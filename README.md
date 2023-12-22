@@ -1,38 +1,40 @@
-# create-svelte
+# reader
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+A news reader
 
-## Creating a project
+- reddit
+- hackernews [not started]
+- [news api](https://newsapi.org/) [not started]
+  - not free probably
+  - [pygooglenews](https://github.com/kotartemiy/pygooglenews)
 
-If you're seeing this, you've probably already done this step. Congrats!
+## Usage
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
-
-# create a new project in my-app
-npm create svelte@latest my-app
+```command
+npm install && npm run dev
 ```
 
-## Developing
+## Features
+- [x] reddit
+  - [x] add subreddit
+  - [x] view comments
+    - [x] expand comments
+  - [x] view article
+    - [x] use mozilla readability
+    - [x] view images
+  - [ ] remember scroll position; make issue
+  - [ ] remember subreddit; make issue
+  - [ ] remember list of subreddits; make issue
+- [ ] hackernews
+  - [ ] view top
+    - [ ] new
+    - [ ] jobs
+  - [ ] view comments
+    - [ ] expand comments
+  - [ ] view article
+    - [ ] use mozilla readability
+    - [ ] view images
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+## License
 
-```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-To create a production version of your app:
-
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+AGPL-3.0

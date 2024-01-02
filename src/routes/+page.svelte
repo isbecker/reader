@@ -271,13 +271,13 @@
 </script>
 
 <main class="bg-base-100" data-theme={theme}>
-    <div class="drawer bg-base-100">
+    <div class="drawer">
         <input id="side-drawer" type="checkbox" class="drawer-toggle" />
         <div class="drawer-content flex flex-col">
             <!-- Navbar -->
             <Navbar {theme} {themes} setTheme={changeTheme} />
             <!-- Page content here -->
-            <div class="h-screen w-screen p-4">
+            <div class="min-h-screen min-w-screen p-4">
                 <Subreddit subreddit="technology"></Subreddit>
             </div>
         </div>

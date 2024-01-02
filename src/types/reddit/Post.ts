@@ -13,6 +13,7 @@ export default interface Post {
     length: number,
     image: string,
     comments: Comment[]
+    is_read: boolean
 }
 
 export function parsePost(post: any): Post {
@@ -28,6 +29,7 @@ export function parsePost(post: any): Post {
         date: post.created_utc,
         length: post.selftext_html.length,
         image: post.thumbnail,
-        comments: post.comments?.data?.children?.map(parseComment)
+        comments: post.comments?.data?.children?.map(parseComment),
+        is_read: false
     };
 }

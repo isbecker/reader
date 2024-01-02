@@ -17,6 +17,7 @@
             length: 1,
             image: "https://source.unsplash.com/random/100x100",
             comments: [],
+            is_read: false,
         },
         {
             id: "2",
@@ -31,8 +32,8 @@
             length: 1,
             image: "https://source.unsplash.com/random/100x100",
             comments: [],
+            is_read: true,
         },
-
         {
             id: "3",
             author: "u/username",
@@ -46,30 +47,76 @@
             length: 1,
             image: "https://source.unsplash.com/random/100x100",
             comments: [],
+            is_read: false,
+        },
+        {
+            id: "3",
+            author: "u/username",
+            subreddit: subreddit,
+            permalink: "/r/subreddit/comments/1/post_title/",
+            slug: "post_title",
+            title: "Post Title",
+            content: "Post Content",
+            excerpt: "Post Excerpt",
+            date: Date.now(),
+            length: 1,
+            image: "https://source.unsplash.com/random/100x100",
+            comments: [],
+            is_read: false,
+        },
+        {
+            id: "3",
+            author: "u/username",
+            subreddit: subreddit,
+            permalink: "/r/subreddit/comments/1/post_title/",
+            slug: "post_title",
+            title: "Post Title",
+            content: "Post Content",
+            excerpt: "Post Excerpt",
+            date: Date.now(),
+            length: 1,
+            image: "https://source.unsplash.com/random/100x100",
+            comments: [],
+            is_read: false,
+        },
+        {
+            id: "3",
+            author: "u/username",
+            subreddit: subreddit,
+            permalink: "/r/subreddit/comments/1/post_title/",
+            slug: "post_title",
+            title: "Post Title",
+            content: "Post Content",
+            excerpt: "Post Excerpt",
+            date: Date.now(),
+            length: 1,
+            image: "https://source.unsplash.com/random/100x100",
+            comments: [],
+            is_read: false,
         },
     ];
 </script>
 
 <div class="bg-base-100">
     {subreddit}
-    <ul class="flex flex-col flex-row gap-4 place-items-start">
+    <ul class="flex flex-col gap-4 place-items-start">
         {#each posts as post}
-            <li class="w-full hover:bg-base-300">
-                <div class="card card-bordered flex flex-row justify-stretch">
+            <li class="w-full hover:bg-base-300" class:opacity-20={post.is_read}>
+                <div class="card card-bordered flex flex-row">
                     <div class="flex flex-col p-2 gap-1">
-                        <figure><img src={post.image} alt="img" /></figure>
-                        <div
-                            class="badge badge-primary-content badge-outline grow "
-                        >
+                        <figure class="grow">
+                            <img src={post.image} alt="img" />
+                        </figure>
+                        <button class="btn btn-accent btn-outline btn-sm">
                             {post.comments.length} comments
-                        </div>
+                        </button>
                     </div>
-                    <div class="card-body grow">
+                    <div class="card-body">
                         <div class="flex flex-col">
                             <div class="card-title">
                                 {post.title}
                             </div>
-                            <div class="grow">
+                            <div class="">
                                 {post.excerpt}
                             </div>
                         </div>

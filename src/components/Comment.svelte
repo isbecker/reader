@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type Comment from "./+page.svelte";
+    import type Comment from "../types/reddit/Comment";
 
     export let comment: Comment;
     let isCollapsed = true; // Tracks whether replies are collapsed or expanded

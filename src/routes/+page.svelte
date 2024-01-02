@@ -3,7 +3,8 @@
     import { onMount } from "svelte";
     import { writable } from "svelte/store";
 
-    import Comment from "./Comment.svelte";
+    import Navbar from "../components/Navbar.svelte";
+    import Sidebar from "../components/Sidebar.svelte";
 
     interface RedditPost {
         id?: string;
@@ -35,37 +36,37 @@
     let theme = "cyberpunk";
     const themes = [
         "light",
-      "dark",
-      "cupcake",
-      "bumblebee",
-      "emerald",
-      "corporate",
-      "synthwave",
-      "retro",
-      "cyberpunk",
-      "valentine",
-      "halloween",
-      "garden",
-      "forest",
-      "aqua",
-      "lofi",
-      "pastel",
-      "fantasy",
-      "wireframe",
-      "black",
-      "luxury",
-      "dracula",
-      "cmyk",
-      "autumn",
-      "business",
-      "acid",
-      "lemonade",
-      "night",
-      "coffee",
-      "winter",
-      "dim",
-      "nord",
-      "sunset",
+        "dark",
+        "cupcake",
+        "bumblebee",
+        "emerald",
+        "corporate",
+        "synthwave",
+        "retro",
+        "cyberpunk",
+        "valentine",
+        "halloween",
+        "garden",
+        "forest",
+        "aqua",
+        "lofi",
+        "pastel",
+        "fantasy",
+        "wireframe",
+        "black",
+        "luxury",
+        "dracula",
+        "cmyk",
+        "autumn",
+        "business",
+        "acid",
+        "lemonade",
+        "night",
+        "coffee",
+        "winter",
+        "dim",
+        "nord",
+        "sunset",
     ];
     let isSidebarOpen = false;
     let subreddits = ["technology", "sveltejs"]; // Example subreddits
@@ -269,225 +270,24 @@
 </script>
 
 <main class="" data-theme={theme}>
-    <div class="flex">
-        <!-- Top Navbar -->
-        <nav class="navbar fixed top-0 left-0 right-0 z-30">
-            <div class="flex-none">
-                <button
-                    class="btn btn-square btn-ghost"
-                    on:click={toggleSidebar}
-                >
-                    <!-- Hamburger Icon -->
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        class="inline-block w-6 h-6 stroke-current"
-                    >
-                        <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M4 6h16M4 12h16M4 18h16"
-                        ></path>
-                    </svg>
-                </button>
-                <!-- svelte-ignore a11y-missing-attribute -->
-                <a class="btn btn-ghost normal-case text-xl"
-                    >Reader for r/{subreddit}</a
-                >
-
-                <!-- Theme picker -->
-                <div class="dropdown ml-auto">
-                    <div tabindex="0" role="button" class="btn m-1">
-                        Theme
-                        <svg
-                            width="12px"
-                            height="12px"
-                            class="h-2 w-2 fill-current opacity-60 inline-block"
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 2048 2048"
-                        >
-                            <path
-                                d="M1799 349l242 241-1017 1017L7 590l242-241 775 775 775-775z"
-                            ></path>
-                        </svg>
-                    </div>
-                    <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-                    <ul
-                        tabindex="0"
-                        class="dropdown-content z-[1] p-2 shadow-2xl bg-base-300 rounded-box w-52 bg-neutral"
-                    >
-                        {#each themes as t}
-                            <li>
-                                <input
-                                    type="radio"
-                                    name="theme-dropdown"
-                                    class="theme-controller btn btn-neutral-content btn-sm btn-block btn-ghost justify-start capitalize"
-                                    aria-label={t}
-                                    value={t}
-                                    on:click={() => {
-                                        changeTheme(t);
-                                    }}
-                                />
-                            </li>
-                        {/each}
-                    </ul>
-                </div>
-            </div>
-        </nav>
-
-        <!-- Sidebar -->
-        <div
-            class={`fixed z-20 transform ${
-                isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-            } transition-transform top-0 bottom-0 w-64 bg-base-100`}
-        >
-            <div
-                class="overflow-y-auto pt-16 pb-4 h-screen bg-primary"
-            >
-                <ul class="menu p-0 bg-neutral text-neutral-content">
-                    {#each subreddits as subreddit}
-                        <!-- svelte-ignore a11y-missing-attribute -->
-                        <!-- svelte-ignore a11y-no-static-element-interactions -->
-                        <li class=" bg-neutral text-neutral-content">
-                            <!-- svelte-ignore a11y-click-events-have-key-events -->
-                            <a on:click={() => fetchSubreddit(subreddit)}>
-                                {subreddit}</a
-                            >
-                        </li>
-                    {/each}
-                    <li class="menu-item bg-neutral text-neutral-content">
-                        <input
-                            type="text"
-                            bind:value={newSubreddit}
-                            placeholder="Add subreddit"
-                            class="input input-bordered w-full"
-                        />
-                        <button
-                            class="btn btn-primary mt-2 bg-neutral text-neutral-content"
-                            on:click={addSubreddit}>Add</button
-                        >
-                    </li>
-                </ul>
-            </div>
+    <div class="drawer">
+        <input id="side-drawer" type="checkbox" class="drawer-toggle" />
+        <div class="drawer-content flex flex-col">
+            <!-- Navbar -->
+            <Navbar {theme} {themes} setTheme={changeTheme} />
+            <!-- Page content here -->
+            <div class="h-screen w-screen">Content</div>
         </div>
-
-        <!-- Main Content -->
-        <div class={`flex-1 ${isSidebarOpen ? "ml-64" : ""} pt-16`}>
-            <div class="p-4 overflow-y-auto h-full">
-                {#if isLoading}
-                    <div class="loading loading-lg"></div>
-                {/if}
-                {#if !selectedArticle && !isLoading}
-                    {#each posts as post}
-                        <!-- svelte-ignore a11y-no-static-element-interactions -->
-                        <!-- svelte-ignore a11y-click-events-have-key-events -->
-                        <div
-                            class="card bg-base-100 hover:bg-base-200 cursor-pointer mb-4 bg-neutral"
-                            on:click={() => loadArticleContent(post)}
-                        >
-                            <div
-                                class="card-body bg-neutral"
-                            >
-                                <!-- Post Title and Upvotes -->
-                                <div
-                                    class="flex items-center justify-between bg-neutral"
-                                >
-                                    <h2
-                                        class="card-title flex-grow text-neutral-content"
-                                    >
-                                        {post.title}
-                                    </h2>
-                                    <div
-                                        class="badge badge-accent"
-                                    >
-                                        {post.upvotes} Upvotes
-                                    </div>
-                                </div>
-
-                                <!-- Thumbnail and Main Content -->
-                                <div
-                                    class="flex bg-neutral"
-                                >
-                                    {#if post.imageUrl}
-                                        <div class="flex-shrink-0">
-                                            <img
-                                                src={post.imageUrl}
-                                                alt={post.title}
-                                                class="w-24 h-24 object-cover mr-4"
-                                            />
-                                        </div>
-                                    {/if}
-                                    <div
-                                        class="flex-grow bg-neutral"
-                                    >
-                                        <p class="text-neutral-content">
-                                            {post.selftext ||
-                                                "Click to read more..."}
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <button
-                                    class="btn btn-outline btn-accent transition duration-750 ease-in-out"
-                                    on:click={async (event) => {
-                                        event.stopPropagation();
-                                        await toggleComments(post);
-                                    }}
-                                >
-                                    {post.num_comments} Comments
-                                </button>
-                                <!-- Expandable Comments Section -->
-                                {#if post.comments && post.commentsVisible}
-                                    <div
-                                        class="text-neutral-content transition duration-750 ease-in-out"
-                                    >
-                                        {#each post.comments as comment}
-                                            <Comment
-                                                {comment}
-                                            />
-                                        {/each}
-                                    </div>
-                                {/if}
-                            </div>
-                        </div>
-                    {/each}
-                {/if}
-                {#if selectedArticle}
-                    <div class="hero bg-neutral text-neutral-content">
-                        <div
-                            class="hero-content bg-neutral text-neutral-content"
-                        >
-                            <p class="py-6 bg-neutral text-neutral-content">
-                                {@html selectedArticle.content}
-                            </p>
-                            <button
-                                class="btn btn-primary"
-                                on:click={() => {
-                                    selectedArticle = null;
-                                }}
-                            >
-                                Back to list
-                            </button>
-                        </div>
-                    </div>
-                {/if}
-            </div>
+        <div class="drawer-side">
+            <label
+                for="side-drawer"
+                aria-label="close sidebar"
+                class="drawer-overlay"
+            ></label>
+            <Sidebar {subreddits} currentSubreddit="technology" />
         </div>
     </div>
 </main>
 
 <style>
-    /* Ensure the sidebar starts below the navbar */
-    .navbar {
-        height: 4rem;
-    }
-    .top-16 {
-        top: 4rem;
-    } /* Height of the navbar */
-
-    
-    .nested-comments {
-        margin-left: 1rem; /* Adjust to ensure it fits within the card */
-    }
 </style>

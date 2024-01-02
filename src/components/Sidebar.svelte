@@ -42,7 +42,7 @@
             {/each}
         </ul>
     </div>
-    <div class="p-4">
+    <div class="p-4 place-self-end">
         <input
             id="new-subreddit"
             placeholder="Add sub"

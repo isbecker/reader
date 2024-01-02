@@ -97,7 +97,7 @@
   ];
 </script>
 
-<div class="bg-base-100 min-w-fit min-h-fit">
+<div class="bg-base-100 min-w-full min-h-fit">
   {subreddit}
   <ul class="flex flex-col gap-4 ">
     {#each posts as post}

@@ -38,33 +38,21 @@
     const themes = [
         "light",
         "dark",
-        "cupcake",
-        "bumblebee",
-        "emerald",
-        "corporate",
         "synthwave",
         "retro",
         "cyberpunk",
-        "valentine",
-        "halloween",
-        "garden",
         "forest",
         "aqua",
         "lofi",
-        "pastel",
         "fantasy",
         "wireframe",
         "black",
-        "luxury",
         "dracula",
-        "cmyk",
-        "autumn",
         "business",
         "acid",
         "lemonade",
         "night",
         "coffee",
-        "winter",
         "dim",
         "nord",
         "sunset",
@@ -270,7 +258,7 @@
     }
 </script>
 
-<main class="bg-base-100" data-theme={theme}>
+<main class="bg-base-100 min-h-screen min-w-screen"  >
     <div class="drawer">
         <input id="side-drawer" type="checkbox" class="drawer-toggle" />
         <div class="drawer-content flex flex-col">

@@ -5,6 +5,7 @@
 
     import Navbar from "../components/Navbar.svelte";
     import Sidebar from "../components/Sidebar.svelte";
+    import Subreddit from "../components/Subreddit.svelte";
 
     interface RedditPost {
         id?: string;
@@ -269,14 +270,16 @@
     }
 </script>
 
-<main class="" data-theme={theme}>
-    <div class="drawer">
+<main class="bg-base-100" data-theme={theme}>
+    <div class="drawer bg-base-100">
         <input id="side-drawer" type="checkbox" class="drawer-toggle" />
         <div class="drawer-content flex flex-col">
             <!-- Navbar -->
             <Navbar {theme} {themes} setTheme={changeTheme} />
             <!-- Page content here -->
-            <div class="h-screen w-screen">Content</div>
+            <div class="h-screen w-screen p-4">
+                <Subreddit subreddit="technology"></Subreddit>
+            </div>
         </div>
         <div class="drawer-side">
             <label

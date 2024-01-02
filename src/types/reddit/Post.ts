@@ -1,6 +1,6 @@
 import { parseComment } from "./Comment"
 
-export interface Post {
+export default interface Post {
     id: string,
     author: string,
     subreddit: string,

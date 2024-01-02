@@ -97,11 +97,11 @@
   ];
 </script>
 
-<div class="bg-base-100">
+<div class="bg-base-100 min-w-fit min-h-fit">
   {subreddit}
   <ul class="flex flex-col gap-4 ">
     {#each posts as post}
-      <li class="w-full hover:bg-base-300" class:opacity-20={post.is_read}>
+      <li class="hover:bg-base-300" class:opacity-20={post.is_read}>
         <div class="card card-bordered flex flex-row">
           <div class="flex flex-col p-2 gap-1 shrink-0">
             <figure class="">
@@ -111,7 +111,7 @@
               {post.comments.length} comments
             </button>
           </div>
-          <div class="card-body">
+          <div class="card-body flex flex-col">
             <div class="flex flex-col">
               <div class="card-title">
                 {post.title}
@@ -122,7 +122,7 @@
             </div>
           </div>
           <div class="card-actions place-self-end p-2">
-            <button class="btn btn-accent btn-sm">More</button>
+            <button class="btn btn-accent btn-xs">More</button>
           </div>
         </div>
       </li>

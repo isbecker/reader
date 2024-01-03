@@ -1,131 +1,58 @@
 <script lang="ts">
+  import { onMount } from "svelte";
+  import SvelteMarkdown from "svelte-markdown";
   import type Post from "../types/reddit/Post";
+  import type Subreddit from "../types/reddit/Subreddit";
+  import { parseSubreddit } from "../types/reddit/Subreddit";
+    import PostCard from "./PostCard.svelte";
 
-  export let subreddit: string;
-  let posts: Post[] = [
-    {
-      id: "1",
-      author: "u/username",
-      subreddit: subreddit,
-      permalink: "/r/subreddit/comments/1/post_title/",
-      slug: "post_title",
-      title: "Post Title",
-      content: "Post Content",
-      excerpt:
-        "Here is a very long content that might need to end up growing and making other stuff smaller...",
-      date: Date.now(),
-      length: 1,
-      image: "https://source.unsplash.com/random/100x100",
-      comments: [],
-      is_read: false,
-    },
-    {
-      id: "2",
-      author: "u/username",
-      subreddit: subreddit,
-      permalink: "/r/subreddit/comments/1/post_title/",
-      slug: "post_title",
-      title: "Post Title",
-      content: "Post Content",
-      excerpt: "Post Excerpt",
-      date: Date.now(),
-      length: 1,
-      image: "https://source.unsplash.com/random/100x100",
-      comments: [],
-      is_read: true,
-    },
-    {
-      id: "3",
-      author: "u/username",
-      subreddit: subreddit,
-      permalink: "/r/subreddit/comments/1/post_title/",
-      slug: "post_title",
-      title: "Post Title",
-      content: "Post Content",
-      excerpt: "Post Excerpt",
-      date: Date.now(),
-      length: 1,
-      image: "https://source.unsplash.com/random/100x100",
-      comments: [],
-      is_read: false,
-    },
-    {
-      id: "3",
-      author: "u/username",
-      subreddit: subreddit,
-      permalink: "/r/subreddit/comments/1/post_title/",
-      slug: "post_title",
-      title: "Post Title",
-      content: "Post Content",
-      excerpt: "Post Excerpt",
-      date: Date.now(),
-      length: 1,
-      image: "https://source.unsplash.com/random/100x100",
-      comments: [],
-      is_read: false,
-    },
-    {
-      id: "3",
-      author: "u/username",
-      subreddit: subreddit,
-      permalink: "/r/subreddit/comments/1/post_title/",
-      slug: "post_title",
-      title: "Post Title",
-      content: "Post Content",
-      excerpt: "Post Excerpt",
-      date: Date.now(),
-      length: 1,
-      image: "https://source.unsplash.com/random/100x100",
-      comments: [],
-      is_read: false,
-    },
-    {
-      id: "3",
-      author: "u/username",
-      subreddit: subreddit,
-      permalink: "/r/subreddit/comments/1/post_title/",
-      slug: "post_title",
-      title: "Post Title",
-      content: "Post Content",
-      excerpt: "Post Excerpt",
-      date: Date.now(),
-      length: 1,
-      image: "https://source.unsplash.com/random/100x100",
-      comments: [],
-      is_read: false,
-    },
-  ];
+  export let subredditName: string;
+  let subreddit: Subreddit;
+
+  onMount(async () => {
+    let subJson = await changeSubreddit(subredditName);
+    // console.log(`Subreddit: ${subJson}`);
+  });
+
+  async function changeSubreddit(sub: string) {
+    let rawSubreddit = await fetchSubreddit(sub);
+    subreddit = await parseSubreddit(rawSubreddit);
+
+  }
+
+  async function fetchReadableContent(post: Post): Promise<any> {
+    let response = await fetch(`/api/content/readable?url=${post.url}`);
+    if (response.ok) {
+      let data = await response.json();
+      return data.article ?? data.error;
+    } else {
+      throw new Error("Failed to fetch");
+    }
+  }
+
+  async function fetchSubreddit(subreddit: string): Promise<any> {
+    try {
+      const response = await fetch(`/api/reddit/${subreddit}`);
+      if (response.ok) {
+        return await response.json();
+      } else {
+        throw new Error("Failed to fetch");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  }
 </script>
 
 <div class="bg-base-100 min-w-full min-h-fit">
-  {subreddit}
-  <ul class="flex flex-col gap-4 ">
-    {#each posts as post}
-      <li class="hover:bg-base-300" class:opacity-20={post.is_read}>
-        <div class="card card-bordered flex flex-row">
-          <div class="flex flex-col p-2 gap-1 shrink-0">
-            <figure class="">
-              <img src={post.image} alt="img" />
-            </figure>
-            <button class="btn btn-accent btn-outline btn-sm">
-              {post.comments.length} comments
-            </button>
-          </div>
-          <div class="card-body flex flex-col">
-            <div class="flex flex-col">
-              <div class="card-title">
-                {post.title}
-              </div>
-              <div class="">
-                {post.excerpt}
-              </div>
-            </div>
-          </div>
-          <div class="card-actions place-self-end p-2">
-            <button class="btn btn-accent btn-xs">More</button>
-          </div>
-        </div>
-      </li>
-    {/each}
+  <div class="underline text-secondary font-bold">r/{subredditName}</div>
+  <ul class="flex flex-col gap-4">
+    {#if subreddit}
+      {#each subreddit.posts as post}
+        <li class="hover:bg-base-300">
+          <PostCard {post} />
+        </li>
+      {/each}
+    {/if}
   </ul>
 </div>

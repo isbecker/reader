@@ -1,5 +1,5 @@
 <script lang="ts">
-  export let theme: string = "cyberpunk";
+  export let theme: string = "dark";
   export let themes: string[];
 </script>
 
@@ -27,6 +27,7 @@
           class="theme-controller btn btn-sm btn-block btn-ghost justify-start"
           aria-label={t}
           value={t}
+          checked={t === theme}
         />
       </li>
     {/each}

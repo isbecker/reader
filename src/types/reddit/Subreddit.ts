@@ -1,18 +1,20 @@
-import type { Post } from "./Post";
+import type Post from "./Post";
 import { parsePost } from "./Post";
 
-export interface Subreddit {
+export default interface Subreddit {
     name: string,
     title: string,
     description: string,
     posts: Post[]
 }
 
-export function parseSubreddit(subreddit: any): Subreddit {
-    return {
-        name: subreddit.name,
-        title: subreddit.title,
-        description: subreddit.public_description,
-        posts: subreddit.children.map(parsePost)
+export async function parseSubreddit(subreddit: any): Promise<Subreddit> {
+    const parsedSubreddit: Subreddit = {
+        name: subreddit.data.name,
+        title: subreddit.data.title,
+        description: subreddit.data.public_description,
+        posts: await Promise.all(subreddit.data.children.map(parsePost))
     };
+
+    return parsedSubreddit;
 }

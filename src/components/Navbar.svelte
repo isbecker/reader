@@ -1,7 +1,7 @@
 <script lang="ts">
     import ThemePicker from "./ThemePicker.svelte";
 
-    export let theme: string = "cyberpunk";
+    export let theme: string = "dark";
     export let themes: string[];
     export let setTheme: (theme: string) => void;
 

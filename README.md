@@ -15,6 +15,7 @@ npm install && npm run dev
 ```
 
 ## Features
+
 - [x] reddit
   - [x] add subreddit
   - [x] view comments
@@ -25,6 +26,10 @@ npm install && npm run dev
   - [ ] remember scroll position; make issue
   - [ ] remember subreddit; make issue
   - [ ] remember list of subreddits; make issue
+  - [ ] mark as read on scroll
+  - [ ] mark as read on click
+  - [ ] load more on scroll to bottom
+    - [ ] detect scroll to bottom
 - [ ] hackernews
   - [ ] view top
     - [ ] new

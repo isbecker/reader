@@ -5,9 +5,9 @@ export const GET: RequestHandler = async ({ params }) => {
     const { subreddit } = params;
 
     try {
-        const response = await fetch(`https://www.reddit.com/r/${subreddit}/hot.json?limit=30`);
+        const response = await fetch(`https://www.reddit.com/r/${subreddit}/hot.json`);
         const data = await response.json();
-        
+
 
         return new Response(JSON.stringify(data), {
             status: 200,

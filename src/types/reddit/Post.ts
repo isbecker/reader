@@ -1,4 +1,4 @@
-import { parseComment } from "./Comment"
+import { parseComment } from "./Comment";
 
 export default interface Post {
     id: string,
@@ -9,6 +9,8 @@ export default interface Post {
     title: string,
     content: string,
     excerpt: string,
+    readable: string,
+    url: string,
     date: number,
     length: number,
     image: string,
@@ -16,20 +18,24 @@ export default interface Post {
     is_read: boolean
 }
 
-export function parsePost(post: any): Post {
-    return {
+export async function parsePost(post: any): Promise<Post> {
+    post = post.data;
+    const parsedPost: Post = {
         id: post.id,
         author: post.author,
         subreddit: post.subreddit,
         permalink: post.permalink,
         slug: post.id,
-        title: post.title,
+        title: post.title || "Untitled",
         content: post.selftext_html || "Read more",
-        excerpt: post.selftext_html || undefined,
+        excerpt: post.selftext || undefined,
+        readable: "nothing",
+        url: post.url,
         date: post.created_utc,
-        length: post.selftext_html.length,
+        length: 0,
         image: post.thumbnail,
         comments: post.comments?.data?.children?.map(parseComment),
         is_read: false
     };
+    return parsedPost;
 }

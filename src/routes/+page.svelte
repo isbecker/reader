@@ -34,7 +34,7 @@
         excerpt?: string;
         length?: number;
     }
-    let theme = "cyberpunk";
+    let theme = "dark";
     const themes = [
         "light",
         "dark",
@@ -266,7 +266,7 @@
             <Navbar {theme} {themes} setTheme={changeTheme} />
             <!-- Page content here -->
             <div class="min-h-screen min-w-screen p-4">
-                <Subreddit subreddit="technology"></Subreddit>
+                <Subreddit subredditName="technology"></Subreddit>
             </div>
         </div>
         <div class="drawer-side">

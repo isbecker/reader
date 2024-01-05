@@ -14,7 +14,8 @@ export default interface Post {
     date: number,
     length: number,
     image: string,
-    comments: Comment[]
+    comments: Comment[],
+    num_comments: number,
     is_read: boolean
 }
 
@@ -35,6 +36,7 @@ export async function parsePost(post: any): Promise<Post> {
         length: 0,
         image: post.thumbnail,
         comments: post.comments?.data?.children?.map(parseComment),
+        num_comments: post.num_comments,
         is_read: false
     };
     return parsedPost;

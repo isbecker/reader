@@ -67,7 +67,7 @@
       </figure>
     {/if}
     <button class="btn btn-accent btn-outline btn-sm">
-      {post.comments?.length ?? 0} comments
+      {post.num_comments} comments
     </button>
   </div>
   <div class="card-body flex flex-col">

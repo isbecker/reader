@@ -1,4 +1,7 @@
 <script lang="ts">
+    import { createEventDispatcher } from "svelte";
+
+    const dispatch = createEventDispatcher();
     let open = false;
     export let subreddits: string[];
 
@@ -6,7 +9,10 @@
 
     function changeSubreddit(sub: string) {
         currentSubreddit = sub;
-        // Do some other stuff
+
+        dispatch("notify", {
+            subreddit: sub,
+        });
     }
 
     function addSubreddit() {
@@ -25,19 +31,23 @@
         <ul class="menu p-4 w-80 min-h-full text-base-content">
             <!-- Sidebar content here -->
             {#each subreddits as sub}
-                <div class="flex group" class:bg-secondary={sub === currentSubreddit}>
-                    <button class="btn btn-ghost btn-sm rounded-btn grow"
-                    on:click={() => {
+                <div
+                    class="flex group"
+                    class:bg-secondary={sub === currentSubreddit}
+                >
+                    <button
+                        class="btn btn-ghost btn-sm rounded-btn grow"
+                        on:click={() => {
                             changeSubreddit(sub);
-                        }}
-                        >{sub}</button
+                        }}>{sub}</button
                     >
                     <!-- only visible on hover of the div -->
-                    <button class="btn btn-ghost btn-sm rounded-btn hidden group-hover:inline"
-                    on:click={() => {
+                    <button
+                        class="btn btn-ghost btn-sm rounded-btn hidden group-hover:inline"
+                        on:click={() => {
                             subreddits = subreddits.filter((s) => s !== sub);
-                        }}
-                        >X</button>
+                        }}>X</button
+                    >
                 </div>
             {/each}
         </ul>
@@ -54,7 +64,7 @@
             }}
         />
         <button
-            class="btn btn-primary btn-sm rounded-btn "
+            class="btn btn-primary btn-sm rounded-btn"
             on:click={addSubreddit}>Add</button
         >
     </div>

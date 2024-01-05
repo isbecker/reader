@@ -40,6 +40,10 @@ npm install && npm run dev
     - [ ] use mozilla readability
     - [ ] view images
 
+## Sites that don't work with readability
+
+- bloomberg
+
 ## License
 
 AGPL-3.0

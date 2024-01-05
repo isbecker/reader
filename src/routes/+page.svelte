@@ -58,12 +58,13 @@
         "sunset",
     ];
     let isSidebarOpen = false;
+    let sidebar: Sidebar;
     let subreddits = ["technology", "sveltejs"]; // Example subreddits
     let newSubreddit = "";
     let visibleCommentsPostId: string | null = null;
 
     let posts: RedditPost[] = [];
-    let subreddit = "gaming";
+    let subreddit = "technology";
     let feed: any[] = [];
     let selectedArticleContent: string | null = null;
 
@@ -258,7 +259,7 @@
     }
 </script>
 
-<main class="bg-base-100 min-h-screen min-w-screen"  >
+<main class="bg-base-100 min-h-screen min-w-screen">
     <div class="drawer">
         <input id="side-drawer" type="checkbox" class="drawer-toggle" />
         <div class="drawer-content flex flex-col">
@@ -266,7 +267,7 @@
             <Navbar {theme} {themes} setTheme={changeTheme} />
             <!-- Page content here -->
             <div class="min-h-screen min-w-screen p-4">
-                <Subreddit subredditName="technology"></Subreddit>
+                <Subreddit subredditName={subreddit} />
             </div>
         </div>
         <div class="drawer-side">
@@ -275,7 +276,11 @@
                 aria-label="close sidebar"
                 class="drawer-overlay"
             ></label>
-            <Sidebar {subreddits} currentSubreddit="technology" />
+            <Sidebar
+                {subreddits}
+                currentSubreddit={subreddit}
+                on:notify={(event) => (subreddit = event.detail.subreddit)}
+            />
         </div>
     </div>
 </main>

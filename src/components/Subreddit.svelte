@@ -1,33 +1,25 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import SvelteMarkdown from "svelte-markdown";
-  import type Post from "../types/reddit/Post";
   import type Subreddit from "../types/reddit/Subreddit";
   import { parseSubreddit } from "../types/reddit/Subreddit";
-    import PostCard from "./PostCard.svelte";
+  import PostCard from "./PostCard.svelte";
 
-  export let subredditName: string;
+  export let subredditName: string = "";
   let subreddit: Subreddit;
 
   onMount(async () => {
     let subJson = await changeSubreddit(subredditName);
-    // console.log(`Subreddit: ${subJson}`);
   });
+
+  $: {
+    if (subreddit?.name !== subredditName) {
+      // changeSubreddit(subredditName);
+    }
+  }
 
   async function changeSubreddit(sub: string) {
     let rawSubreddit = await fetchSubreddit(sub);
-    subreddit = await parseSubreddit(rawSubreddit);
-
-  }
-
-  async function fetchReadableContent(post: Post): Promise<any> {
-    let response = await fetch(`/api/content/readable?url=${post.url}`);
-    if (response.ok) {
-      let data = await response.json();
-      return data.article ?? data.error;
-    } else {
-      throw new Error("Failed to fetch");
-    }
+    subreddit = await parseSubreddit(sub, rawSubreddit);
   }
 
   async function fetchSubreddit(subreddit: string): Promise<any> {
@@ -45,7 +37,9 @@
 </script>
 
 <div class="bg-base-100 min-w-full min-h-fit">
-  <div class="underline text-secondary font-bold">r/{subredditName}</div>
+  <div class="underline text-secondary font-bold">
+    r/{subredditName}
+  </div>
   <ul class="flex flex-col gap-4">
     {#if subreddit}
       {#each subreddit.posts as post}

@@ -75,21 +75,31 @@
       <div class="card-title">
         {post.title}
       </div>
+      <div class="divider"></div>
 
-      <div class="">
-        {post.readable}
+      <div
+        class="collapse collapse-arrow border"
+        on:click={(event) => event.stopPropagation()}
+      >
+        <input type="checkbox" />
+        <div class="collapse-title">{post.excerpt}</div>
+        <div class="collapse-content">
+          <p>
+            {post.readable}
+          </p>
+        </div>
       </div>
     </div>
   </div>
   <div class="card-actions place-self-end p-2">
     <button
       class="btn btn-accent btn-xs"
-      on:click={(event) => {
+      on:click={async (event) => {
         event.stopPropagation();
-        fetchReadableContent(post).then((article) => {
+        await fetchReadableContent(post).then((article) => {
           // post.title = article.title;
           post.content = article.content;
-          // post.excerpt = article.content;
+          post.excerpt = article.excerpt;
           post.readable = article.textContent;
           post.is_read = true;
         });

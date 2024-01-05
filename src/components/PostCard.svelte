@@ -1,6 +1,5 @@
 <script lang="ts">
   import { onDestroy, onMount } from "svelte";
-  import SvelteMarkdown from "svelte-markdown";
   import { writable, type Writable } from "svelte/store";
   import type Post from "../types/reddit/Post";
 
@@ -49,16 +48,24 @@
   }
 </script>
 
+<!-- svelte-ignore a11y-no-static-element-interactions -->
+<!-- svelte-ignore a11y-click-events-have-key-events -->
 <div
   bind:this={card}
   class="card card-bordered flex flex-row"
   class:opacity-20={is_read}
   class:hidden={is_read && hide_read}
+  on:click={() => {
+    window.open(post.url, "_blank").focus();
+    is_read = true;
+  }}
 >
-  <div class="flex flex-col p-2 gap-1 shrink-0">
-    <figure class="">
-      <img src={post.image} alt="img" />
-    </figure>
+  <div class="place-self-center flex flex-col p-2 gap-1 shrink-0">
+    {#if post.image != "self"}
+      <figure class="">
+        <img src={post.image} alt="img" />
+      </figure>
+    {/if}
     <button class="btn btn-accent btn-outline btn-sm">
       {post.comments?.length ?? 0} comments
     </button>
@@ -68,20 +75,22 @@
       <div class="card-title">
         {post.title}
       </div>
+
       <div class="">
-        <SvelteMarkdown source={post.excerpt} />
+        {post.readable}
       </div>
     </div>
   </div>
   <div class="card-actions place-self-end p-2">
     <button
       class="btn btn-accent btn-xs"
-      on:click={() => {
+      on:click={(event) => {
+        event.stopPropagation();
         fetchReadableContent(post).then((article) => {
+          // post.title = article.title;
           post.content = article.content;
-          post.excerpt = article.excerpt;
-          post.readable = article.textcontent;
-          console.log(`${JSON.stringify(article)}`);
+          // post.excerpt = article.content;
+          post.readable = article.textContent;
           post.is_read = true;
         });
       }}>More</button

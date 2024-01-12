@@ -3,9 +3,7 @@
 
     export let theme: string = "dark";
     export let themes: string[];
-    export let setTheme: (theme: string) => void;
-
-    let themePickerHidden = true;
+    export let currentSubreddit: string;
 </script>
 
 <div class="navbar bg-primary text-primary-content flex-row">
@@ -30,7 +28,7 @@
         </label>
     </div>
     <div class="grow">
-        <a class="btn btn-ghost text-xl">Reader</a>
+        <p class="text-xl underline text-accent">r/{currentSubreddit}</p>
     </div>
     <div class="">
         <ThemePicker {theme} {themes} />

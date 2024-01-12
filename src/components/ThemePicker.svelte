@@ -24,7 +24,7 @@
         <input
           type="radio"
           name="theme-dropdown"
-          class="theme-controller btn btn-sm btn-block btn-ghost justify-start"
+          class="theme-controller btn btn-sm btn-block btn-ghost justify-start text-accent"
           aria-label={t}
           value={t}
           checked={t === theme}

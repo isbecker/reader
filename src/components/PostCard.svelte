@@ -72,8 +72,9 @@
   </div>
   <div class="card-body flex flex-col">
     <div class="flex flex-col">
-      <div class="card-title">
-        {post.title}
+      <div class="card-title flex flex-col place-items-start">
+        <p class="text-2xl">{post.title}</p>
+        <p class="text-xs">{post.domain}</p>
       </div>
       <div class="divider"></div>
 

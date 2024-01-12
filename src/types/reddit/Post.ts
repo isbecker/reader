@@ -1,3 +1,4 @@
+import type Readable from "../Reabable";
 import { parseComment } from "./Comment";
 
 export default interface Post {
@@ -9,7 +10,7 @@ export default interface Post {
     title: string,
     content: string,
     excerpt: string,
-    readable: string,
+    readable: Readable,
     url: string,
     date: number,
     length: number,
@@ -17,6 +18,8 @@ export default interface Post {
     comments: Comment[],
     num_comments: number,
     is_read: boolean
+    post_hint?: string
+    domain?: string
 }
 
 export async function parsePost(post: any): Promise<Post> {
@@ -37,7 +40,9 @@ export async function parsePost(post: any): Promise<Post> {
         image: post.thumbnail,
         comments: post.comments?.data?.children?.map(parseComment),
         num_comments: post.num_comments,
-        is_read: false
+        is_read: false,
+        post_hint: post.post_hint,
+        domain: post.domain
     };
     return parsedPost;
 }

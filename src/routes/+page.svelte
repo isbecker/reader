@@ -273,7 +273,7 @@
                 <Subreddit subredditName={subreddit} />
             </div>
         </div>
-        <div class="drawer-side">
+        <div class="drawer-side z-50">
             <label
                 for="side-drawer"
                 aria-label="close sidebar"

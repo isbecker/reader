@@ -32,22 +32,29 @@
             <!-- Sidebar content here -->
             {#each subreddits as sub}
                 <div
-                    class="flex group"
-                    class:bg-secondary={sub === currentSubreddit}
+                    class="flex group bg-base"
+                    class:bg-primary={sub === currentSubreddit}
                 >
                     <button
-                        class="btn btn-ghost btn-sm rounded-btn grow"
+                        class="btn btn-ghost btn-sm rounded-btn grow text-accent"
                         on:click={() => {
                             changeSubreddit(sub);
                         }}>{sub}</button
                     >
                     <!-- only visible on hover of the div -->
-                    <button
-                        class="btn btn-ghost btn-sm rounded-btn hidden group-hover:inline"
-                        on:click={() => {
-                            subreddits = subreddits.filter((s) => s !== sub);
-                        }}>X</button
+                    <div
+                        data-tip="Remove"
+                        class="tooltip tooltip-right tooltip-secondary hidden group-hover:inline"
                     >
+                        <button
+                            class="btn btn-secondary btn-sm"
+                            on:click={() => {
+                                subreddits = subreddits.filter(
+                                    (s) => s !== sub,
+                                );
+                            }}>🗑️</button
+                        >
+                    </div>
                 </div>
             {/each}
         </ul>

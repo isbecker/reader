@@ -264,7 +264,10 @@
         <input id="side-drawer" type="checkbox" class="drawer-toggle" />
         <div class="drawer-content flex flex-col">
             <!-- Navbar -->
+            <div class="sticky top-0 z-50">
             <Navbar {theme} {themes} setTheme={changeTheme} />
+            </div>
+
             <!-- Page content here -->
             <div class="min-h-screen min-w-screen p-4">
                 <Subreddit subredditName={subreddit} />

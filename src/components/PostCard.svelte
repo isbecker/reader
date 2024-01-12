@@ -1,6 +1,8 @@
 <script lang="ts">
   import { onDestroy, onMount } from "svelte";
   import { writable, type Writable } from "svelte/store";
+  import type Readable from "../types/Reabable";
+  import { parseReadable } from "../types/Reabable";
   import type Post from "../types/reddit/Post";
 
   export let post: Post;
@@ -8,6 +10,8 @@
   let hide_read: boolean = false;
   let has_intersected: boolean = false;
   let card: HTMLDivElement;
+
+  let readableContent = fetchReadableContent();
 
   const observer: Writable<IntersectionObserver | null> = writable(null);
   onMount(() => {
@@ -37,13 +41,25 @@
     });
   });
 
-  async function fetchReadableContent(post: Post): Promise<any> {
+  async function fetchReadableContent(): Promise<Partial<Readable>> {
+    if (post.post_hint === "image") {
+      return {
+        error: "Image posts are not supported",
+      };
+    }
+
     let response = await fetch(`/api/content/readable?url=${post.url}`);
     if (response.ok) {
       let data = await response.json();
-      return data.article ?? data.error;
+      const readable = parseReadable(data);
+
+      post.readable = readable;
+      return readable;
     } else {
-      throw new Error("Failed to fetch");
+      // TODO: Perhaps add a help doc link to a list of sites that don't work nicely
+      throw new Error(
+        "Failed to fetch readable content. Some sites are uncooperative.",
+      );
     }
   }
 </script>
@@ -89,33 +105,38 @@
       </div>
       <div class="divider"></div>
 
-      <div
-        class="collapse collapse-arrow border"
-        on:click={(event) => event.stopPropagation()}
-      >
-        <input type="checkbox" />
-        <div class="collapse-title">{post.excerpt}</div>
-        <div class="collapse-content">
-          <p>
-            {post.readable}
-          </p>
+      {#if post.post_hint == "image"}
+        <div>
+          <img src={post.url} alt="img" style="max-height: 600px;" />
         </div>
-      </div>
+      {:else if post.post_hint == "rich:video"}
+        <div class="text-secondary">
+          {post.url}
+        </div>
+      {:else}
+        {#await readableContent}
+          <p>loading...</p>
+        {:then readable}
+          {#if readable.error}
+            <div class="text-red-500">{readable.error}</div>
+          {:else}
+            <div
+              class="collapse collapse-arrow border"
+              on:click={(event) => event.stopPropagation()}
+            >
+              <input type="checkbox" />
+              <div class="collapse-title">{readable.excerpt}</div>
+              <div class="collapse-content">
+                <p>
+                  {readable.textContent}
+                </p>
+              </div>
+            </div>
+          {/if}
+        {:catch error}
+          <div class="text-red-500">{error.message}</div>
+        {/await}
+      {/if}
     </div>
-  </div>
-  <div class="card-actions place-self-end p-2">
-    <button
-      class="btn btn-accent btn-xs"
-      on:click={async (event) => {
-        event.stopPropagation();
-        await fetchReadableContent(post).then((article) => {
-          // post.title = article.title;
-          post.content = article.content;
-          post.excerpt = article.excerpt;
-          post.readable = article.textContent;
-          post.is_read = true;
-        });
-      }}>More</button
-    >
   </div>
 </div>

@@ -88,7 +88,10 @@
     <button
       class="btn btn-accent btn-outline btn-sm"
       on:click={() => {
-        const newWindow = window.open(`https://old.reddit.com/${post.permalink}`, "_blank");
+        const newWindow = window.open(
+          `https://old.reddit.com/${post.permalink}`,
+          "_blank",
+        );
         if (newWindow) {
           newWindow.focus();
         }

@@ -40,9 +40,6 @@
 </script>
 
 <div class="bg-base-100 min-w-full min-h-fit">
-  <div class="underline text-secondary font-bold">
-    r/{subredditName}
-  </div>
   {#await subreddit}
     <div class="text-primary">Loading {subredditName}</div>
   {:then subreddit}

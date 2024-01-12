@@ -56,7 +56,10 @@
   class:opacity-20={is_read}
   class:hidden={is_read && hide_read}
   on:click={() => {
-    window.open(post.url, "_blank").focus();
+    const newWindow = window.open(post.url, "_blank");
+    if (newWindow) {
+      newWindow.focus();
+    }
     is_read = true;
   }}
 >

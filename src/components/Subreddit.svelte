@@ -41,7 +41,10 @@
 
 <div class="bg-base-100 min-w-full min-h-fit">
   {#await subreddit}
-    <div class="text-primary">Loading {subredditName}</div>
+    <div class="flex flex-col items-stretch">
+      <span class="loading loading-dots loading-lg self-center" />
+      <div class="text-primary text-5xl p-10 self-center grow">Loading r/{subredditName}</div>
+    </div>
   {:then subreddit}
     <ul class="flex flex-col gap-4">
       {#if subreddit}

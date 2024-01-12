@@ -61,7 +61,7 @@
   }}
 >
   <div class="place-self-center flex flex-col p-2 gap-1 shrink-0">
-    {#if post.image != "self"}
+    {#if post.image != "self" && post.image}
       <figure class="">
         <img src={post.image} alt="img" />
       </figure>

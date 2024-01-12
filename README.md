@@ -43,6 +43,7 @@ npm install && npm run dev
 ## Sites that don't work with readability
 
 - bloomberg
+- reuters
 
 ## License
 

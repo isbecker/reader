@@ -69,7 +69,15 @@
         <img src={post.image} alt="img" />
       </figure>
     {/if}
-    <button class="btn btn-accent btn-outline btn-sm">
+    <button
+      class="btn btn-accent btn-outline btn-sm"
+      on:click={() => {
+        const newWindow = window.open(`https://old.reddit.com/${post.permalink}`, "_blank");
+        if (newWindow) {
+          newWindow.focus();
+        }
+      }}
+    >
       {post.num_comments} comments
     </button>
   </div>

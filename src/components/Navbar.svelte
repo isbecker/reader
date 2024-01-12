@@ -8,7 +8,7 @@
     let themePickerHidden = true;
 </script>
 
-<div class="navbar bg-base-100 flex-row">
+<div class="navbar bg-primary text-primary-content flex-row">
     <div class="">
         <label
             for="side-drawer"

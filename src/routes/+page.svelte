@@ -265,7 +265,7 @@
         <div class="drawer-content flex flex-col">
             <!-- Navbar -->
             <div class="sticky top-0 z-50">
-            <Navbar {theme} {themes} setTheme={changeTheme} />
+                <Navbar {theme} {themes} setTheme={changeTheme} />
             </div>
 
             <!-- Page content here -->

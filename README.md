@@ -3,7 +3,7 @@
 A news reader
 
 - reddit
-- hackernews [not started]
+- hackernews
 - [news api](https://newsapi.org/) [not started]
   - not free probably
   - [pygooglenews](https://github.com/kotartemiy/pygooglenews)
@@ -26,19 +26,18 @@ npm install && npm run dev
   - [ ] remember scroll position; make issue
   - [ ] remember subreddit; make issue
   - [ ] remember list of subreddits; make issue
-  - [ ] mark as read on scroll
+  - [x] mark as read on scroll
   - [ ] mark as read on click
   - [ ] load more on scroll to bottom
     - [ ] detect scroll to bottom
 - [ ] hackernews
-  - [ ] view top
+  - [x] view top
     - [ ] new
     - [ ] jobs
   - [ ] view comments
     - [ ] expand comments
-  - [ ] view article
+  - [x] view article
     - [ ] use mozilla readability
-    - [ ] view images
 
 ## Sites that don't work with readability
 

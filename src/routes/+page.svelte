@@ -29,26 +29,6 @@
     let subreddits = ["technology", "sveltejs"]; // Example subreddits
     let subreddit = "technology";
 
-    // async function loadCommentsForPost(post: RedditPost) {
-    //     try {
-    //         // console.log(`Fetching comments for post: ${post.id}`);
-    //         const response = await fetch(
-    //             `/api/reddit/${post.subreddit}/comments/${post.id}`,
-    //         );
-    //         if (response.ok) {
-    //             let json = await response.json();
-    //             if (typeof json === "string") {
-    //                 // console.log(`Data: ${res}`);
-    //                 json = JSON.parse(json);
-    //             }
-
-    //             // Assuming the comments are in the second "Listing" object
-    //             post.comments = parseComments(json[1].data.children);
-    //         }
-    //     } catch (error) {
-    //         console.error("Error fetching comments for post:", post.id, error);
-    //     }
-    // }
 </script>
 
 <main class="bg-base-100 min-h-screen min-w-screen">

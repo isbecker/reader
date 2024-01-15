@@ -87,7 +87,8 @@
     {/if}
     <button
       class="btn btn-accent btn-outline btn-sm"
-      on:click={() => {
+      on:click={(event) => {
+        event.stopPropagation();
         const newWindow = window.open(
           `https://old.reddit.com/${post.permalink}`,
           "_blank",

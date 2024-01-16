@@ -34,8 +34,8 @@ npm install && npm run dev
   - [x] view top
     - [ ] new
     - [ ] jobs
-  - [ ] view comments
-    - [ ] expand comments
+  - [x] view comments
+    - [x] expand comments
   - [x] view article
     - [ ] use mozilla readability
 

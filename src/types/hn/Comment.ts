@@ -7,10 +7,12 @@ export default interface Comment {
   text: string,
   time: number,
   type: string // "comment"
-  children?: Comment[]
+  children?: Comment[],
+  root?: number
+  isRoot: boolean
 }
 
-export function parseComment(comment: any): Comment {
+export function parseComment(comment: any, story?: number): Comment {
   return {
     id: comment.id,
     author: comment.by,
@@ -19,6 +21,8 @@ export function parseComment(comment: any): Comment {
     time: comment.time,
     type: comment.type,
     kids: comment.kids,
+    root: story,
+    isRoot: !!story // Update isRoot to ensure it is of type boolean
   }
 }
 
@@ -30,10 +34,10 @@ export async function loadChildren(comment: Comment): Promise<Comment[] | undefi
     const response = await fetch(`/api/hn/post/${id}`);
     const commentRes = await response.json();
 
-    const comment = parseComment(commentRes);
-    comment.children = await loadChildren(comment);
+    const child = parseComment(commentRes, comment.root ?? comment.id);
+    child.children = await loadChildren(child);
 
-    return comment
+    return child
   }));
 
   return comments;

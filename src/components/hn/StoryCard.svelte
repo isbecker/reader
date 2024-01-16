@@ -13,7 +13,11 @@
         <p>{story.title}</p>
         <div class="join gap-1">
           <p class="text-xs">{story.score} points</p>
-          <p class="text-xs">by {story.author}</p>
+          <div class="text-xs">
+            by <a class="hover:underline" href="https://news.ycombinator.com/user?id={story.author}"
+              >{story.author}</a
+            >
+          </div>
           <p class="text-xs">
             at {new Date(story.time * 1000).toLocaleString()}
           </p>

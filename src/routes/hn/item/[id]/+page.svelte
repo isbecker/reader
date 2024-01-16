@@ -33,7 +33,9 @@
       </div>
     </div>
   </div>
-  {#await comments then loaded}
+  {#await comments}
+    <span class="loading loading-dots loading-lg"></span>
+  {:then loaded}
     <ul>
       {#if loaded}
         {#each loaded as comment}

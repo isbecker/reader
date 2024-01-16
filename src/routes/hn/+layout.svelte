@@ -2,7 +2,7 @@
   import "../../app.css";
 </script>
 
-<div data-theme="dark" class="navbar">
+<div data-theme="dark" class="navbar sticky top-0 z-50">
   <div class="tooltip tooltip-bottom" data-tip="Top">
     <a class="btn btn-ghost text-xl" href="/hn">Home</a>
   </div>

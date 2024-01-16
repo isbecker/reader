@@ -25,20 +25,3 @@ export function parseComment(comment: any, story?: number): Comment {
     isRoot: !!story // Update isRoot to ensure it is of type boolean
   }
 }
-
-export async function loadChildren(comment: Comment): Promise<Comment[] | undefined> {
-
-  if (!comment.kids) return undefined;
-
-  const comments = await Promise.all(comment.kids.map(async (id) => {
-    const response = await fetch(`/api/hn/post/${id}`);
-    const commentRes = await response.json();
-
-    const child = parseComment(commentRes, comment.root ?? comment.id);
-    child.children = await loadChildren(child);
-
-    return child
-  }));
-
-  return comments;
-}

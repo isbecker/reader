@@ -1,5 +1,4 @@
 import type Comment from "./Comment";
-import { loadChildren, parseComment } from "./Comment";
 
 export default interface Story {
   id: number,
@@ -33,19 +32,4 @@ export function parseStory(story: any): Story {
   }
 
   return s;
-}
-
-export async function loadComments(story: Story): Promise<Comment[] | undefined> {
-
-  if (!story.kids) return undefined;
-
-  const comments = await Promise.all(story.kids.map(async (id) => {
-    const response = await fetch(`/api/hn/post/${id}`);
-    const commentRes = await response.json();
-    const comment = parseComment(commentRes);
-    comment.children = await loadChildren(comment);
-    return comment
-  }));
-
-  return comments;
 }

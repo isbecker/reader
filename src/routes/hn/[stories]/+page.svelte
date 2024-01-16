@@ -6,7 +6,7 @@
   let hn = data.storyList;
 </script>
 
-<main data-theme="dark" class="h-full w-full">
+<div class="h-full w-full">
   <ul>
     {#await hn}
       <span class="loading loading-dots loading-lg"></span>
@@ -18,4 +18,4 @@
       {/each}
     {/await}
   </ul>
-</main>
+</div>

@@ -1,12 +1,10 @@
 <script lang="ts">
   import CommentCard from "../../../../components/hn/CommentCard.svelte";
-  import { loadComments } from "../../../../types/hn/Story";
   export let data;
   const story = data.story;
-  let comments = loadComments(story);
 </script>
 
-<main data-theme="dark" class="min-h-screen min-w-full h-dvh">
+<div class="min-h-screen min-w-full h-dvh">
   <div class="card">
     <div class="card-body">
       <a class="card-title flex-col place-items-start" href={story.url}>
@@ -33,7 +31,7 @@
       </div>
     </div>
   </div>
-  {#await comments}
+  {#await story.comments}
     <span class="loading loading-dots loading-lg"></span>
   {:then loaded}
     <ul>
@@ -46,4 +44,4 @@
       {/if}
     </ul>
   {/await}
-</main>
+</div>

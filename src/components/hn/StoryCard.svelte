@@ -14,7 +14,9 @@
         <div class="join gap-1">
           <p class="text-xs">{story.score} points</p>
           <div class="text-xs">
-            by <a class="hover:underline" href="https://news.ycombinator.com/user?id={story.author}"
+            by <a
+              class="hover:underline"
+              href="https://news.ycombinator.com/user?id={story.author}"
               >{story.author}</a
             >
           </div>
@@ -24,7 +26,11 @@
         </div>
       </a>
       <div class="card-actions justify-end">
-        <a class="btn btn-primary" href="/hn/item/{story.id}">
+        <a
+          class="btn btn-primary"
+          href="/hn/item/{story.id}"
+          data-sveltekit-preload-data
+        >
           {story.descendants ?? 0} Comments
         </a>
       </div>

@@ -4,7 +4,7 @@
   const story = data.story;
 </script>
 
-<div class="min-h-screen min-w-full h-dvh">
+<div class="max-w-full ">
   <div class="card">
     <div class="card-body">
       <a class="card-title flex-col place-items-start" href={story.url}>
@@ -34,10 +34,10 @@
   {#await story.comments}
     <span class="loading loading-dots loading-lg"></span>
   {:then loaded}
-    <ul>
+    <ul class="">
       {#if loaded}
         {#each loaded as comment}
-          <li class="p-1">
+          <li class="">
             <CommentCard {comment} />
           </li>
         {/each}

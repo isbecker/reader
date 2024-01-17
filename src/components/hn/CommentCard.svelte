@@ -7,7 +7,7 @@
 
 {#if comment && comment.author}
   <div
-    class="collapse collapse-arrow border border-primary"
+    class="collapse collapse-arrow "
     id="comment-{comment.id}"
   >
     <input type="checkbox" {checked} />
@@ -23,27 +23,31 @@
           {new Date(comment.time * 1000).toLocaleString()}
         </p>
         {#if comment.isRoot}
-          <div class="divider divider-horizontal"></div>
-          <a
-            class="text-sm text-secondary z-10 hover:underline"
-            href="#comment-{comment.parent}">parent</a
-          >
-          <div class="divider divider-horizontal"></div>
-          <a
-            class="text-sm text-secondary z-10 hover:underline"
-            href="#comment-{comment.root}">root</a
-          >
+          <div class="gap-1 z-10">
+            <a
+              class="text-sm text-secondary hover:underline"
+              href="#comment-{comment.parent}">parent</a
+            >
+
+            <a
+              class="text-sm text-secondary hover:underline"
+              href="#comment-{comment.root}">root</a
+            >
+          </div>
         {/if}
       </div>
     </div>
 
     <div class="collapse-content">
-      <p>
-        {@html comment.text.replace(/<a/g, '<a class="hover:underline text-secondary"')}
-      </p>
+      <article class="text-wrap  prose ">
+        {@html comment.text.replace(
+          /<a/g,
+          '<a class="hover:underline text-secondary"',
+        )}
+      </article>
       {#if comment.children}
         {#each comment.children as child}
-          <svelte:self comment={child} />
+            <svelte:self comment={child} />
         {/each}
       {/if}
     </div>

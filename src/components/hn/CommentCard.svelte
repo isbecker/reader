@@ -7,7 +7,7 @@
 
   // Function to calculate the width based on nesting level
   function calculateWidth(level: number) {
-    const baseSubtractAmount = 20; // Change this value as needed
+    const baseSubtractAmount = 16; // Change this value as needed
     return `calc(100vw - ${level * baseSubtractAmount}px)`;
   }
 
@@ -17,8 +17,9 @@
 
 {#if comment && comment.author}
   <div
-    class="collapse collapse-arrow divide-x divide-accent "
+    class="collapse collapse-arrow divide-x divide-accent"
     id="comment-{comment.id}"
+    style={`max-width: ${widthStyle};`}
   >
     <input class="" type="checkbox" {checked} />
     <div class="collapse-title text-xs font-medium text-secondary">
@@ -48,8 +49,8 @@
       </div>
     </div>
 
-    <div class="collapse-content" style={`width: ${widthStyle};`}>
-      <article class="text-wrap prose sm:prose-sm md:prose-lg lg:prose-xl">
+    <div class="collapse-content" style={`max-width: ${widthStyle};`}>
+      <article class="text-wrap prose">
         {@html comment.text}
       </article>
       {#if comment.children}

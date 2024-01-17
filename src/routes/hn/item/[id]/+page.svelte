@@ -9,7 +9,9 @@
     <div class="card-body">
       <a class="card-title flex-col place-items-start" href={story.url}>
         <div class="join gap-1">
-          <div class="text-5xl">{story.title}</div>
+          <div class="text-base md:text-lg lg:text-3xl xl:text-5xl">
+            {story.title}
+          </div>
           <div class="text-sm self-center">({story.domain})</div>
         </div>
         <div class="join gap-1">
@@ -31,17 +33,21 @@
       </div>
     </div>
   </div>
-  {#await story.comments}
-    <span class="loading loading-dots loading-lg"></span>
-  {:then loaded}
-    <ul class="divide-y divide-neutral">
-      {#if loaded}
-        {#each loaded as comment}
-          <li class="">
-            <CommentCard {comment} />
-          </li>
-        {/each}
-      {/if}
-    </ul>
-  {/await}
+  <div class="">
+    {#await story.comments}
+      <span class="loading loading-dots loading-lg"></span>
+    {:then loaded}
+      <ul class="divide-y divide-neutral mx-auto max-w-max ">
+        {#if loaded}
+          {#each loaded as comment}
+            <li class="">
+              <div class="">
+                <CommentCard {comment} />
+              </div>
+            </li>
+          {/each}
+        {/if}
+      </ul>
+    {/await}
+  </div>
 </div>

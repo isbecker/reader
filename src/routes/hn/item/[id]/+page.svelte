@@ -34,7 +34,7 @@
   {#await story.comments}
     <span class="loading loading-dots loading-lg"></span>
   {:then loaded}
-    <ul class="">
+    <ul class="divide-y divide-neutral">
       {#if loaded}
         {#each loaded as comment}
           <li class="">

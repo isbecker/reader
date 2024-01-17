@@ -17,7 +17,7 @@
 
 {#if comment && comment.author}
   <div
-    class="collapse collapse-arrow divide-x divide-primary"
+    class="collapse collapse-arrow divide-x divide-accent "
     id="comment-{comment.id}"
   >
     <input class="" type="checkbox" {checked} />

@@ -4,7 +4,7 @@
   const story = data.story;
 </script>
 
-<div class="max-w-full ">
+<div class="">
   <div class="card">
     <div class="card-body">
       <a class="card-title flex-col place-items-start" href={story.url}>

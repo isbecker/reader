@@ -19,7 +19,7 @@ export async function load({ fetch, params }) {
 
 async function loadComments(story: Story, fetch: {
   (input: URL | RequestInfo, init?: RequestInit | undefined): Promise<Response>;
-  (input: string | URL | Request, init?: RequestInit | undefined): Promise<any>;
+  (input: string | URL | Request, init?: RequestInit | undefined): Promise<Response>;
 }): Promise<Comment[] | undefined> {
 
   if (!story.kids) return undefined;
@@ -39,7 +39,7 @@ async function loadComments(story: Story, fetch: {
 async function loadChildren(comment: Comment,
   fetch: {
     (input: URL | RequestInfo, init?: RequestInit | undefined): Promise<Response>;
-    (input: string | URL | Request, init?: RequestInit | undefined): Promise<any>;
+    (input: string | URL | Request, init?: RequestInit | undefined): Promise<Response>;
   }): Promise<Comment[] | undefined> {
   if (!comment.kids) return undefined;
 

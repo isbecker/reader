@@ -1,7 +1,7 @@
 <script lang="ts">
     import Navbar from "../components/Navbar.svelte";
     import Sidebar from "../components/Sidebar.svelte";
-    import Subreddit from "../components/Subreddit.svelte";
+    import Subreddit from "../components/SubredditView.svelte";
 
     let theme = "dark";
     const themes = [

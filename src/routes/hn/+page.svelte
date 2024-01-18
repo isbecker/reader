@@ -6,8 +6,8 @@
   let hn = data.stories;
 </script>
 
-<div class="h-full w-full">
-  <ul>
+<div class="">
+  <ul class="">
     {#await hn}
       <span class="loading loading-dots loading-lg"></span>
     {:then stories}

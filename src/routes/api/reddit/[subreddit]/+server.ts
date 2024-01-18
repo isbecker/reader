@@ -5,7 +5,7 @@ export const GET: RequestHandler = async ({ params }) => {
     const { subreddit } = params;
 
     try {
-        const response = await fetch(`https://www.reddit.com/r/${subreddit}/hot.json`);
+        const response = await fetch(`https://corsproxy.io/?${encodeURIComponent(`https://www.reddit.com/r/${subreddit}/hot.json`)}`);
         const data = await response.json();
 
 

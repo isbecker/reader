@@ -1,5 +1,6 @@
 import type Subreddit from "../../../types/reddit/Subreddit";
 import { parseSubreddit } from "../../../types/reddit/Subreddit";
+import moment from "moment";
 
 export async function load({ fetch, params }) {
 
@@ -19,7 +20,7 @@ async function fetchSubreddit(subreddit: string,
 
     while (retryCount < maxRetries) {
         try {
-            const response = await fetch(`https://corsproxy.io/?${encodeURIComponent(`https://www.reddit.com/r/${subreddit}/hot.json`)}`);
+            const response = await fetch(`https://corsproxy.io/?${encodeURIComponent(`https://www.reddit.com/r/${subreddit}/hot.json?t=${moment().unix()}`)}`);
             // const response = await fetch(`/api/reddit/${subreddit}`);
             if (response.ok) {
                 return await response.json();

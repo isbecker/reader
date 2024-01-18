@@ -23,25 +23,28 @@
     style={`max-width: ${widthStyle};`}
   >
     <input class="" type="checkbox" {checked} />
-    <article class="collapse-title text-xs font-medium text-secondary">
+    <article class="collapse-title text-xs font-medium">
       <div class="join gap-1">
         <a
           href="https://news.ycombinator.com/user?id={comment.author}"
-          class="hover:underline text-sm z-10"
+          class="text-sm z-10 text-secondary link btn btn-ghost btn-xs"
           >{comment.author}
         </a>
-        <p class="text-sm text-base-content">
+        <a
+          href="#comment-{comment.id}"
+          class="text-sm z-10 link btn btn-ghost btn-xs"
+        >
           {moment.unix(comment.time).fromNow()}
-        </p>
-        {#if comment.isRoot}
-          <div class="gap-1 z-10">
+        </a>
+        {#if !comment.isRoot}
+          <div class="join z-10">
             <a
-              class="text-sm text-secondary hover:underline"
+              class="text-sm text-secondary link btn btn-ghost btn-xs"
               href="#comment-{comment.parent}">parent</a
             >
 
             <a
-              class="text-sm text-secondary hover:underline"
+              class="text-sm text-secondary link btn btn-ghost btn-xs"
               href="#comment-{comment.root}">root</a
             >
           </div>

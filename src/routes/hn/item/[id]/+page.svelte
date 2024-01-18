@@ -8,14 +8,16 @@
 <div class="">
   <div class="card">
     <div class="card-body">
-      <a class="card-title flex-col place-items-start" href={story.url}>
-        <div class="join gap-1">
+      <a class="card-title flex-col place-items-start mx-auto" href={story.url}>
+        <article class="join gap-1">
           <div class="text-base md:text-lg lg:text-3xl xl:text-5xl">
             {story.title}
           </div>
-          <div class="text-sm self-center">({story.domain})</div>
-        </div>
-        <div class="join gap-1">
+          {#if story.domain}
+            <div class="text-sm self-center">({story.domain})</div>
+          {/if}
+        </article>
+        <div class="join gap-1  ">
           <div class="text-sm">{story.score} points</div>
           <a
             class="text-sm hover:underline"
@@ -27,9 +29,9 @@
           </p>
         </div>
       </a>
-      <div class="">
+      <div class="mx-auto max-w-max">
         {#if story.text}
-          <div>{@html story.text}</div>
+          <article class="prose">{@html story.text}</article>
         {/if}
       </div>
     </div>

@@ -1,4 +1,5 @@
 <script lang="ts">
+  import moment from "moment";
   import CommentCard from "../../../../components/hn/CommentCard.svelte";
   export let data;
   const story = data.story;
@@ -22,7 +23,7 @@
             >{story.author}</a
           >
           <p class="text-sm">
-            at {new Date(story.time * 1000).toLocaleString()}
+            {moment.unix(story.time).fromNow()}
           </p>
         </div>
       </a>

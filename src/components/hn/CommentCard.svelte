@@ -1,4 +1,5 @@
 <script lang="ts">
+  import moment from "moment";
   import type Comment from "../../types/hn/Comment";
 
   export let comment: Comment;
@@ -30,8 +31,7 @@
           >{comment.author}
         </a>
         <p class="text-sm text-base-content">
-          at
-          {new Date(comment.time * 1000).toLocaleString()}
+          {moment.unix(comment.time).fromNow()}
         </p>
         {#if comment.isRoot}
           <div class="gap-1 z-10">

@@ -1,28 +1,19 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte";
-    import { writable } from "svelte/store";
+    import { subscriptions } from "../stores/reddit/subscribed";
 
     const dispatch = createEventDispatcher();
     let newSub: string = "";
 
-    export const subredditStore = writable([
-        { name: "programming", url: "/r/programming" },
-        { name: "technology", url: "/r/technology" },
-        { name: "science", url: "/r/science" },
-        { name: "news", url: "/r/news" },
-        { name: "gaming", url: "/r/gaming" },
-    ]);
-
     function addSubreddit() {
         console.log(newSub);
-        const newSubreddit = {
+        const newSubreddit: Subscription = {
             name: newSub,
             url: `/r/${newSub}`,
         };
+        $subscriptions = [...$subscriptions, newSubreddit];
 
         newSub = "";
-
-        subredditStore.update((subreddits) => [...subreddits, newSubreddit]);
     }
 </script>
 
@@ -45,7 +36,7 @@
             <details open>
                 <summary><a href="/r/all">Reddit</a></summary>
                 <ul>
-                    {#each $subredditStore as subreddit}
+                    {#each $subscriptions as subreddit}
                         <li><a href={subreddit.url}>r/{subreddit.name}</a></li>
                     {/each}
                     <li>

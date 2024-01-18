@@ -22,6 +22,6 @@ export function parseComment(comment: any, story?: number): Comment {
     type: comment.type,
     kids: comment.kids,
     root: story,
-    isRoot: !!story // Update isRoot to ensure it is of type boolean
+    isRoot: story? false : true // Update isRoot to ensure it is of type boolean
   }
 }

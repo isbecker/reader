@@ -17,7 +17,7 @@
             <div class="text-sm self-center">({story.domain})</div>
           {/if}
         </article>
-        <div class="join gap-1  ">
+        <div class="join gap-1">
           <div class="text-sm">{story.score} points</div>
           <a
             class="text-sm hover:underline"
@@ -29,9 +29,9 @@
           </p>
         </div>
       </a>
-      <div class="mx-auto max-w-max">
+      <div class="mx-auto max-w-prose w-full">
         {#if story.text}
-          <article class="prose">{@html story.text}</article>
+          <article class="text-wrap prose">{@html story.text}</article>
         {/if}
       </div>
     </div>

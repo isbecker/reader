@@ -9,13 +9,14 @@
   let is_read: boolean = false;
   let hide_read: boolean = false;
   let has_intersected: boolean = false;
-  let card: HTMLDivElement;
+  let card: HTMLAnchorElement;
 
-  let readableContent = fetchReadableContent();
+  let readableContent: Promise<Partial<Readable>>;
 
   const observer: Writable<IntersectionObserver | null> = writable(null);
   onMount(() => {
     is_read = post.is_read;
+    readableContent = fetchReadableContent();
     observer.set(
       new IntersectionObserver(([entry]) => {
         if (
@@ -66,18 +67,12 @@
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<div
-  bind:this={card}
+<a
   class="card card-bordered flex flex-row"
   class:opacity-20={is_read}
   class:hidden={is_read && hide_read}
-  on:click={() => {
-    const newWindow = window.open(post.url, "_blank");
-    if (newWindow) {
-      newWindow.focus();
-    }
-    is_read = true;
-  }}
+  href={post.url}
+  bind:this={card}
 >
   <div class="place-self-center flex flex-col p-2 gap-1 shrink-0">
     {#if post.image != "self" && post.image}
@@ -85,21 +80,12 @@
         <img src={post.image} alt="img" />
       </figure>
     {/if}
-    <button
+    <a
+      href="https://old.reddit.com/{post.permalink}"
       class="btn btn-accent btn-outline btn-sm"
-      on:click={(event) => {
-        event.stopPropagation();
-        const newWindow = window.open(
-          `https://old.reddit.com/${post.permalink}`,
-          "_blank",
-        );
-        if (newWindow) {
-          newWindow.focus();
-        }
-      }}
     >
       {post.num_comments} comments
-    </button>
+    </a>
   </div>
   <div class="card-body flex flex-col">
     <div class="flex flex-col">
@@ -117,7 +103,7 @@
         <div class="text-secondary">
           {post.url}
         </div>
-      {:else}
+        <!-- {:else}
         {#await readableContent}
           <p>loading...</p>
         {:then readable}
@@ -139,8 +125,8 @@
           {/if}
         {:catch error}
           <div class="text-red-500">{error.message}</div>
-        {/await}
+        {/await} -->
       {/if}
     </div>
   </div>
-</div>
+</a>

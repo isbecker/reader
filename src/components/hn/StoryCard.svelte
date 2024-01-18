@@ -11,9 +11,23 @@
   <div class="card card-bordered hover:bg-base-200">
     <div class="card-body">
       <a class="card-title flex-col place-items-start" href={story.url}>
+        <article>
+          <p>{story.title}</p>
+          <div class="join gap-1">
+            <p class="text-xs">{story.score} points</p>
+            <div class="join gap-1">
+              <p class="text-xs">by</p>
+              <a
+                class="text-xs hover:underline"
+                href="https://news.ycombinator.com/user?id={story.author}"
+                >{story.author}</a
+              >
+            </div>
             <p class="text-xs">
               {moment.unix(story.time).fromNow()}
             </p>
+          </div>
+        </article>
       </a>
       <div class="card-actions justify-end">
         <a

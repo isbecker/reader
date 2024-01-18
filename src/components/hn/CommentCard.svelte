@@ -23,7 +23,7 @@
     style={`max-width: ${widthStyle};`}
   >
     <input class="" type="checkbox" {checked} />
-    <div class="collapse-title text-xs font-medium text-secondary">
+    <article class="collapse-title text-xs font-medium text-secondary">
       <div class="join gap-1">
         <a
           href="https://news.ycombinator.com/user?id={comment.author}"
@@ -47,7 +47,7 @@
           </div>
         {/if}
       </div>
-    </div>
+    </article>
 
     <div class="collapse-content" style={`max-width: ${widthStyle};`}>
       <article class="text-wrap prose">

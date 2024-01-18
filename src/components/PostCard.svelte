@@ -65,8 +65,6 @@
   }
 </script>
 
-<!-- svelte-ignore a11y-no-static-element-interactions -->
-<!-- svelte-ignore a11y-click-events-have-key-events -->
 <a
   class="card card-bordered flex flex-row"
   class:opacity-20={is_read}

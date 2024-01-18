@@ -3,7 +3,7 @@
 
     export let theme: string = "dark";
     export let themes: string[];
-    export let currentSubreddit: string;
+    export let title: string;
 </script>
 
 <div class="navbar bg-primary text-primary-content flex-row">
@@ -28,7 +28,7 @@
         </label>
     </div>
     <div class="grow">
-        <p class="text-xl underline text-accent">r/{currentSubreddit}</p>
+        <p class="text-xl underline text-accent">{title}</p>
     </div>
     <div class="">
         <ThemePicker {theme} {themes} />

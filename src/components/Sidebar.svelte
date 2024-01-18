@@ -1,78 +1,71 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte";
+    import { writable } from "svelte/store";
 
     const dispatch = createEventDispatcher();
-    let open = false;
-    export let subreddits: string[];
+    let newSub: string = "";
 
-    export let currentSubreddit: string;
-
-    function changeSubreddit(sub: string) {
-        currentSubreddit = sub;
-
-        dispatch("notify", {
-            subreddit: sub,
-        });
-    }
+    export const subredditStore = writable([
+        { name: "programming", url: "/r/programming" },
+        { name: "technology", url: "/r/technology" },
+        { name: "science", url: "/r/science" },
+        { name: "news", url: "/r/news" },
+        { name: "gaming", url: "/r/gaming" },
+    ]);
 
     function addSubreddit() {
-        const newSub = document.getElementById(
-            "new-subreddit",
-        ) as HTMLInputElement;
-        if (newSub) {
-            subreddits = [...subreddits, newSub.value];
-        }
-        newSub.value = "";
+        console.log(newSub);
+        const newSubreddit = {
+            name: newSub,
+            url: `/r/${newSub}`,
+        };
+
+        newSub = "";
+
+        subredditStore.update((subreddits) => [...subreddits, newSubreddit]);
     }
 </script>
 
-<div class="flex flex-col h-screen bg-base-100">
-    <div class="flex-grow">
-        <ul class="menu p-4 w-80 min-h-full text-base-content">
-            <!-- Sidebar content here -->
-            {#each subreddits as sub}
-                <div
-                    class="flex group bg-base"
-                    class:bg-primary={sub === currentSubreddit}
-                >
-                    <button
-                        class="btn btn-ghost btn-sm rounded-btn grow text-accent"
-                        on:click={() => {
-                            changeSubreddit(sub);
-                        }}>{sub}</button
-                    >
-                    <!-- only visible on hover of the div -->
-                    <div
-                        data-tip="Remove"
-                        class="tooltip tooltip-right tooltip-secondary hidden group-hover:inline"
-                    >
-                        <button
-                            class="btn btn-secondary btn-sm"
-                            on:click={() => {
-                                subreddits = subreddits.filter(
-                                    (s) => s !== sub,
-                                );
-                            }}>🗑️</button
-                        >
-                    </div>
-                </div>
-            {/each}
-        </ul>
-    </div>
-    <div class="p-4 place-self-end">
-        <input
-            id="new-subreddit"
-            placeholder="Add sub"
-            class="input input-bordered input-accent"
-            on:keypress={(event) => {
-                if (event.key === "Enter") {
-                    addSubreddit();
-                }
-            }}
-        />
-        <button
-            class="btn btn-primary btn-sm rounded-btn"
-            on:click={addSubreddit}>Add</button
-        >
-    </div>
+<div class="flex flex-col h-screen bg-base-100 w-fit">
+    <ul class="menu bg-base-200 rounded-box">
+        <li>
+            <details open>
+                <summary><a href="/hn/top">Hacker News</a></summary>
+                <ul>
+                    <li><a href="/hn/top">Top</a></li>
+                    <li><a href="/hn/best">Best</a></li>
+                    <li><a href="/hn/new">New</a></li>
+                    <li><a href="/hn/ask">Ask</a></li>
+                    <li><a href="/hn/show">Show</a></li>
+                    <li><a href="/hn/jobs">Jobs</a></li>
+                </ul>
+            </details>
+        </li>
+        <li>
+            <details open>
+                <summary><a href="/r/all">Reddit</a></summary>
+                <ul>
+                    {#each $subredditStore as subreddit}
+                        <li><a href={subreddit.url}>r/{subreddit.name}</a></li>
+                    {/each}
+                    <li>
+                        <div>
+                            <input
+                                id="new-subreddit"
+                                type="text"
+                                placeholder="Add subreddit"
+                                bind:value={newSub}
+                            />
+                            <button
+                                class="btn btn-primary"
+                                on:click={addSubreddit}
+                            >
+                                Add
+                            </button>
+                        </div>
+                    </li>
+                </ul>
+            </details>
+        </li>
+    </ul>
 </div>

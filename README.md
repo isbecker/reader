@@ -21,7 +21,7 @@ npm install && npm run dev
   - [x] view comments
     - [x] expand comments
   - [x] view article
-    - [x] use mozilla readability
+    - [x] use mozilla readability - currently broken
     - [x] view images
   - [ ] remember scroll position; make issue
   - [ ] remember subreddit; make issue
@@ -30,14 +30,17 @@ npm install && npm run dev
   - [ ] mark as read on click
   - [ ] load more on scroll to bottom
     - [ ] detect scroll to bottom
-- [ ] hackernews
+- [x] hackernews
   - [x] view top
-    - [ ] new
-    - [ ] jobs
+    - [x] new
+    - [x] jobs
+    - [x] ask
+    - [x] show
+    - [x] best
   - [x] view comments
     - [x] expand comments
   - [x] view article
-    - [ ] use mozilla readability
+    - [x] use mozilla readability
 
 ## Sites that don't work with readability
 

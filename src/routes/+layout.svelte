@@ -3,6 +3,10 @@
   import Navbar from "../components/Navbar.svelte";
   import Sidebar from "../components/Sidebar.svelte";
   const themes = [
+    "latte",
+    "frappe",
+    "macchiato",
+    "mocha",
     "light",
     "dark",
     "synthwave",
@@ -25,7 +29,6 @@
     "sunset",
   ];
   let theme = "dark";
-
   let title = "";
 </script>
 
@@ -35,10 +38,12 @@
     <div class="drawer-content flex flex-col">
       <!-- Navbar -->
       <div class="sticky top-0 z-50 bg-secondary">
-        <Navbar {theme} {themes} {title} />
+        <Navbar {themes} {title} />
       </div>
 
-      <slot />
+      <div class="">
+        <slot />
+      </div>
     </div>
 
     <div class="drawer-side z-50">

@@ -30,6 +30,13 @@
         </article>
       </a>
       <div class="card-actions justify-end">
+        <div class="tooltip place-self-start" data-tip="Reader view">
+          <a
+            data-sveltekit-preload-data
+            href="/hn/readable/{story.id}"
+            class="btn btn-ghost max-w-fit">📜</a
+          >
+        </div>
         <a
           class="btn btn-primary"
           href="/hn/item/{story.id}"

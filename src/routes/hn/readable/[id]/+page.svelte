@@ -24,7 +24,9 @@
       <p class="text-xs">({story.domain})</p>
     </article>
   </div>
-  <article class="prose">
-    {@html readable.content}
-  </article>
+  <div class="max-w-full p-2">
+    <article class="prose text-wrap">
+      {@html readable.content}
+    </article>
+  </div>
 </div>

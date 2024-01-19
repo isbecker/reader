@@ -17,6 +17,13 @@
             <div class="text-sm self-center">({story.domain})</div>
           {/if}
         </article>
+        <div class="tooltip place-self-start" data-tip="Reader view">
+          <a
+            data-sveltekit-preload-data
+            href="/hn/readable/{story.id}"
+            class="link link-primary btn btn-ghost max-w-fit">📜</a
+          >
+        </div>
         <div class="join gap-1">
           <div class="text-sm">{story.score} points</div>
           <a

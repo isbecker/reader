@@ -1,5 +1,5 @@
 <script lang="ts">
-  export let theme: string = "dark";
+  import { theme } from "../stores/app/theme";
   export let themes: string[];
 </script>
 
@@ -27,7 +27,8 @@
           class="theme-controller btn btn-sm btn-block btn-ghost justify-start text-accent"
           aria-label={t}
           value={t}
-          checked={t === theme}
+          checked={t === $theme}
+          on:change={() => ($theme = t)}
         />
       </li>
     {/each}

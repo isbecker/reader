@@ -1,7 +1,5 @@
 <script lang="ts">
     import ThemePicker from "./ThemePicker.svelte";
-
-    export let theme: string = "dark";
     export let themes: string[];
     export let title: string;
 </script>
@@ -31,6 +29,6 @@
         <p class="text-xl underline text-accent">{title}</p>
     </div>
     <div class="">
-        <ThemePicker {theme} {themes} />
+        <ThemePicker {themes} />
     </div>
 </div>

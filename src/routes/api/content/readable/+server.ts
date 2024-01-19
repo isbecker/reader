@@ -1,7 +1,6 @@
 // src/routes/api/content/+server.ts
 import { Readability } from '@mozilla/readability';
 import type { RequestHandler } from '@sveltejs/kit';
-import fetch from 'cross-fetch';
 import { JSDOM } from 'jsdom';
 
 export const GET: RequestHandler = async ({ request }) => {
@@ -16,18 +15,15 @@ export const GET: RequestHandler = async ({ request }) => {
     }
 
     try {
-        const response = await fetch(url);
-        if (!response.ok) {
-            throw new Error(`Failed to fetch content: ${response.statusText}`);
+        const article = await JSDOM.fromURL(url)
+            .then(function (dom) {
+                const reader = new Readability(dom.window.document);
+                return reader.parse();
+            });
+
+        if (!article) {
+            throw new Error(`Failed to parse content: ${url}`);
         }
-
-        const text = await response.text();
-        const dom = new JSDOM(text);
-        const reader = new Readability(dom.window.document);
-        const article = reader.parse();
-
-        // console.log(JSON.stringify(article, null, 2))
-
         return new Response(JSON.stringify({ article }), {
             status: 200,
             headers: {

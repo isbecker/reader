@@ -46,6 +46,7 @@ npm install && npm run dev
 
 - bloomberg
 - reuters
+- wsj
 
 ## License
 

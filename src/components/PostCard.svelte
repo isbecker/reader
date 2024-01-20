@@ -1,8 +1,6 @@
 <script lang="ts">
   import { onDestroy, onMount } from "svelte";
   import { writable, type Writable } from "svelte/store";
-  import type Readable from "../types/Reabable";
-  import { parseReadable } from "../types/Reabable";
   import type Post from "../types/reddit/Post";
 
   export let post: Post;
@@ -11,12 +9,12 @@
   let has_intersected: boolean = false;
   let card: HTMLAnchorElement;
 
-  let readableContent: Promise<Partial<Readable>>;
+  // let readableContent: Promise<Partial<Readable>>;
 
   const observer: Writable<IntersectionObserver | null> = writable(null);
   onMount(() => {
     is_read = post.is_read;
-    readableContent = fetchReadableContent();
+    // readableContent = fetchReadableContent();
     observer.set(
       new IntersectionObserver(([entry]) => {
         if (
@@ -42,27 +40,27 @@
     });
   });
 
-  async function fetchReadableContent(): Promise<Partial<Readable>> {
-    if (post.post_hint === "image") {
-      return {
-        error: "Image posts are not supported",
-      };
-    }
+  // async function fetchReadableContent(): Promise<Partial<Readable>> {
+  //   if (post.post_hint === "image") {
+  //     return {
+  //       error: "Image posts are not supported",
+  //     };
+  //   }
 
-    let response = await fetch(`/api/content/readable?url=${post.url}`);
-    if (response.ok) {
-      let data = await response.json();
-      const readable = parseReadable(data);
+  //   let response = await fetch(`/api/content/readable?url=${post.url}`);
+  //   if (response.ok) {
+  //     let data = await response.json();
+  //     const readable = parseReadable(data);
 
-      post.readable = readable;
-      return readable;
-    } else {
-      // TODO: Perhaps add a help doc link to a list of sites that don't work nicely
-      throw new Error(
-        "Failed to fetch readable content. Some sites are uncooperative.",
-      );
-    }
-  }
+  //     post.readable = readable;
+  //     return readable;
+  //   } else {
+  //     // TODO: Perhaps add a help doc link to a list of sites that don't work nicely
+  //     throw new Error(
+  //       "Failed to fetch readable content. Some sites are uncooperative.",
+  //     );
+  //   }
+  // }
 </script>
 
 <a
@@ -79,8 +77,9 @@
       </figure>
     {/if}
     <a
-      href="https://old.reddit.com/{post.permalink}"
+      href="{post.permalink}"
       class="btn btn-accent btn-outline btn-sm"
+      data-sveltekit-preload-data
     >
       {post.num_comments} comments
     </a>

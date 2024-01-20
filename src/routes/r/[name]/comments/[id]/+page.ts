@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { parseComment } from '../../../../../types/reddit/Comment';
 // import type Post from '../../../../../types/reddit/Post';
 // import { parsePost } from '../../../../../types/reddit/Post';
@@ -23,8 +24,8 @@ async function fetchComments(subreddit: string, id: string,
   const maxRetries = 3;
   let retryCount = 0;
 
-  // const url = `https://corsproxy.io/?${encodeURIComponent(`https://www.reddit.com/r/${subreddit}/${id}.json?t=${moment().unix()}`)}`
-  const url = `/api/reddit/${subreddit}/comments/${id}`
+  const url = `https://corsproxy.io/?${encodeURIComponent(`https://www.reddit.com/r/${subreddit}/${id}.json?t=${moment().unix()}`)}`
+  // const url = `/api/reddit/${subreddit}/comments/${id}`
   // console.log(url)
   while (retryCount < maxRetries) {
     try {

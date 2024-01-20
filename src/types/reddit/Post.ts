@@ -22,8 +22,7 @@ export default interface Post {
     domain?: string
 }
 
-export async function parsePost(post: any): Promise<Post> {
-    post = post.data;
+export async function parseSubredditPost(post: any): Promise<Post> {
     const parsedPost: Post = {
         id: post.id,
         author: post.author,
@@ -38,11 +37,42 @@ export async function parsePost(post: any): Promise<Post> {
         date: post.created_utc,
         length: 0,
         image: post.thumbnail || undefined,
-        comments: post.comments?.data?.children?.map(parseComment),
+        comments: [],
         num_comments: post.num_comments,
         is_read: false,
         post_hint: post.post_hint,
         domain: post.domain
     };
+
+    return parsedPost;
+}
+
+export async function parsePost(post: any): Promise<Post> {
+    const op = post[0].data.children[0].data;
+    const comments = post[1].data.children
+
+    const parsedPost: Post = {
+        id: op.id,
+        author: op.author,
+        subreddit: op.subreddit,
+        permalink: op.permalink,
+        slug: op.id,
+        title: op.title || "Untitled",
+        content: op.selftext_html || undefined,
+        excerpt: op.selftext || undefined,
+        readable: undefined,
+        url: op.url,
+        date: op.created_utc,
+        length: 0,
+        image: op.thumbnail || undefined,
+        comments: [],
+        num_comments: op.num_comments,
+        is_read: false,
+        post_hint: op.post_hint,
+        domain: op.domain
+    };
+
+    parsedPost.comments = comments?.map((c) => parseComment(c.data, c.kind, parsedPost))
+
     return parsedPost;
 }

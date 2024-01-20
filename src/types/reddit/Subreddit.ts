@@ -1,5 +1,5 @@
 import type Post from "./Post";
-import { parsePost } from "./Post";
+import { parseSubredditPost } from "./Post";
 
 export default interface Subreddit {
     name: string,
@@ -10,7 +10,7 @@ export async function parseSubreddit(name: string, subreddit: any): Promise<Subr
     if (!subreddit) return undefined;
     const parsedSubreddit: Subreddit = {
         name,
-        posts: await Promise.all(subreddit?.data?.children?.map(parsePost))
+        posts: await Promise.all(subreddit?.data?.children?.map((p) => parseSubredditPost(p.data)))
     };
 
     return parsedSubreddit;

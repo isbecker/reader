@@ -16,13 +16,15 @@ export const GET: RequestHandler = async ({ params }) => {
     }
 
     try {
-        const response = await fetch(`https://www.reddit.com/r/${subreddit}/comments/${id}.json?sort=top`);
+        // const url = `https://www.reddit.com/r/${subreddit}/comments/${id}.json?sort=top`;
+        const url = `https://corsproxy.io/?${encodeURIComponent(`https://www.reddit.com/r/${subreddit}/${id}.json?t=${moment().unix()}`)}`
+        const response = await fetch(url);
         if (!response.ok) {
             throw new Error(`Failed to fetch comments: ${response.statusText}`);
         }
 
 
-        const content = await response.text();
+        const content = await response.json();
         return new Response(JSON.stringify(content), {
             status: 200,
             headers: {

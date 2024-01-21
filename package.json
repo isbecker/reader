@@ -33,6 +33,7 @@
 	"type": "module",
 	"dependencies": {
 		"@mozilla/readability": "^0.4.4",
+		"@vercel/analytics": "^1.1.2",
 		"cross-fetch": "^4.0.0",
 		"firebase": "^10.7.1",
 		"he": "^1.2.0",

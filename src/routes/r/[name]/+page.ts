@@ -1,14 +1,16 @@
 import moment from "moment";
-import type Subreddit from "../../../types/reddit/Subreddit";
 import { parseSubreddit } from "../../../types/reddit/Subreddit";
 
 export async function load({ fetch, params }) {
 
     const { name } = params;
-    const subreddit: Subreddit | undefined = await fetchSubreddit(name, fetch)
-        .then(async (subreddit) => await parseSubreddit(name, subreddit));
-    return subreddit ? { subreddit } : { status: 404 };
+    return {
+        subreddit: await fetchSubreddit(name, fetch)
+            .then(async (subreddit) => await parseSubreddit(name, subreddit))
+
+    }
 }
+
 
 async function fetchSubreddit(subreddit: string,
     fetch: {

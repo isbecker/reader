@@ -36,19 +36,6 @@
         >
           {moment.unix(comment.time).fromNow()}
         </a>
-        {#if !comment.isRoot}
-          <div class="join z-10">
-            <a
-              class="text-sm text-secondary link btn btn-ghost btn-xs"
-              href="#comment-{comment.parent}">parent</a
-            >
-
-            <a
-              class="text-sm text-secondary link btn btn-ghost btn-xs"
-              href="#comment-{comment.root}">root</a
-            >
-          </div>
-        {/if}
       </div>
     </article>
 
@@ -56,6 +43,19 @@
       <article class="text-wrap prose">
         {@html comment.text}
       </article>
+      {#if !comment.isRoot}
+          <div class="join gap-1">
+            <a
+              class="btn btn-ghost btn-xs link link-secondary"
+              href="#comment-{comment.parent}">parent</a
+            >
+
+            <a
+              class="btn btn-ghost btn-xs link link-secondary"
+              href="#comment-{comment.root}">root</a
+            >
+          </div>
+        {/if}
       {#if comment.children}
         {#each comment.children as child}
           <div class="child-comment">

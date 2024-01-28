@@ -71,13 +71,13 @@
   bind:this={card}
 >
   <div class="place-self-center flex flex-col p-2 gap-1 shrink-0">
-    {#if post.image != "self" && post.image}
+    {#if post.image != "self" && post.image && post.image !== "spoiler"}
       <figure class="">
         <img src={post.image} alt="img" />
       </figure>
     {/if}
     <a
-      href="{post.permalink}"
+      href={post.permalink}
       class="btn btn-accent btn-outline btn-sm"
       data-sveltekit-preload-data
     >
@@ -100,29 +100,6 @@
         <div class="text-secondary">
           {post.url}
         </div>
-        <!-- {:else}
-        {#await readableContent}
-          <p>loading...</p>
-        {:then readable}
-          {#if readable.error}
-            <div class="text-red-500">{readable.error}</div>
-          {:else}
-            <div
-              class="collapse collapse-arrow border"
-              on:click={(event) => event.stopPropagation()}
-            >
-              <input type="checkbox" />
-              <div class="collapse-title">{readable.excerpt}</div>
-              <div class="collapse-content">
-                <p>
-                  {readable.textContent}
-                </p>
-              </div>
-            </div>
-          {/if}
-        {:catch error}
-          <div class="text-red-500">{error.message}</div>
-        {/await} -->
       {/if}
     </div>
   </div>

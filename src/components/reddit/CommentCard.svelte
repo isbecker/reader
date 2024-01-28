@@ -30,16 +30,21 @@
 
 {#if comment && comment.kind !== "more"}
   <div
-    class="collapse collapse-arrow divide-x divide-accent"
+    class="collapse collapse-plus divide-x divide-accent"
     id={comment.id}
     style={`max-width: ${widthStyle};`}
   >
     <input class="" type="checkbox" {checked} />
-    <article class="collapse-title text-xs font-medium">
-      <div class="join gap-1">
-        <a class="btn btn-xs btn-ghost link z-10" href="#{comment.id}">{comment.ups} points</a>
+    <article
+      class="collapse-title text-xs"
+      style={`max-width: ${widthStyle};`}
+    >
+      <div class="join gap-4">
+        <a class="link z-10 truncate font-bold self-center" href="#{comment.id}"
+          >{comment.ups} points</a
+        >
         <a
-          class="btn btn-ghost btn-xs link z-10 truncate"
+          class=" link z-10 truncate font-bold self-center"
           href="https://old.reddit.com/user/{comment.author}"
         >
           {comment.author}
@@ -55,7 +60,6 @@
         {@html decodedBody}
       </article>
       <div class="join gap-1">
-
         <a
           class="btn btn-ghost btn-sm link link-secondary"
           href="#{comment.parent.id}">parent</a

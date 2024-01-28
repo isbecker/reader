@@ -25,6 +25,7 @@
       decodedBody = comment.body;
     }
   }
+  $: checked = comment.ups > -10;
 </script>
 
 {#if comment && comment.kind !== "more"}
@@ -33,32 +34,39 @@
     id={comment.id}
     style={`max-width: ${widthStyle};`}
   >
-    <input class="" type="checkbox" checked />
+    <input class="" type="checkbox" {checked} />
     <article class="collapse-title text-xs font-medium">
       <div class="join gap-1">
-        <p>{comment.ups} points</p>
+        <a class="btn btn-xs btn-ghost link z-10" href="#{comment.id}">{comment.ups} points</a>
         <a
-          class="btn btn-ghost btn-sm link z-10"
+          class="btn btn-ghost btn-xs link z-10 truncate"
           href="https://old.reddit.com/user/{comment.author}"
         >
           {comment.author}
         </a>
+      </div>
+    </article>
+    <div class="collapse-content" style={`max-width: ${widthStyle};`}>
+      <article
+        class="prose text-wrap"
+        class:opacity-20={comment.ups < 0}
+        class:opacity-10={comment.ups < -10}
+      >
+        {@html decodedBody}
+      </article>
+      <div class="join gap-1">
+
         <a
-          class="btn btn-ghost btn-sm link link-primary z-10"
+          class="btn btn-ghost btn-sm link link-secondary"
           href="#{comment.parent.id}">parent</a
         >
         {#if !comment.isRoot}
           <a
-            class="btn btn-ghost btn-sm link link-primary z-10"
+            class="btn btn-ghost btn-sm link link-secondary"
             href="#{comment.root?.id}">root</a
           >
         {/if}
       </div>
-    </article>
-    <div class="collapse-content" style={`max-width: ${widthStyle};`}>
-      <article class="prose text-wrap">
-        {@html decodedBody}
-      </article>
       {#if comment.replies}
         {#each comment.replies as reply}
           <svelte:self comment={reply} nestLevel={nestLevel + 1} />

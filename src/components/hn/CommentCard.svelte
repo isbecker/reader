@@ -18,7 +18,7 @@
 
 {#if comment && comment.author}
   <div
-    class="collapse collapse-arrow divide-x divide-accent"
+    class="collapse collapse-plus divide-x divide-accent"
     id="comment-{comment.id}"
     style={`max-width: ${widthStyle};`}
   >

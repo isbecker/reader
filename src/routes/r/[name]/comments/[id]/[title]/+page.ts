@@ -6,7 +6,9 @@ import { parsePost } from '../../../../../../types/reddit/Post';
 
 export async function load({ fetch, params }) {
   const { name, id, title } = params;
-  return { post: await fetchComments(name, id, title, fetch).then(parsePost) }
+  return { 
+    post: await fetchComments(name, id, title, fetch).then(parsePost) 
+  }
 }
 
 async function fetchComments(subreddit: string, id: string, title: string,

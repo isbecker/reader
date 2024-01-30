@@ -14,7 +14,6 @@
   const observer: Writable<IntersectionObserver | null> = writable(null);
   onMount(() => {
     is_read = post.is_read;
-    // readableContent = fetchReadableContent();
     observer.set(
       new IntersectionObserver(([entry]) => {
         if (
@@ -22,7 +21,7 @@
           has_intersected &&
           entry.boundingClientRect.y < (entry.rootBounds?.y ?? 0)
         ) {
-          is_read = true;
+          // is_read = true;
         } else {
           has_intersected = true;
         }
@@ -64,33 +63,25 @@
 </script>
 
 <a
-  class="card card-bordered flex flex-row"
+  class="card card-bordered card-compact flex flex-row"
   class:opacity-20={is_read}
   class:hidden={is_read && hide_read}
   href={post.url}
   bind:this={card}
 >
   <div class="place-self-center flex flex-col p-2 gap-1 shrink-0">
-    {#if post.image != "self" && post.image && post.image !== "spoiler"}
+    {#if post.image && post.image != "self" && post.image !== "spoiler" && post.image !== "default"}
       <figure class="">
         <img src={post.image} alt="img" />
       </figure>
     {/if}
-    <a
-      href={post.permalink}
-      class="btn btn-accent btn-outline btn-sm"
-      data-sveltekit-preload-data
-    >
-      {post.num_comments} comments
-    </a>
   </div>
-  <div class="card-body flex flex-col">
+  <div class="card-body flex flex-col hover:link">
     <div class="flex flex-col">
       <div class="card-title flex flex-col place-items-start">
-        <p class="text-2xl">{post.title}</p>
-        <p class="text-xs">{post.domain}</p>
+        <p class="">{post.title}</p>
+        <p class="text-xs">({post.domain})</p>
       </div>
-      <div class="divider"></div>
 
       {#if post.post_hint == "image"}
         <div>
@@ -101,6 +92,17 @@
           {post.url}
         </div>
       {/if}
+    </div>
+    <div class="card-actions justify-end">
+      <div class="tooltip place-self-start" data-tip="Reader view">
+        <a
+          href={post.permalink.replace("comments", "readable")}
+          class="btn btn-ghost max-w-fit">📜</a
+        >
+      </div>
+      <a class="btn btn-primary" href={post.permalink}>
+        {post.num_comments ?? 0} Comments
+      </a>
     </div>
   </div>
 </a>

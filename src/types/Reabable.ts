@@ -1,28 +1,19 @@
 export default interface Readable {
-  title: string | null,
-  byline: string | null,
-  lang: string | null,
-  content: string | null,
-  textContent: string | null,
-  length: number | null,
-  excerpt: string | null,
-  siteName: string | null,
-  publishedTime: string | null, // TODO: make a date type?
-  error: string | null
+  title?: string,
+  byline?: string,
+  lang?: string,
+  content?: string,
+  textContent?: string,
+  length?: number,
+  excerpt?: string,
+  siteName?: string,
+  publishedTime?: string, // TODO: make a date type?
+  error?: string
 }
 
-export function parseReadable(readableJson: any) {
+export function parseReadable(readableJson: any): Readable {
   if (readableJson.error) {
     const error: Readable = {
-      title: null,
-      byline: null,
-      lang: null,
-      content: null,
-      textContent: null,
-      length: null,
-      excerpt: null,
-      siteName: null,
-      publishedTime: null,
       error: readableJson.error
     }
 
@@ -38,8 +29,7 @@ export function parseReadable(readableJson: any) {
       length: Number.parseInt(readableJson.length),
       excerpt: readableJson.excerpt,
       siteName: readableJson.siteName,
-      publishedTime: readableJson.publishedTime,
-      error: null
+      publishedTime: readableJson.publishedTime
     }
     return readable;
 

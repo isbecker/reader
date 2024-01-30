@@ -10,9 +10,16 @@
     {#if post.title}
       <article class="prose mx-auto text-xl">
         <a class="link" href={post.url}>
-          {@html post.title}
+          {post.title}
         </a>
       </article>
+
+      <div class="tooltip" data-tip="Reader view">
+        <a
+          href={post.permalink.replace("comments", "readable")}
+          class="btn btn-ghost">📜</a
+        >
+      </div>
     {/if}
     {#if post.post_hint == "image"}
       <div class="carousel mx-auto">

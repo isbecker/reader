@@ -1,8 +1,8 @@
 <script lang="ts">
+  import { injectSpeedInsights } from "@vercel/speed-insights/sveltekit";
   import "../app.css";
   import Navbar from "../components/Navbar.svelte";
   import Sidebar from "../components/Sidebar.svelte";
-import { injectSpeedInsights } from "@vercel/speed-insights/sveltekit"
 
   const themes = [
     "latte",
@@ -32,7 +32,6 @@ import { injectSpeedInsights } from "@vercel/speed-insights/sveltekit"
   ];
   let title = "";
   let y = 0;
-
 
   injectSpeedInsights();
 </script>

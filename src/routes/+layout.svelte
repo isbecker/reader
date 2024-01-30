@@ -2,6 +2,8 @@
   import "../app.css";
   import Navbar from "../components/Navbar.svelte";
   import Sidebar from "../components/Sidebar.svelte";
+import { injectSpeedInsights } from "@vercel/speed-insights/sveltekit"
+
   const themes = [
     "latte",
     "frappe",
@@ -28,9 +30,11 @@
     "nord",
     "sunset",
   ];
-  let theme = "dark";
   let title = "";
   let y = 0;
+
+
+  injectSpeedInsights();
 </script>
 
 <svelte:window bind:scrollY={y} />
@@ -56,12 +60,10 @@
     </div>
   </div>
 
-  <div class="fixed bottom-0 right-0">
+  <div class="fixed bottom-0 right-0 pb-2 pr-2">
     <button
       class="btn btn-circle btn-base-300 hover:btn-secondary"
-      on:click={() => {
-        y = 0;
-      }}
+      on:click={() => (y = 0)}
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"

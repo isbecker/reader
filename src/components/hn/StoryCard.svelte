@@ -8,7 +8,7 @@
 <div>
   <!-- svelte-ignore a11y-no-static-element-interactions -->
   <!-- svelte-ignore a11y-click-events-have-key-events -->
-  <div class="card card-bordered hover:bg-base-200">
+  <div class="card card-bordered card-compact hover:bg-base-200">
     <div class="card-body">
       <a class="card-title flex-col place-items-start" href={story.url}>
         <article>

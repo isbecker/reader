@@ -68,7 +68,7 @@
         <li>
             <details open>
                 <summary
-                    ><a class="btn btn-ghost self-stretch" href="/r/all"
+                    ><a class="btn btn-ghost self-stretch" href="/r/{$subscriptions.flatMap((s) => s.name).join("+")}"
                         >Reddit</a
                     ></summary
                 >

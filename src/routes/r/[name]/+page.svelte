@@ -6,13 +6,13 @@
 </script>
 
 {#if data.subreddit}
-  <ul>
+  <div class="flex flex-col">
     {#each data.subreddit.posts as post}
-      <li class="hover:bg-base-300">
-        <div>
+      <div>
+        <div class="container mx-auto">
           <PostCard {post} />
         </div>
-      </li>
+      </div>
     {/each}
-  </ul>
+  </div>
 {/if}

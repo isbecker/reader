@@ -10,16 +10,14 @@
     <div class="card-body">
       <!-- Card title -->
       <div class="card-title">
-        <div
-          class="flex flex-col sm:flex-row gap-1 place-items-center hover:link"
-        >
-          <div class="flex flex-row gap-1 place-items-center">
-            <p class="text-xs md:text-base lg:text-lg xl:text-x">
+        <div class="flex flex-col gap-1 place-items-start">
+          <div class="join gap-1">
+            <p class="text-sm md:text-base lg:text-lg xl:text-xl">
               {story.title}
             </p>
-            <p class="text-[0.5rem] md:text-xs">({story.domain})</p>
+            <p class="text-[0.5rem] md:text-xs self-center">({story.domain})</p>
           </div>
-          <div class="flex flex-row gap-1 place-items-center">
+          <div class="join gap-1">
             <p class="text-xs text-accent">{story.score} points</p>
             <p class="text-xs">by</p>
             <a
@@ -30,11 +28,16 @@
             <p class="text-xs">
               {moment.unix(story.time).fromNow()}
             </p>
+          </div>
+        </div>
+      </div>
 
-        <div class="tooltip tooltip-left" data-tip="Reader view">
+      <!-- Card actions -->
+      <div class="card-actions justify-end">
+        <div class="tooltip tooltip-left w-fit shrink" data-tip="Reader view">
           <a
             href="/hn/readable/{story.id}"
-            class="btn btn-ghost btn-xs max-w-fit md:btn-sm sm:btn-xs lg:btn-md"
+            class="btn btn-ghost btn-xs md:btn-sm sm:btn-xs lg:btn-md"
             ><svg
               xmlns="http://www.w3.org/2000/svg"
               height="24"
@@ -47,14 +50,8 @@
             ></a
           >
         </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Card actions -->
-      <div class="card-actions justify-end">
         <a
-          class="btn btn-xs btn-primary md:btn-sm sm:btn-xs lg:btn-md "
+          class="btn btn-xs btn-primary md:btn-sm sm:btn-xs lg:btn-md"
           href="/hn/item/{story.id}"
         >
           {story.descendants ?? 0} Comments

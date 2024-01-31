@@ -17,6 +17,7 @@ export default interface Post {
     image?: string,
     comments: Comment[],
     num_comments: number,
+    ups: number,
     is_read: boolean
     post_hint?: string
     domain?: string
@@ -39,6 +40,7 @@ export async function parseSubredditPost(post: any): Promise<Post> {
         image: post.thumbnail || undefined,
         comments: [],
         num_comments: post.num_comments,
+        ups: post.ups,
         is_read: false,
         post_hint: post.post_hint,
         domain: post.domain

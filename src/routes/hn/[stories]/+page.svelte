@@ -6,16 +6,16 @@
   let hn = data.storyList;
 </script>
 
-<div class="h-full w-full">
-  <ul>
+<div>
+  <div class="flex flex-col place-items-center">
     {#await hn}
       <span class="loading loading-dots loading-lg"></span>
     {:then stories}
       {#each stories as story}
-        <li>
+        <div class="container mx-auto"> 
           <StoryCard {story} />
-        </li>
+        </div>
       {/each}
     {/await}
-  </ul>
+  </div>
 </div>

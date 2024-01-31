@@ -62,47 +62,62 @@
   // }
 </script>
 
-<a
-  class="card card-bordered card-compact flex flex-row"
-  class:opacity-20={is_read}
-  class:hidden={is_read && hide_read}
-  href={post.url}
-  bind:this={card}
->
-  <div class="place-self-center flex flex-col p-2 gap-1 shrink-0">
-    {#if post.image && post.image != "self" && post.image !== "spoiler" && post.image !== "default"}
-      <figure class="">
-        <img src={post.image} alt="img" />
-      </figure>
-    {/if}
-  </div>
-  <div class="card-body flex flex-col hover:link">
-    <div class="flex flex-col">
-      <div class="card-title flex flex-col place-items-start">
-        <p class="">{post.title}</p>
-        <p class="text-xs">({post.domain})</p>
-      </div>
-
-      {#if post.post_hint == "image"}
-        <div>
-          <img src={post.url} alt="img" style="max-height: 600px;" />
-        </div>
-      {:else if post.post_hint == "rich:video"}
-        <div class="text-secondary">
-          {post.url}
-        </div>
+<div class="hover:bg-base-200">
+  <a
+    class="card card-bordered card-compact flex flex-row"
+    class:opacity-20={is_read}
+    class:hidden={is_read && hide_read}
+    href={post.url}
+    bind:this={card}
+  >
+    <div class="place-self-center flex flex-col p-2 gap-1 shrink-0">
+      {#if post.image && post.image != "self" && post.image !== "spoiler" && post.image !== "default"}
+        <figure class="">
+          <img src={post.image} alt="img" />
+        </figure>
       {/if}
     </div>
-    <div class="card-actions justify-end">
-      <div class="tooltip place-self-start" data-tip="Reader view">
-        <a
-          href={post.permalink.replace("comments", "readable")}
-          class="btn btn-ghost max-w-fit">📜</a
-        >
+    <div class="card-body flex flex-col hover:link">
+      <div class="flex flex-col">
+        <div class="card-title flex flex-row">
+          <p class="grow">{post.title}</p>
+          <p class="text-xs">({post.domain})</p>
+          <p class="text-xs text-accent">{post.ups} points</p>
+          <p class="text-xs text-warning">r/{post.subreddit}</p>
+        </div>
+
+        {#if post.post_hint == "image"}
+          <div>
+            <img src={post.url} alt="img" style="max-height: 600px;" />
+          </div>
+        {:else if post.post_hint == "rich:video"}
+          <div class="text-secondary">
+            {post.url}
+          </div>
+        {/if}
       </div>
-      <a class="btn btn-primary" href={post.permalink}>
-        {post.num_comments ?? 0} Comments
-      </a>
+      <div class="card-actions justify-end">
+        <div class="tooltip place-self-start" data-tip="Reader view">
+          <a
+            href={post.permalink.replace("comments", "readable")}
+            class="btn btn-ghost max-w-fit"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              height="24"
+              viewBox="0 -960 960 960"
+              width="24"
+              class="fill-secondary"
+              ><path
+                d="M320-240h320v-80H320v80Zm0-160h320v-80H320v80ZM240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v480q0 33-23.5 56.5T720-80H240Zm280-520v-200H240v640h480v-440H520ZM240-800v200-200 640-640Z"
+              /></svg
+            >
+          </a>
+        </div>
+        <a class="btn btn-primary" href={post.permalink}>
+          {post.num_comments ?? 0} Comments
+        </a>
+      </div>
     </div>
-  </div>
-</a>
+  </a>
+</div>

@@ -1,4 +1,5 @@
 <script lang="ts">
+  import he from "he";
   import { onDestroy, onMount } from "svelte";
   import { writable, type Writable } from "svelte/store";
   import type Post from "../types/reddit/Post";
@@ -8,8 +9,6 @@
   let hide_read: boolean = false;
   let has_intersected: boolean = false;
   let card: HTMLAnchorElement;
-
-  // let readableContent: Promise<Partial<Readable>>;
 
   const observer: Writable<IntersectionObserver | null> = writable(null);
   onMount(() => {
@@ -64,43 +63,44 @@
 
 <div class="hover:bg-base-200">
   <a
-    class="card card-bordered card-compact flex flex-row"
+    class="card card-bordered card-compact"
     class:opacity-20={is_read}
     class:hidden={is_read && hide_read}
     href={post.url}
     bind:this={card}
   >
-    <div class="place-self-center flex flex-col p-2 gap-1 shrink-0">
+    <!-- <div class="place-self-center  p-2 gap-1 shrink-0">
       {#if post.image && post.image != "self" && post.image !== "spoiler" && post.image !== "default"}
         <figure class="">
           <img src={post.image} alt="img" />
         </figure>
       {/if}
-    </div>
-    <div class="card-body flex flex-col hover:link">
-      <div class="flex flex-col">
-        <div class="card-title flex flex-row">
-          <p class="grow">{post.title}</p>
-          <p class="text-xs">({post.domain})</p>
-          <p class="text-xs text-accent">{post.ups} points</p>
-          <p class="text-xs text-warning">r/{post.subreddit}</p>
+    </div> -->
+    <div class="card-body hover:link">
+      <!-- <div class="join gap-1"> -->
+        <!-- {#if post.image && post.image != "self" && post.image !== "spoiler" && post.image !== "default" && post.post_hint !== "image" && post.post_hint !== "rich:video"}
+          <figure class="">
+            <img src={post.image} alt="img" />
+          </figure>
+        {/if} -->
+        <div class="card-title">
+          <p class="text-xs md:text-base lg:text-lg xl:text-xl">
+            {he.decode(post.title)}
+          </p>
         </div>
+      <!-- </div> -->
 
-        {#if post.post_hint == "image"}
-          <div>
-            <img src={post.url} alt="img" style="max-height: 600px;" />
-          </div>
-        {:else if post.post_hint == "rich:video"}
-          <div class="text-secondary">
-            {post.url}
-          </div>
-        {/if}
+      <div class="join gap-1">
+        <p class="text-xs text-info">({post.domain})</p>
+        <p class="text-xs text-accent">{post.ups} points</p>
+        <p class="text-xs text-warning">r/{post.subreddit}</p>
       </div>
+
       <div class="card-actions justify-end">
-        <div class="tooltip place-self-start" data-tip="Reader view">
+        <div class="tooltip tooltip-left w-fit shrink" data-tip="Reader view">
           <a
             href={post.permalink.replace("comments", "readable")}
-            class="btn btn-ghost max-w-fit"
+            class="btn btn-ghost btn-xs md:btn-sm sm:btn-xs lg:btn-md"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -114,10 +114,23 @@
             >
           </a>
         </div>
-        <a class="btn btn-primary" href={post.permalink}>
+        <a
+          class="btn btn-xs btn-primary md:btn-sm sm:btn-xs lg:btn-md"
+          href={post.permalink}
+        >
           {post.num_comments ?? 0} Comments
         </a>
       </div>
+
+      {#if post.post_hint == "image"}
+        <div>
+          <img src={post.url} alt="img" style="max-height: 600px;" />
+        </div>
+      {:else if post.post_hint == "rich:video"}
+        <div class="text-secondary">
+          {post.url}
+        </div>
+      {/if}
     </div>
   </a>
 </div>

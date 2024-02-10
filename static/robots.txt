@@ -1,2 +1,2 @@
-User-agent: Amazonbot               # Amazon's user agent
-Disallow: /do-not-crawl/            # disallow this directory
+User-agent: Amazonbot
+Disallow: /r

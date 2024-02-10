@@ -76,14 +76,14 @@
         </figure>
       {/if}
     </div> -->
-    <div class="card-body hover:link">
+    <div class="card-body">
       <!-- <div class="join gap-1"> -->
         <!-- {#if post.image && post.image != "self" && post.image !== "spoiler" && post.image !== "default" && post.post_hint !== "image" && post.post_hint !== "rich:video"}
           <figure class="">
             <img src={post.image} alt="img" />
           </figure>
         {/if} -->
-        <div class="card-title">
+        <div class="card-title hover:link">
           <p class="text-xs md:text-base lg:text-lg xl:text-xl">
             {he.decode(post.title)}
           </p>

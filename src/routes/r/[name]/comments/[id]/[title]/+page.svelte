@@ -1,5 +1,6 @@
 <script lang="ts">
   import CommentCard from "../../../../../../components/reddit/CommentCard.svelte";
+  import he from "he";
   export let data;
 </script>
 
@@ -28,6 +29,11 @@
           /></svg
         ></a
         >
+      </div>
+    {/if}
+    {#if post.content}
+      <div class="prose mx-auto">
+        {@html he.decode(post.content)}
       </div>
     {/if}
     {#if post.post_hint == "image"}

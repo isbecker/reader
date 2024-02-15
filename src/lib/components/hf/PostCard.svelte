@@ -48,7 +48,7 @@
     <div class="card card-bordered card-compact bg-base-100 shadow-xl">
       <div class="card-body">
         <div class="card-title text-sm">
-          <a class="link" href="hf.co/{post.author?.name}">
+          <a class="link" href="https://hf.co/{post.author?.name}">
             <div class="avatar">
               <div class="w-4 rounded-full">
                 <img src={post.author.avatarUrl} alt={post.author?.name} />

@@ -46,11 +46,11 @@
 </script>
 
 <div class="flex justify-center">
-  <div class="container max-w-4xl mx-auto p-4">
+  <div class="container max-w-4xl mx-auto p-1">
     <div class="card card-bordered card-compact bg-base-100 shadow-xl">
       <div class="card-body">
         <div class="card-title text-sm">
-          <a class="link" href="https://hf.co/{post.author?.name}">
+          <a class="link link-primary" href="https://hf.co/{post.author?.name}">
             <div class="avatar">
               <div class="w-4 rounded-full">
                 <img src={post.author.avatarUrl} alt={post.author?.name} />
@@ -58,12 +58,13 @@
             </div>
             <span>{post.author?.name}</span>
           </a>
-          about {moment(post.publishedAt).fromNow()}
+          <div class="text-secondary">about {moment(post.publishedAt).fromNow()}</div>
+          
         </div>
         <div class="container">
           <div class="relative">
             <div
-              class="content max-h-{fullPost ? 'screen' : '64'} overflow-hidden"
+              class="content max-h-{fullPost ? 'fit' : '64'} overflow-hidden"
             >
               <article class="prose break-words">
                 {#each post.content as content}
@@ -82,9 +83,9 @@
                     </div>
                   {/if}
                   {#if content.type === "resource"}
-                    <div class="badge badge-info">
+                    <div class="badge badge-accent max-w-prose">
                       <a class="text text-info-content" href={content.url}>
-                        <span class="text-ellipsis w-64">
+                        <span class="truncate">
                           {content.resource?.id}
                         </span>
                       </a>
@@ -94,7 +95,7 @@
               </article>
               {#if !fullPost}
                 <div
-                  class="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-base-100 to-transparent"
+                  class="absolute bottom-0 left-0 right-0 h-5 bg-gradient-to-tl from-base-100 to-transparent"
                 />
                 <a
                   href="/hf/posts/{post.author.name}/{post.slug}"
@@ -120,10 +121,10 @@
                         class=""
                       />
                     {:else if post.attachments?.[currentAttachmentIndex].type === "video"}
+                      <!-- svelte-ignore a11y-media-has-caption -->
                       <video
                         src={attachment.url}
                         class="pointer-events-none"
-                        controls
                       />
                     {/if}
                   </button>
@@ -136,7 +137,7 @@
                 class="modal modal-open fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center"
                 on:click={closeLightbox}
               >
-                <div class="flex items-center justify-between w-full p-16">
+                <div class="flex items-center justify-between w-full ">
                   <button
                     class="p-2 leading-none z-50 cursor-pointer"
                     on:click|stopPropagation={showPrevious}
@@ -153,6 +154,8 @@
                     ></button
                   >
 
+                  <!-- svelte-ignore a11y-click-events-have-key-events -->
+                  <!-- svelte-ignore a11y-no-static-element-interactions -->
                   <div on:click|stopPropagation>
                     {#if post.attachments?.[currentAttachmentIndex].type === "image"}
                       <img
@@ -161,6 +164,7 @@
                         alt={post.attachments?.[currentAttachmentIndex].type}
                       />
                     {:else if post.attachments?.[currentAttachmentIndex].type === "video"}
+                      <!-- svelte-ignore a11y-media-has-caption -->
                       <video
                         class="max-h-[90vh] max-w-full mx-auto"
                         src={post.attachments?.[currentAttachmentIndex].url}

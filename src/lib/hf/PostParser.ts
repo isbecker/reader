@@ -12,7 +12,7 @@ class PostParser {
     numTotalItems: z.number(),
   });
 
-  public static parseSocialPost(data: any): SocialPostsData | null {
+  public static parseSocialPosts(data: any): SocialPostsData | null {
     try {
       return this.SocialPostsSchema.parse(data);
     } catch (error) {
@@ -21,8 +21,20 @@ class PostParser {
     }
   }
 
-  public static safeParseSocialPost(data: any): { success: boolean; data?: SocialPostsData; error?: z.ZodError } {
+  public static safeParseSocialPosts(data: any): { success: boolean; data?: SocialPostsData; error?: z.ZodError } {
     const result = this.SocialPostsSchema.safeParse(data);
+
+    if (result.success) {
+      // The data is valid, and result.data contains the parsed data
+      return { success: true, data: result.data };
+    } else {
+      // The data is invalid, and result.error contains the validation errors
+      return { success: false, error: result.error };
+    }
+  }
+
+  public static safeParseSocialPost(data: any): { success: boolean; data?: SocialPost; error?: z.ZodError } {
+    const result = SocialPostSchema.safeParse(data);
 
     if (result.success) {
       // The data is valid, and result.data contains the parsed data

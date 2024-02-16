@@ -7,5 +7,5 @@ export const AuthorSchema = z.object({
   type: z.string(),
   isPro: z.boolean(),
   isHf: z.boolean(),
-  isFollowing: z.boolean(),
+  isFollowing: z.boolean().optional(),
 });

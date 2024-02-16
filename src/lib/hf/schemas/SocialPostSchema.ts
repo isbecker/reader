@@ -3,6 +3,7 @@ import { AttachmentSchema } from '$lib/hf/schemas/AttachmentSchema';
 import { ContentItemSchema } from '$lib/hf/schemas/ContentItemSchema';
 import { AuthorSchema } from '$lib/hf/schemas/AuthorSchema';
 import { ReactionSchema } from '$lib/hf/schemas/ReactionSchema';
+import { CommentSchema } from '$lib/hf/schemas/CommentSchemas';
 
 export const SocialPostSchema = z.object({
   slug: z.string(),
@@ -16,6 +17,7 @@ export const SocialPostSchema = z.object({
   updatedAt: z.string(),
   url: z.string(),
   numComments: z.number(),
+  comments: z.array(CommentSchema).optional()
 });
 
 export type SocialPost = z.infer<typeof SocialPostSchema>;

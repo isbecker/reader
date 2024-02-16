@@ -8,6 +8,8 @@
   let lightboxOpen = false;
   let currentAttachmentIndex = 0;
 
+  $: fullPost = post.comments !== undefined;
+
   const openLightbox = (index) => {
     currentAttachmentIndex = index;
     lightboxOpen = true;
@@ -44,7 +46,7 @@
 </script>
 
 <div class="flex justify-center">
-  <div class="container mx-auto p-4">
+  <div class="container max-w-4xl mx-auto p-4">
     <div class="card card-bordered card-compact bg-base-100 shadow-xl">
       <div class="card-body">
         <div class="card-title text-sm">
@@ -58,39 +60,57 @@
           </a>
           about {moment(post.publishedAt).fromNow()}
         </div>
-        <div class="">
-          <article class="prose overflow-hidden break-words">
-            {#each post.content as content}
-              {#if content.type === "text"}
-                {content.value}
+        <div class="container">
+          <div class="relative">
+            <div
+              class="content max-h-{fullPost ? 'screen' : 64} overflow-hidden"
+            >
+              <article class="prose break-words">
+                {#each post.content as content}
+                  {#if content.type === "text"}
+                    {content.value}
+                  {/if}
+                  {#if content.type === "new_line"}
+                    <br />
+                  {/if}
+                  {#if content.type === "link"}
+                    <div class="badge badge-primary max-w-prose overflow-clip">
+                      <a
+                        class="text text-primary-content truncate"
+                        href={content.href}>{content.href}</a
+                      >
+                    </div>
+                  {/if}
+                  {#if content.type === "resource"}
+                    <div class="badge badge-info">
+                      <a class="text text-info-content" href={content.url}>
+                        <span class="text-ellipsis w-64">
+                          {content.resource?.id}
+                        </span>
+                      </a>
+                    </div>
+                  {/if}
+                {/each}
+              </article>
+              {#if !fullPost}
+                <div
+                  class="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-base-100 to-transparent"
+                />
+                <a
+                  href="/hf/posts/{post.author.name}/{post.slug}"
+                  class="link btn btn-sm btn-ghost absolute bottom-[-16px] right-0"
+                  >...read more</a
+                >
               {/if}
-              {#if content.type === "new_line"}
-                <br />
-              {/if}
-              {#if content.type === "link"}
-                <div class="badge badge-primary">
-                  <a class="text text-primary-content" href={content.href}
-                    >{content.href}</a
-                  >
-                </div>
-              {/if}
-              {#if content.type === "resource"}
-                <div class="badge badge-info">
-                  <a class="text text-info-content" href={content.url}>
-                    <span class="text-ellipsis truncate overflow-clip">
-                      {content.resource?.id}
-                    </span>
-                  </a>
-                </div>
-              {/if}
-            {/each}
-          </article>
+            </div>
+          </div>
+
           <div>
             <ul class="overflow-scroll w-screen join">
               {#each post.attachments ?? [] as attachment, index}
                 <li>
                   <button
-                    class="btn btn-ghost h-48 w-48 z-50"
+                    class="btn btn-ghost h-40 w-40 z-50"
                     on:click={() => openLightbox(index)}
                   >
                     {#if post.attachments?.[currentAttachmentIndex].type === "image"}

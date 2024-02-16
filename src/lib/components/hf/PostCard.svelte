@@ -63,7 +63,7 @@
         <div class="container">
           <div class="relative">
             <div
-              class="content max-h-{fullPost ? 'screen' : 64} overflow-hidden"
+              class="content max-h-{fullPost ? 'screen' : '64'} overflow-hidden"
             >
               <article class="prose break-words">
                 {#each post.content as content}

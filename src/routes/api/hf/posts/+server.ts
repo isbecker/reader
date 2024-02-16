@@ -10,7 +10,7 @@ export const GET: RequestHandler = async ({ request, fetch }) => {
     .then(async (res) => await res.json())
     .catch((err) => console.log(err));
 
-  const hf = PostParser.safeParseSocialPost(hfJson);
+  const hf = PostParser.safeParseSocialPosts(hfJson);
 
   if (!hf.success) {
     return json({ error: hf.error });

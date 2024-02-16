@@ -56,7 +56,7 @@
             </div>
             <span>{post.author?.name}</span>
           </a>
-          about {moment(post.publishedAt).fromNow()} ago
+          about {moment(post.publishedAt).fromNow()}
         </div>
         <div class="">
           <article class="prose overflow-hidden break-words">

@@ -72,11 +72,11 @@
             <details open>
                 <summary>
                     <div class="indicator">
-                        <span class="indicator-item badge badge-info"
-                            >beta</span
-                        >
-                        <a class="btn btn-ghost self-stretch" href="/hf/posts"
-                            >Hugging Face
+                        <span class="indicator-item badge badge-info mt-[.75rem]">
+                            beta
+                        </span>
+                        <a class="btn btn-ghost self-stretch" href="/hf/posts">
+                            Hugging Face
                         </a>
                     </div>
                 </summary>

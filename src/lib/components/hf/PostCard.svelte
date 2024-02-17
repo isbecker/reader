@@ -64,7 +64,9 @@
         <div class="container">
           <div class="relative">
             <div
-              class="content max-h-{fullPost ? 'fit' : '64'} overflow-hidden"
+              class="overflow-hidden"
+              class:max-h-[10lh]={!fullPost}
+              class:max-h-full={fullPost}
             >
               <article class="prose break-words">
                 {#each post.content as content}

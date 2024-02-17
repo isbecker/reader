@@ -16,7 +16,7 @@
 
         newSub = "";
     }
-    const links = [
+    const hnLinks = [
         { name: "Top", url: "/hn/top" },
         { name: "Best", url: "/hn/best" },
         { name: "New", url: "/hn/new" },
@@ -24,6 +24,7 @@
         { name: "Show", url: "/hn/show" },
         { name: "Jobs", url: "/hn/jobs" },
     ];
+    const hfLinks = [{ name: "Posts", url: "/hf/posts" }];
 </script>
 
 <div class="flex flex-col h-screen bg-base-100 w-min max-w-full">
@@ -55,12 +56,39 @@
                 >
 
                 <ul class="menu bg-base-100 rounded-box">
-                    {#each links as link}
+                    {#each hnLinks as link}
                         <li>
                             <a
                                 class="btn btn-ghost self-stretch"
-                                href={link.url}>{link.name}</a
-                            >
+                                href={link.url}
+                                >{link.name}
+                            </a>
+                        </li>
+                    {/each}
+                </ul>
+            </details>
+        </li>
+        <li>
+            <details open>
+                <summary>
+                    <div class="indicator">
+                        <span class="indicator-item badge badge-info"
+                            >beta</span
+                        >
+                        <a class="btn btn-ghost self-stretch" href="/hf/posts"
+                            >Hugging Face
+                        </a>
+                    </div>
+                </summary>
+
+                <ul class="menu bg-base-100 rounded-box">
+                    {#each hfLinks as link}
+                        <li>
+                            <a
+                                class="btn btn-ghost self-stretch"
+                                href={link.url}
+                                >{link.name}
+                            </a>
                         </li>
                     {/each}
                 </ul>
@@ -69,8 +97,11 @@
         <li>
             <details open>
                 <summary
-                    ><a class="btn btn-ghost self-stretch" href="/r/{$subscriptions.flatMap((s) => s.name).join("+")}"
-                        >Reddit</a
+                    ><a
+                        class="btn btn-ghost self-stretch"
+                        href="/r/{$subscriptions
+                            .flatMap((s) => s.name)
+                            .join('+')}">Reddit</a
                     ></summary
                 >
                 <ul>

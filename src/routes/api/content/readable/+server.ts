@@ -1,9 +1,10 @@
 // src/routes/api/content/+server.ts
 import { Readability } from '@mozilla/readability';
-import type { RequestHandler } from '@sveltejs/kit';
+import { type RequestHandler } from '@sveltejs/kit';
 import { JSDOM } from 'jsdom';
+import { json } from '@sveltejs/kit';
 
-export const GET: RequestHandler = async ({ request }) => {
+export const GET: RequestHandler = async ({ request, fetch }) => {
     const url = new URL(request.url).searchParams.get('url')
     if (!url) {
         return new Response(JSON.stringify({ error: 'URL parameter is required' }), {
@@ -15,27 +16,18 @@ export const GET: RequestHandler = async ({ request }) => {
     }
 
     try {
-        const article = await JSDOM.fromURL(url)
-            .then(function (dom) {
-                const reader = new Readability(dom.window.document);
-                return reader.parse();
-            });
+        const dom = await JSDOM.fromURL(url)
+        const reader = new Readability(dom.window.document);
+        const article = reader.parse();
+
 
         if (!article) {
             throw new Error(`Failed to parse content: ${url}`);
         }
-        return new Response(JSON.stringify({ article }), {
-            status: 200,
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
+        return json({article});
     } catch (error) {
-        return new Response(JSON.stringify({ error: (error as Error).message }), {
-            status: 500,
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
+        const archive = await fetch(`/api/content/archive/readable?url=${url}`)
+        const obj = await archive.json()
+        return json(obj)
     }
 };

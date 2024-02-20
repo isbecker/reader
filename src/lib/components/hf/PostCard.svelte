@@ -1,5 +1,7 @@
 <script lang="ts">
   import type { SocialPost } from "$lib/hf/schemas/SocialPostSchema";
+  import hljs from "highlight.js";
+  import "highlight.js/styles/github.css";
   import moment from "moment";
   import { onMount } from "svelte";
 
@@ -58,8 +60,9 @@
             </div>
             <span>{post.author?.name}</span>
           </a>
-          <div class="text-secondary">about {moment(post.publishedAt).fromNow()}</div>
-          
+          <div class="text-secondary">
+            about {moment(post.publishedAt).fromNow()}
+          </div>
         </div>
         <div class="container">
           <div class="relative">
@@ -83,6 +86,22 @@
                         href={content.href}>{content.href}</a
                       >
                     </div>
+                  {/if}
+                  {#if content.type === "inline_code"}
+                    <code>{content.code}</code>
+                  {/if}
+                  {#if content.type === "code_fence"}
+                    <pre><code
+                        >{@html hljs.highlightAuto(content.code, [
+                          "python",
+                          "javascript",
+                          "typescript",
+                          "rust",
+                        ]).value}</code
+                      ></pre>
+                  {/if}
+                  {#if content.type === "mention"}
+                    <a href="https://hf.co/{content.user}">@{content.user}</a>
                   {/if}
                   {#if content.type === "resource"}
                     <div class="badge badge-accent max-w-prose">
@@ -124,10 +143,7 @@
                       />
                     {:else if post.attachments?.[currentAttachmentIndex].type === "video"}
                       <!-- svelte-ignore a11y-media-has-caption -->
-                      <video
-                        src={attachment.url}
-                        class="pointer-events-none"
-                      />
+                      <video src={attachment.url} class="pointer-events-none" />
                     {/if}
                   </button>
                 </li>
@@ -139,7 +155,7 @@
                 class="modal modal-open fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center"
                 on:click={closeLightbox}
               >
-                <div class="flex items-center justify-between w-full ">
+                <div class="flex items-center justify-between w-full">
                   <button
                     class="p-2 leading-none z-50 cursor-pointer"
                     on:click|stopPropagation={showPrevious}
@@ -203,6 +219,16 @@
                 </form>
               </button>
             {/if}
+          </div>
+
+          <div class="join gap-1">
+            {#each post.reactions as reaction}
+              <div class="badge badge-info">
+                <div class="badge-icon">
+                  <span>{reaction.reaction} {reaction.count}</span>
+                </div>
+              </div>
+            {/each}
           </div>
         </div>
       </div>

@@ -1,9 +1,9 @@
 <script lang="ts">
-    import { createEventDispatcher } from "svelte";
+    import { swiperStore } from "../stores/app/swiper";
     import { subscriptions } from "../stores/reddit/subscribed";
     import type Subscription from "../types/reddit/Subscription";
 
-    const dispatch = createEventDispatcher();
+    $: swiper = $swiperStore;
     let newSub: string = "";
 
     function addSubreddit() {
@@ -29,10 +29,12 @@
 
 <div class="flex flex-col h-screen bg-base-100 w-min max-w-full">
     <div>
-        <label
-            for="side-drawer"
+        <button
             aria-label="open sidebar"
             class="btn btn-square btn-ghost"
+            on:click={() => {
+                swiper.slideTo(1);
+            }}
         >
             <svg
                 class="swap-on fill-current"
@@ -44,7 +46,7 @@
                     points="400 145.49 366.51 112 256 222.51 145.49 112 112 145.49 222.51 256 112 366.51 145.49 400 256 289.49 366.51 400 400 366.51 289.49 256 400 145.49"
                 /></svg
             >
-        </label>
+        </button>
     </div>
     <ul class="menu bg-base-100 rounded-box">
         <li>
@@ -72,7 +74,9 @@
             <details open>
                 <summary>
                     <div class="indicator">
-                        <span class="indicator-item badge badge-info mt-[.75rem]">
+                        <span
+                            class="indicator-item badge badge-info mt-[.75rem]"
+                        >
                             beta
                         </span>
                         <a class="btn btn-ghost self-stretch" href="/hf/posts">

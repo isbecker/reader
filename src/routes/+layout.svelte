@@ -99,25 +99,5 @@
           >
         </button>
       </div>
-
     </div>
-  </div>
-
-  <div class="fixed bottom-0 right-0 pb-2 pr-2">
-    <button
-      class="btn btn-circle btn-base-300 hover:btn-secondary"
-      on:click={() => (y = 0)}
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        height="24"
-        viewBox="0 -960 960 960"
-        width="24"
-        class="fill-accent"
-        ><path
-          d="M440-160v-487L216-423l-56-57 320-320 320 320-56 57-224-224v487h-80Z"
-        /></svg
-      >
-    </button>
-  </div>
-</main>
+  </main>

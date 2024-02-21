@@ -221,7 +221,7 @@
             {/if}
           </div>
 
-          <div class="join gap-1">
+          <div id="reactions-{post.slug}" class="join gap-1">
             {#each post.reactions as reaction}
               <div class="badge badge-info">
                 <div class="badge-icon">

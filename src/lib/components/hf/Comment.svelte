@@ -15,10 +15,16 @@
       <article class="join gap-1">
         {#if comment.author}
           <div class="z-10">
-            <a class="text-xs link link-primary" href="https://hf.co/{comment.author?.name}">
+            <a
+              class="text-xs link link-primary"
+              href="https://hf.co/{comment.author?.name}"
+            >
               <div class="avatar">
                 <div class="w-4 rounded-full">
-                  <img src={comment.author?.avatarUrl} alt={comment.author?.name} />
+                  <img
+                    src={comment.author?.avatarUrl}
+                    alt={comment.author?.name}
+                  />
                 </div>
               </div>
               <span>{comment.author?.name}</span>
@@ -27,7 +33,10 @@
         {:else}
           <p class="text-xs">deleted</p>
         {/if}
-        <a class="text-xs link link-secondary self-center z-10" href="#{comment.id}">
+        <a
+          class="text-xs link link-secondary self-center z-10"
+          href="#{comment.id}"
+        >
           {moment(comment.createdAt).fromNow()}
         </a>
       </article>
@@ -40,6 +49,14 @@
       {#each comment.replies ?? [] as reply}
         <svelte:self comment={reply} />
       {/each}
+
+      <div id="reactions-{comment.id}" class="join gap-1">
+        {#each comment.data.reactions as reaction}
+          <div class="badge badge-info">
+            <span>{reaction.reaction} {reaction.count}</span>
+          </div>
+        {/each}
+      </div>
     </div>
   </div>
 </div>

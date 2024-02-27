@@ -1,13 +1,10 @@
 <script lang="ts">
-    import { swiperStore } from "../stores/app/swiper";
     import { subscriptions } from "../stores/reddit/subscribed";
     import type Subscription from "../types/reddit/Subscription";
 
-    $: swiper = $swiperStore;
     let newSub: string = "";
 
     function addSubreddit() {
-        console.log(newSub);
         const newSubreddit: Subscription = {
             name: newSub,
             url: `/r/${newSub}`,
@@ -27,14 +24,12 @@
     const hfLinks = [{ name: "Posts", url: "/hf/posts" }];
 </script>
 
-<div class="flex flex-col h-screen bg-base-100 w-min max-w-full">
+<div class="flex flex-col bg-base-100">
     <div>
-        <button
+        <label
+            for="side-drawer"
             aria-label="open sidebar"
             class="btn btn-square btn-ghost"
-            on:click={() => {
-                swiper.slideTo(1);
-            }}
         >
             <svg
                 class="swap-on fill-current"
@@ -46,7 +41,7 @@
                     points="400 145.49 366.51 112 256 222.51 145.49 112 112 145.49 222.51 256 112 366.51 145.49 400 256 289.49 366.51 400 400 366.51 289.49 256 400 145.49"
                 /></svg
             >
-        </button>
+        </label>
     </div>
     <ul class="menu bg-base-100 rounded-box">
         <li>

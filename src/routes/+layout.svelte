@@ -90,13 +90,14 @@
     const diffX = Math.abs(currentX - startX);
     const diffY = Math.abs(currentY - startY);
 
-    // Determine swipe direction if not already set
-    if (!swipeDirection) {
+    // Determine the swipe direction if it hasn't been set
+    if (!swipeDirection && (diffX > 10 || diffY > 10)) {
+      // Using 10px as a threshold
       swipeDirection = diffX > diffY ? "horizontal" : "vertical";
     }
 
-    // If horizontal swipe, proceed with drawer logic
     if (swipeDirection === "horizontal") {
+      event.preventDefault(); // Prevent vertical scrolling during a horizontal swipe
       const swipedDistance = currentX - startX;
       if (drawerOpen) {
         const closingSwipePercentage = Math.max(
@@ -112,7 +113,6 @@
         progress = openingSwipePercentage;
       }
     }
-    // If vertical swipe, you might want to handle vertical scrolling or ignore the swipe
   }
 
   function handleTouchEnd(event: TouchEvent) {
@@ -142,7 +142,7 @@
 <svelte:window
   bind:scrollY={y}
   on:touchstart={handleTouchStart}
-  on:touchmove={handleTouchMove}
+  on:touchmove|nonpassive={handleTouchMove}
   on:touchend={handleTouchEnd}
 />
 

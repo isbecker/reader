@@ -47,12 +47,15 @@
 
   // Start tracking the swipe
   function handleTouchStart(event: TouchEvent) {
+    if (event.touches.length > 1) return; // Ignore multi-touch
+
     startX = event.touches[0].clientX;
     currentX = startX;
     swiping = true;
   }
 
   function handleTouchMove(event: TouchEvent) {
+    if (event.touches.length > 1) return; // Ignore multi-touch
     if (!swiping) return;
 
     currentX = event.touches[0].clientX;
@@ -63,7 +66,8 @@
     progress = Math.min(swipePercentage, 1);
   }
 
-  function handleTouchEnd() {
+  function handleTouchEnd(event: TouchEvent) {
+    if (event.touches.length > 1) return; // Ignore multi-touch
     swiping = false;
     if (progress > 0.33) {
       progress = 1; // Fully open the drawer if more than half swiped

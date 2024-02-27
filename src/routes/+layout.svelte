@@ -104,7 +104,7 @@
           1 - (startX - currentX) / drawer.offsetWidth,
           0,
         );
-        progress = closingSwipePercentage;
+        progress = Math.min(1, closingSwipePercentage);
       } else {
         const openingSwipePercentage = Math.min(
           swipedDistance / drawer.offsetWidth,

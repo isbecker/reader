@@ -1,10 +1,13 @@
 <script lang="ts">
-  import { onMount } from "svelte";
+  import { QueryClientProvider } from "@tanstack/svelte-query";
+  import type { PageData } from "./$types";
+
   import { injectSpeedInsights } from "@vercel/speed-insights/sveltekit";
   import "../app.css";
   import Navbar from "../components/Navbar.svelte";
   import Sidebar from "../components/Sidebar.svelte";
 
+  export let data: PageData;
   const themes = [
     "latte",
     "frappe",
@@ -77,11 +80,7 @@
 
 <svelte:window bind:scrollY={y} />
 
-  <main class="bg-base-100">
-    <div class="swiper-container">
-      <div class="swiper-wrapper">
-        <div class="swiper-slide max-w-fit">
-          <Sidebar />
+<QueryClientProvider client={data.queryClient}>
   <main class="bg-base-200">
     <div class="drawer">
       <input
@@ -135,6 +134,7 @@
       </button>
     </div>
   </main>
+</QueryClientProvider>
 
 <style>
   :global(.drawer-side > *:not(.drawer-overlay)) {

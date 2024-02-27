@@ -40,49 +40,111 @@
   injectSpeedInsights();
 
   let drawerOpen: boolean = false;
-  let startX: number, currentX: number;
+  let startX: number, startY: number;
   let drawer: HTMLDivElement;
   let swiping = false;
   let progress = 0; // Represents the progress of the swipe (0 to 1)
 
+  let swipeDirection: "horizontal" | "vertical" | null = null; // New variable to track swipe direction
+
+  function isScrollable(element: HTMLElement) {
+    const overflowX = window.getComputedStyle(element).overflowX;
+    const isScrollable = overflowX === "auto" || overflowX === "scroll";
+    const canScroll = element.scrollWidth > element.clientWidth;
+    return isScrollable && canScroll;
+  }
+
+  // Function to check if the event target or any of its parents is scrollable
+  function originatedFromScrollableElement(target: EventTarget | null) {
+    while (target !== document.body) {
+      // Stop at the body element
+      if (target && isScrollable(target as HTMLElement)) {
+        return true;
+      }
+      target = (target as HTMLElement)?.parentNode;
+    }
+    return false;
+  }
+
   // Start tracking the swipe
   function handleTouchStart(event: TouchEvent) {
     if (event.touches.length > 1) return; // Ignore multi-touch
+    // Check if the touch started in a scrollable element
+    if (originatedFromScrollableElement(event.target)) {
+      // Optionally, handle this case differently or return to ignore the swipe
+      return;
+    }
 
     startX = event.touches[0].clientX;
-    currentX = startX;
+    startY = event.touches[0].clientY;
     swiping = true;
+    swipeDirection = null; // Reset swipe direction at start
+    drawer.style.transition = "none"; // Disable transition for smooth swiping
   }
 
   function handleTouchMove(event: TouchEvent) {
-    if (event.touches.length > 1) return; // Ignore multi-touch
-    if (!swiping) return;
+    if (event.touches.length > 1 || !swiping) return;
 
-    currentX = event.touches[0].clientX;
-    const swipedDistance = currentX - startX;
+    const currentX = event.touches[0].clientX;
+    const currentY = event.touches[0].clientY;
+    const diffX = Math.abs(currentX - startX);
+    const diffY = Math.abs(currentY - startY);
 
-    // Calculate the swipe distance as a percentage of the drawer's or screen's width
-    const swipePercentage = swipedDistance / window.innerWidth;
-    progress = Math.min(swipePercentage, 1);
+    // Determine swipe direction if not already set
+    if (!swipeDirection) {
+      swipeDirection = diffX > diffY ? "horizontal" : "vertical";
+    }
+
+    // If horizontal swipe, proceed with drawer logic
+    if (swipeDirection === "horizontal") {
+      const swipedDistance = currentX - startX;
+      if (drawerOpen) {
+        const closingSwipePercentage = Math.max(
+          1 - (startX - currentX) / drawer.offsetWidth,
+          0,
+        );
+        progress = closingSwipePercentage;
+      } else {
+        const openingSwipePercentage = Math.min(
+          swipedDistance / drawer.offsetWidth,
+          1,
+        );
+        progress = openingSwipePercentage;
+      }
+    }
+    // If vertical swipe, you might want to handle vertical scrolling or ignore the swipe
   }
 
   function handleTouchEnd(event: TouchEvent) {
     if (event.touches.length > 1) return; // Ignore multi-touch
     swiping = false;
-    if (progress > 0.33) {
-      progress = 1; // Fully open the drawer if more than half swiped
-      drawerOpen = true;
-    } else {
-      progress = 0; // Close the drawer
-      drawerOpen = false;
+    drawer.style.transition = "transform 300ms ease"; // Re-enable transition
+
+    // Determine whether to open or close the drawer based on the final progress value
+    if (swipeDirection === "horizontal") {
+      if (progress > 0.33) {
+        drawerOpen = true;
+      } else {
+        drawerOpen = false;
+      }
+      progress = drawerOpen ? 1 : 0;
     }
+
+    // Reset or set progress based on the drawer's state
+    progress = drawerOpen ? 1 : 0;
+    swipeDirection = null; // Reset swipe direction at the end of a swipe
   }
 
-  $: drawerStyle = `--drawer-progress: ${progress}`;
   $: progress = drawerOpen ? 1 : 0;
+  $: drawerStyle = `--drawer-progress: ${progress};`;
 </script>
 
-<svelte:window bind:scrollY={y} />
+<svelte:window
+  bind:scrollY={y}
+  on:touchstart={handleTouchStart}
+  on:touchmove={handleTouchMove}
+  on:touchend={handleTouchEnd}
+/>
 
 <QueryClientProvider client={data.queryClient}>
   <main class="bg-base-100">
@@ -99,11 +161,7 @@
           <Navbar {themes} {title} />
         </div>
 
-        <div
-          on:touchstart={handleTouchStart}
-          on:touchmove={handleTouchMove}
-          on:touchend={handleTouchEnd}
-        >
+        <div>
           <slot />
         </div>
       </div>
@@ -113,7 +171,7 @@
           for="side-drawer"
           aria-label="close sidebar"
           class="drawer-overlay"
-        ></label>
+        />
         <div class="min-w-fit" bind:this={drawer} style={drawerStyle}>
           <Sidebar />
         </div>
@@ -142,6 +200,8 @@
 
 <style>
   :global(.drawer-side > *:not(.drawer-overlay)) {
-    transform: translateX(calc(-100% * (1 - var(--drawer-progress))));
+    transform: translateX(
+      calc(-100% * (1 - var(--drawer-progress)))
+    ) !important;
   }
 </style>

@@ -85,7 +85,7 @@
 <svelte:window bind:scrollY={y} />
 
 <QueryClientProvider client={data.queryClient}>
-  <main class="bg-base-200">
+  <main class="bg-base-100">
     <div class="drawer">
       <input
         id="side-drawer"

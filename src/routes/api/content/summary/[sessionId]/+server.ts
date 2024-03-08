@@ -1,15 +1,14 @@
 import type { RequestHandler } from '@sveltejs/kit';
-import { summaryStore } from "../../../../../lib/stores/summary";
+import { kv } from "@vercel/kv";
 
 export const GET: RequestHandler = async ({ params, fetch, locals }) => {
   const { sessionId } = params;
-  if (!sessionId || !summaryStore.has(sessionId)) {
+  if (!sessionId || !await kv.exists(sessionId)) {
     // Handle missing or invalid sessionId...
     return new Response('Session not found', { status: 404 });
   }
 
-  const summaryRequest = summaryStore.get(sessionId);
-
+  const summaryRequest = await kv.get(sessionId);
   try {
     const response = await fetch('https://summarizer.beckr.dev', {
       method: 'POST',
@@ -23,6 +22,8 @@ export const GET: RequestHandler = async ({ params, fetch, locals }) => {
     if (!response.ok) {
       throw new Error(`Failed to connect: ${response.statusText}`);
     }
+
+    await kv.del(sessionId);
 
     // Stream the response back to the client
     return new Response(response.body, {

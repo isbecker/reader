@@ -38,6 +38,7 @@
 		"@tanstack/svelte-query-devtools": "^5.18.0",
 		"@types/cookie": "^0.6.0",
 		"@vercel/analytics": "^1.1.2",
+		"@vercel/kv": "^1.0.1",
 		"@vercel/speed-insights": "^1.0.9",
 		"cookie": "^0.6.0",
 		"cross-fetch": "^4.0.0",

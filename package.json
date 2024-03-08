@@ -36,8 +36,10 @@
 		"@mozilla/readability": "^0.4.4",
 		"@tanstack/svelte-query": "^5.18.0",
 		"@tanstack/svelte-query-devtools": "^5.18.0",
+		"@types/cookie": "^0.6.0",
 		"@vercel/analytics": "^1.1.2",
 		"@vercel/speed-insights": "^1.0.9",
+		"cookie": "^0.6.0",
 		"cross-fetch": "^4.0.0",
 		"firebase": "^10.7.2",
 		"he": "^1.2.0",
@@ -45,7 +47,7 @@
 		"jsdom": "^23.2.0",
 		"moment": "^2.30.1",
 		"rss-parser": "^3.13.0",
-		"svelte-markdown": "^0.4.0",
+		"svelte-markdown": "^0.4.1",
 		"swiper": "^11.0.6"
 	}
 }

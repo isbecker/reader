@@ -26,15 +26,15 @@ export const GET: RequestHandler = async ({ params, fetch, locals, cookies }) =>
       if (!response.ok) {
         throw redirect(307, '/auth/login');
       } else {
-        response.headers.getSetCookie().find((cookie) => {
+        response.headers.getSetCookie().forEach((cookie) => {
           if (cookie.startsWith('AccessToken')) {
-            cookies.set('AccessToken', cookie);
             const jwt = parse(cookie)['AccessToken'];
+            cookies.set('AccessToken', jwt);
             locals.user.jwt = jwt;
           }
           if (cookie.startsWith('RefreshToken')) {
-            cookies.set('RefreshToken', cookie);
             const refresh = parse(cookie)['RefreshToken'];
+            cookies.set('RefreshToken', refresh);
             locals.user.refresh = refresh;
           }
         });

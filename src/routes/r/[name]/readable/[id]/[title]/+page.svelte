@@ -69,6 +69,11 @@
         const { response } = JSON.parse(event.data);
         reduceResult += response; // Concatenate the new chunk to the existing result
       });
+      eventSource.addEventListener("continueStep", (event) => {
+        // Continue to show the map results
+        const { response } = JSON.parse(event.data);
+        reduceResult += response;
+      });
       eventSource.addEventListener("[DONE]", (event) => {
         summary = reduceResult;
         eventSource.close();

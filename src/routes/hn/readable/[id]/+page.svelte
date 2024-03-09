@@ -30,7 +30,6 @@
       if (!summary) {
         summaryLoading = true;
         await fetchSummary();
-        summaryLoading = false;
       }
     } else {
       mode = "full";
@@ -70,9 +69,16 @@
         const { response } = JSON.parse(event.data);
         reduceResult += response; // Concatenate the new chunk to the existing result
       });
+      eventSource.addEventListener("continueStep", (event) => {
+        // Continue to show the map results
+        const { response } = JSON.parse(event.data);
+        reduceResult += response;
+      });
+
       eventSource.addEventListener("[DONE]", (event) => {
-        summary = reduceResult;
         eventSource.close();
+        summary = reduceResult;
+        summaryLoading = false;
       });
 
       // Set up event listeners on eventSource as needed...
@@ -108,7 +114,7 @@
     </article>
   </div>
   <div class="max-w-full p-2">
-    {#if mode === "full" || (mode == "summary" && summaryLoading)}
+    {#if mode === "full"}
       <article class="text-wrap prose">
         {@html readable.content}
       </article>

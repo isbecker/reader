@@ -1,5 +1,5 @@
 import type { Config } from '@sveltejs/adapter-vercel';
-import type { RequestHandler } from '@sveltejs/kit';
+import { redirect, type RequestHandler } from '@sveltejs/kit';
 import { kv } from "@vercel/kv";
 
 export const config: Config = {
@@ -23,18 +23,14 @@ export const GET: RequestHandler = async ({ params, fetch, locals, url }) => {
         },
       });
       if (!response.ok) {
-        return new Response(null, {
-          status: 307,
-          headers: {
-            'Location': '/auth/login'
-          }
-        });
+        throw redirect(307, '/auth/login');
       } else {
-        // Retry the request
-        return new Response(null, {
-          status: 307,
-          headers: {
-            'Location': url.href
+        response.headers.getSetCookie().find((cookie) => {
+          if (cookie.startsWith('AccessToken')) {
+            locals.user.jwt = cookie.split(';')[0].split('=')[1];
+          }
+          if (cookie.startsWith('RefreshToken')) {
+            locals.user.refresh = cookie.split(';')[0].split('=')[1];
           }
         });
       }
@@ -56,12 +52,7 @@ export const GET: RequestHandler = async ({ params, fetch, locals, url }) => {
       if (response.status === 401) {
         // Clear the session and redirect to login
         await kv.del(sessionId);
-        return new Response(null, {
-          status: 307,
-          headers: {
-            'Location': '/auth/login'
-          }
-        });
+        throw redirect(307, '/auth/login');
       }
       throw new Error(`Failed to connect: ${response.statusText}`);
     }

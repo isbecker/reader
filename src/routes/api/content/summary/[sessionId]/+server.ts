@@ -26,15 +26,61 @@ export const GET: RequestHandler = async ({ params, fetch, locals, cookies }) =>
       if (!response.ok) {
         throw redirect(307, '/auth/login');
       } else {
-        response.headers.getSetCookie().forEach((cookie) => {
-          if (cookie.startsWith('AccessToken')) {
-            const jwt = parse(cookie)['AccessToken'];
-            cookies.set('AccessToken', jwt);
+        response.headers.getSetCookie().forEach((cookieString) => {
+          const cookieAttributes = cookieString.split(';').map(attr => attr.trim());
+          const cookie = parse(cookieAttributes.shift() || ""); // The first part is the cookie name=value
+
+          let expires: string | undefined = undefined;
+          let path: string | undefined = undefined;
+          let domain: string | undefined = undefined;
+          let secure: boolean | undefined = undefined;
+          let httpOnly: boolean | undefined = undefined;
+          let sameSite: 'Lax' | 'Strict' | 'None' | undefined = undefined;
+
+          cookieAttributes.forEach(attr => {
+            const [key, value] = attr.split('=');
+
+            // Checking and extracting the Expires attribute
+            if (key === 'Expires') {
+              expires = value; // Use this value as needed
+              // For example, store it in `locals` or handle it otherwise
+            } else if (key === 'Path') {
+              path = value;
+            } else if (key === 'Domain') {
+              domain = value;
+            } else if (key === 'Secure') {
+              secure = value === 'Secure';
+            } else if (key === 'HttpOnly') {
+              httpOnly = value === 'HttpOnly';
+            } else if (key === 'SameSite') {
+              sameSite = value as 'Lax' | 'Strict' | 'None';
+            }
+          });
+
+          if (cookie['AccessToken']) {
+            const jwt = cookie['AccessToken'];
+            cookies.set('AccessToken', jwt,
+              {
+                path: path || '/',
+                expires: expires ? new Date(expires) : undefined,
+                domain: domain,
+                secure: secure,
+                httpOnly: httpOnly,
+                sameSite: sameSite
+              });
             locals.user.jwt = jwt;
           }
-          if (cookie.startsWith('RefreshToken')) {
-            const refresh = parse(cookie)['RefreshToken'];
-            cookies.set('RefreshToken', refresh);
+          if (cookie['RefreshToken']) {
+            const refresh = cookie['RefreshToken'];
+            cookies.set('RefreshToken', refresh,
+              {
+                path: path || '/',
+                expires: expires ? new Date(expires) : undefined,
+                domain: domain,
+                secure: secure,
+                httpOnly: httpOnly,
+                sameSite: sameSite
+              });
             locals.user.refresh = refresh;
           }
         });

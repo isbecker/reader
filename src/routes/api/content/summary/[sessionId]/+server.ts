@@ -1,12 +1,13 @@
 import type { Config } from '@sveltejs/adapter-vercel';
 import { redirect, type RequestHandler } from '@sveltejs/kit';
 import { kv } from "@vercel/kv";
+import { parse } from 'cookie';
 
 export const config: Config = {
   runtime: 'edge',
 };
 
-export const GET: RequestHandler = async ({ params, fetch, locals, url }) => {
+export const GET: RequestHandler = async ({ params, fetch, locals, cookies }) => {
   const { sessionId } = params;
   if (!sessionId || !await kv.exists(sessionId)) {
     // Handle missing or invalid sessionId...
@@ -27,10 +28,14 @@ export const GET: RequestHandler = async ({ params, fetch, locals, url }) => {
       } else {
         response.headers.getSetCookie().find((cookie) => {
           if (cookie.startsWith('AccessToken')) {
-            locals.user.jwt = cookie.split(';')[0].split('=')[1];
+            cookies.set('AccessToken', cookie);
+            const jwt = parse(cookie)['AccessToken'];
+            locals.user.jwt = jwt;
           }
           if (cookie.startsWith('RefreshToken')) {
-            locals.user.refresh = cookie.split(';')[0].split('=')[1];
+            cookies.set('RefreshToken', cookie);
+            const refresh = parse(cookie)['RefreshToken'];
+            locals.user.refresh = refresh;
           }
         });
       }

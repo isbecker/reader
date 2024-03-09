@@ -12,7 +12,7 @@ export const GET: RequestHandler = async ({ params, fetch, locals, url }) => {
   if (!locals.user.jwt) {
     if (locals.user.refresh) {
       // Refresh the token
-      const response = await fetch('https://auth.beckr.dev/refresh', {
+      const response = await fetch('https://auth.beckr.dev/auth/refresh', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

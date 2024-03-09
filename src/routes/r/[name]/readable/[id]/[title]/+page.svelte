@@ -1,24 +1,21 @@
 <script lang="ts">
   import SvelteMarkdown from "svelte-markdown";
+  import { writable } from "svelte/store";
   import type Readable from "../../../../../../types/Reabable";
   import type Post from "../../../../../../types/reddit/Post";
-  import { writable } from 'svelte/store';
-
-  interface MapResult {
-    response: string;
-    chunkId: number;
-  }
 
   export let data;
   const readable: Readable = data.readable;
   const post: Post = data.post;
 
   const mapResults = writable<{ [key: number]: string }>({});
-  $: mapResultsArray = Object.entries($mapResults).map(([chunkId, response]) => ({
-    chunkId: Number(chunkId),
-    response
-  }));
-  $: reduceResult = ''; // Reactive value for the streamed reduce result
+  $: mapResultsArray = Object.entries($mapResults).map(
+    ([chunkId, response]) => ({
+      chunkId: Number(chunkId),
+      response,
+    }),
+  );
+  $: reduceResult = ""; // Reactive value for the streamed reduce result
   let showMapResults = true; // Flag to show the map results
 
   let summary = "";
@@ -32,7 +29,6 @@
       if (!summary) {
         summaryLoading = true;
         await fetchSummary();
-        // summary = await fetchSummary();
         summaryLoading = false;
       }
     } else {
@@ -54,58 +50,34 @@
   }
 
   async function fetchSummary() {
-    const response = await fetch('/api/content/summary/init', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ content: readable.textContent}),
+    const response = await fetch("/api/content/summary/init", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ content: readable.textContent }),
     });
 
     if (response.ok) {
       const { sessionId } = await response.json();
       const eventSource = new EventSource(`/api/content/summary/${sessionId}`);
-      eventSource.addEventListener('mappingStep', (event) => {
+      eventSource.addEventListener("mappingStep", (event) => {
         const { response, chunkId } = JSON.parse(event.data);
         appendMapResult(chunkId, response);
       });
-      eventSource.addEventListener('reduceStep', (event) => {
+      eventSource.addEventListener("reduceStep", (event) => {
         // Switch to showing the reduce result when the first chunk arrives
         showMapResults = false;
         const { response } = JSON.parse(event.data);
         reduceResult += response; // Concatenate the new chunk to the existing result
       });
-      eventSource.addEventListener('[DONE]', (event) => {
+      eventSource.addEventListener("[DONE]", (event) => {
         summary = reduceResult;
         eventSource.close();
       });
-      
+
       // Set up event listeners on eventSource as needed...
     } else {
-      console.error('Failed to set up summary');
+      console.error("Failed to set up summary");
     }
-
-    // const response = await fetch(`/api/content/summary`, {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify({ content: readable.textContent }),
-    // });
-    // const reader = response.body ? response.body.getReader() : null;
-    // let chunks = '';
-    // let result;
-
-    // while (reader && (result = await reader.read())) {
-    //   if (result.done) {
-    //     break;
-    //   }
-
-    //   // Assuming the server is sending text data
-    //   chunks += new TextDecoder().decode(result.value);
-    // }
-
-    // const json = JSON.parse(chunks);
-
-    // return json.response;
   }
 </script>
 
@@ -151,10 +123,10 @@
             </div>
           {/each}
         </div>
-        {:else}
-          <article class="text-wrap prose">
-            <SvelteMarkdown source={reduceResult} />
-          </article>
+      {:else}
+        <article class="text-wrap prose">
+          <SvelteMarkdown source={reduceResult} />
+        </article>
       {/if}
       <article class="text-wrap prose">
         <SvelteMarkdown source={summary} />

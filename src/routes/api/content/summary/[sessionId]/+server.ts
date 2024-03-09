@@ -1,5 +1,10 @@
+import type { Config } from '@sveltejs/adapter-vercel';
 import type { RequestHandler } from '@sveltejs/kit';
 import { kv } from "@vercel/kv";
+
+export const config: Config = {
+  runtime: 'edge',
+};
 
 export const GET: RequestHandler = async ({ params, fetch, locals, url }) => {
   const { sessionId } = params;
@@ -13,9 +18,7 @@ export const GET: RequestHandler = async ({ params, fetch, locals, url }) => {
     if (locals.user.refresh) {
       // Refresh the token
       const response = await fetch('https://auth.beckr.dev/auth/refresh', {
-        method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
           'Authorization': 'Bearer ' + locals.user.refresh
         },
       });

@@ -5,8 +5,8 @@ declare global {
 		// interface Error {}
 		interface Locals {
       user: {
-        jwt: string;
-        refresh: string;
+        jwt: string?;
+        refresh: string?;
       };
     }
 		// interface PageData {}

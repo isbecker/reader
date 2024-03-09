@@ -21,12 +21,7 @@ export const handle: Handle = async ({ event, resolve }) => {
   const refresh = httpCookie["RefreshToken"] ?? null;
 
 
-  if (jwt) {
-    event.locals.user.jwt = jwt
-  }
-  if (refresh) {
-    event.locals.user.refresh = refresh
-  }
+  event.locals.user = { jwt, refresh };
 
   return resolve(event);
 }

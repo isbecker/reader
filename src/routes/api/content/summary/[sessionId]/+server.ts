@@ -31,6 +31,7 @@ export const GET: RequestHandler = async ({ params, fetch, locals, cookies }) =>
           const cookie = parse(cookieAttributes.shift() || ""); // The first part is the cookie name=value
 
           let expires: string | undefined = undefined;
+          let maxAge: number | undefined = undefined;
           let path: string | undefined = undefined;
           let domain: string | undefined = undefined;
           let secure: boolean | undefined = undefined;
@@ -42,8 +43,9 @@ export const GET: RequestHandler = async ({ params, fetch, locals, cookies }) =>
 
             // Checking and extracting the Expires attribute
             if (key === 'Expires') {
-              expires = value; // Use this value as needed
-              // For example, store it in `locals` or handle it otherwise
+              expires = value;
+            } else if (key === 'Max-Age') {
+              maxAge = parseInt(value);
             } else if (key === 'Path') {
               path = value;
             } else if (key === 'Domain') {
@@ -63,6 +65,7 @@ export const GET: RequestHandler = async ({ params, fetch, locals, cookies }) =>
               {
                 path: path || '/',
                 expires: expires ? new Date(expires) : undefined,
+                maxAge: maxAge,
                 domain: domain,
                 secure: secure,
                 httpOnly: httpOnly,
@@ -75,7 +78,8 @@ export const GET: RequestHandler = async ({ params, fetch, locals, cookies }) =>
             cookies.set('RefreshToken', refresh,
               {
                 path: path || '/',
-                expires: expires ? new Date(expires) : undefined,
+                expires: expires,
+                maxAge: maxAge,
                 domain: domain,
                 secure: secure,
                 httpOnly: httpOnly,

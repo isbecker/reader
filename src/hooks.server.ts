@@ -1,5 +1,4 @@
 import type { Handle } from '@sveltejs/kit';
-import { parse } from 'cookie';
 
 export const handle: Handle = async ({ event, resolve }) => {
 
@@ -15,10 +14,10 @@ export const handle: Handle = async ({ event, resolve }) => {
     return resolve(event);
   }
 
+  
 
-  const httpCookie = parse(event.request.headers.get("Cookie") || "");
-  const jwt = httpCookie["AccessToken"] ?? null;
-  const refresh = httpCookie["RefreshToken"] ?? null;
+  const jwt = event.cookies.get("AccessToken") ?? null;
+  const refresh = event.cookies.get("RefreshToken") ?? null;
 
 
   event.locals.user = { jwt, refresh };

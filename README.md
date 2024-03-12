@@ -4,9 +4,10 @@ A news reader
 
 - reddit
 - hackernews
-- [news api](https://newsapi.org/) [not started]
-  - not free probably
-  - [pygooglenews](https://github.com/kotartemiy/pygooglenews)
+- huggingface posts
+
+New features! Now with summarization!
+Using a LLM model to summarize articles.
 
 ## Usage
 
@@ -16,6 +17,12 @@ npm install && npm run dev
 
 ## Features
 
+- [x] summarization
+  - [x] reddit
+  - [x] hackernews
+- [x] huggingface
+  - [x] view posts
+  - [x] view comments
 - [x] reddit
   - [x] add subreddit
   - [x] view comments
@@ -23,13 +30,7 @@ npm install && npm run dev
   - [x] view article
     - [x] use mozilla readability - currently broken
     - [x] view images
-  - [ ] remember scroll position; make issue
-  - [ ] remember subreddit; make issue
-  - [ ] remember list of subreddits; make issue
-  - [x] mark as read on scroll
-  - [ ] mark as read on click
-  - [ ] load more on scroll to bottom
-    - [ ] detect scroll to bottom
+  - [x] remember list of subreddits
 - [x] hackernews
   - [x] view top
     - [x] new

@@ -28,7 +28,7 @@ npm install && npm run dev
   - [x] view comments
     - [x] expand comments
   - [x] view article
-    - [x] use mozilla readability - currently broken
+    - [x] use mozilla readability
     - [x] view images
   - [x] remember list of subreddits
 - [x] hackernews

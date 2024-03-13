@@ -14,6 +14,7 @@ export const GET: RequestHandler = async ({ params, fetch, locals, cookies }) =>
     return new Response('Session not found', { status: 404 });
   }
 
+  let jwt = locals.user.jwt;
   const summaryRequest = await kv.get(sessionId);
   if (!locals.user.jwt) {
     if (locals.user.refresh) {
@@ -60,7 +61,7 @@ export const GET: RequestHandler = async ({ params, fetch, locals, cookies }) =>
           });
 
           if (cookie['AccessToken']) {
-            const jwt = cookie['AccessToken'];
+            jwt = cookie['AccessToken'];
             cookies.set('AccessToken', jwt,
               {
                 path: path || '/',
@@ -98,7 +99,7 @@ export const GET: RequestHandler = async ({ params, fetch, locals, cookies }) =>
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + locals.user.jwt
+        'Authorization': `Bearer ${jwt}`
       },
       body: JSON.stringify(summaryRequest)
     });

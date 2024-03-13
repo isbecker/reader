@@ -14,7 +14,6 @@ export const GET: RequestHandler = async ({ params, fetch, locals, cookies }) =>
     return new Response('Session not found', { status: 404 });
   }
 
-  let jwt = locals.user.jwt;
   const summaryRequest = await kv.get(sessionId);
   if (!locals.user.jwt) {
     if (locals.user.refresh) {
@@ -61,7 +60,7 @@ export const GET: RequestHandler = async ({ params, fetch, locals, cookies }) =>
           });
 
           if (cookie['AccessToken']) {
-            jwt = cookie['AccessToken'];
+            const jwt = cookie['AccessToken'];
             cookies.set('AccessToken', jwt,
               {
                 path: path || '/',
@@ -91,15 +90,13 @@ export const GET: RequestHandler = async ({ params, fetch, locals, cookies }) =>
         });
       }
     }
-
-    return new Response('Unauthorized', { status: 401 });
   }
   try {
     const response = await fetch('https://summarizer.beckr.dev', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${jwt}`
+        'Authorization': `Bearer ${locals.user.jwt}`
       },
       body: JSON.stringify(summaryRequest)
     });

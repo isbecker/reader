@@ -67,8 +67,8 @@ export const GET: RequestHandler = async ({ params, fetch, locals, cookies }) =>
                 expires: expires ? new Date(expires) : undefined,
                 maxAge: maxAge,
                 domain: domain,
-                secure: secure,
-                httpOnly: httpOnly,
+                secure: true,
+                httpOnly: true,
                 sameSite: sameSite
               });
             locals.user.jwt = jwt;
@@ -81,8 +81,8 @@ export const GET: RequestHandler = async ({ params, fetch, locals, cookies }) =>
                 expires: expires,
                 maxAge: maxAge,
                 domain: domain,
-                secure: secure,
-                httpOnly: httpOnly,
+                secure: true,
+                httpOnly: true,
                 sameSite: sameSite
               });
             locals.user.refresh = refresh;

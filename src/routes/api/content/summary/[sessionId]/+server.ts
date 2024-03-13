@@ -34,8 +34,6 @@ export const GET: RequestHandler = async ({ params, fetch, locals, cookies }) =>
           let maxAge: number | undefined = undefined;
           let path: string | undefined = undefined;
           let domain: string | undefined = undefined;
-          let secure: boolean | undefined = undefined;
-          let httpOnly: boolean | undefined = undefined;
           let sameSite: 'Lax' | 'Strict' | 'None' | undefined = undefined;
 
           cookieAttributes.forEach(attr => {
@@ -50,10 +48,6 @@ export const GET: RequestHandler = async ({ params, fetch, locals, cookies }) =>
               path = value;
             } else if (key === 'Domain') {
               domain = value;
-            } else if (key === 'Secure') {
-              secure = value === 'Secure';
-            } else if (key === 'HttpOnly') {
-              httpOnly = value === 'HttpOnly';
             } else if (key === 'SameSite') {
               sameSite = value as 'Lax' | 'Strict' | 'None';
             }

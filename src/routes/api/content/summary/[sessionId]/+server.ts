@@ -24,7 +24,7 @@ export const GET: RequestHandler = async ({ params, fetch, locals, cookies }) =>
         },
       });
       if (!response.ok) {
-        throw redirect(307, '/auth/login');
+        redirect(307, '/auth/login');
       } else {
         response.headers.getSetCookie().forEach((cookieString) => {
           const cookieAttributes = cookieString.split(';').map(attr => attr.trim());
@@ -99,7 +99,7 @@ export const GET: RequestHandler = async ({ params, fetch, locals, cookies }) =>
       if (response.status === 401) {
         // Clear the session and redirect to login
         await kv.del(sessionId);
-        throw redirect(307, '/auth/login');
+        redirect(307, '/auth/login');
       }
       throw new Error(`Failed to connect: ${response.statusText}`);
     }

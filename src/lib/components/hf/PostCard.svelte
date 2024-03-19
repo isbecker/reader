@@ -128,7 +128,7 @@
           </div>
 
           <div>
-            <ul class="overflow-scroll w-screen join">
+            <ul class="overflow-auto max-w-full join">
               {#each post.attachments ?? [] as attachment, index}
                 <li>
                   <button

@@ -32,7 +32,7 @@
 
     {#if hasReplies(comment) && !isCollapsed}
         <div class="nested-comments transition ease-in-out duration-1000">
-            {#each comment.replies as reply}
+            {#each comment.replies ?? [] as reply}
                 <svelte:self comment={reply} />
             {/each}
         </div>

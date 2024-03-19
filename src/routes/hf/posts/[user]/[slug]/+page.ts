@@ -8,8 +8,8 @@ export const load: PageLoad = async ({ fetch, params }) => {
 
   const url = `/api/hf/posts/${user}/${slug}`
 
-  const hnJson = await fetch(url).then(async (res) => await res.json())
+  const hfJson: Promise<SocialPost> = fetch(url).then(async (res) => await res.json())
     .catch((err) => console.log(err));
 
-  return { post: hnJson as SocialPost }
+  return { post: hfJson }
 }

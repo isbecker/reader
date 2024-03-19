@@ -1,16 +1,13 @@
 <script lang="ts">
   // import Item from "$lib/hn/Item.svelte";
-  import { initializeApp } from "firebase/app";
-  import { getDatabase, ref, get, child } from "firebase/database";
-  import moment from "moment";
   import CommentCard from "$lib/components/hn/CommentCard.svelte";
+  import { initializeApp } from "firebase/app";
+  import { child, get, getDatabase, ref } from "firebase/database";
+  import moment from "moment";
   // import type Comment from "../../../../types/hn/Comment";
-  import { parseComment } from "$lib/types/hn/Comment";
-  import type Story from "$lib/types/hn/Story";
-  import type { PageData } from "./$types";
+  import { Comment, Item } from "$lib/types/hn/item";
   import { onMount } from "svelte";
-  import { parseStory } from "$lib/types/hn/Story";
-  import { Item, Comment } from "$lib/types/hn/item";
+  import type { PageData } from "./$types";
 
   import { writable } from "svelte/store";
 
@@ -50,7 +47,7 @@
   async function fetchCommentById(id: number): Promise<Comment> {
     // Implementation to fetch a single comment by ID
     // This would involve an API call or database query
-    const response = await fetch(`/api/hn/post/${id}`);
+    const response = await fetch(`/api/hn/item/${id}`);
     const commentJson = await response.json();
     const comment = commentJson as Comment;
     return comment;
@@ -117,8 +114,7 @@
   <meta property="og:type" content="article" />
   <meta
     property="og:url"
-    content="https://reader.beckr.dev/hn/item/{$story.id}"
-  />
+    content="https://reader.beckr.dev/hn/item/{$story.id}" />
   <meta property="og:site_name" content="beckr.dev reader" />
   <meta property="og:locale" content="en_US" />
   <meta property="article:author" content="Hacker News" />
@@ -135,8 +131,7 @@
     <div class="card-body">
       <a
         class="card-title flex-col place-items-start mx-auto"
-        href={$story.url}
-      >
+        href={$story.url}>
         <article class="join gap-1">
           <div class="text-base md:text-lg lg:text-3xl xl:text-5xl">
             {$story.title}
@@ -156,8 +151,7 @@
               width="24"
               class="fill-secondary"
               ><path
-                d="M320-240h320v-80H320v80Zm0-160h320v-80H320v80ZM240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v480q0 33-23.5 56.5T720-80H240Zm280-520v-200H240v640h480v-440H520ZM240-800v200-200 640-640Z"
-              />
+                d="M320-240h320v-80H320v80Zm0-160h320v-80H320v80ZM240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v480q0 33-23.5 56.5T720-80H240Zm280-520v-200H240v640h480v-440H520ZM240-800v200-200 640-640Z" />
             </svg>
           </a>
         </div>
@@ -166,8 +160,7 @@
           <a
             class="text-sm hover:underline"
             href="https://news.ycombinator.com/user?id={$story.author}"
-            >{$story.author}</a
-          >
+            >{$story.author}</a>
           <p class="text-sm">
             {moment.unix($story.time ?? 0).fromNow()}
           </p>

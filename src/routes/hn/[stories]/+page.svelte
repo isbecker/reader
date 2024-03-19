@@ -4,12 +4,14 @@
 
   // import StoryCard from "../../../components/hn/StoryCard.svelte";
   import Stories from "$lib/hn/Stories.svelte";
+  import Story from "$lib/hn/Story.svelte";
   import type { PageData } from "./$types";
 
   export let data: PageData;
 
-  $: stories = data.stories;
   $: kind = data.kind;
+
+  const skeletonStories = Array(30).fill(0);
 
   // const firebaseConfig = {
   //   databaseURL: "https://hacker-news.firebaseio.com",
@@ -33,9 +35,16 @@
 <svelte:head>
   <title>beckr.dev - Hacker News - {kind}</title>
 </svelte:head>
+
 <div>
   {#key kind}
-    <Stories storyKind={kind} initialStories={stories}></Stories>
+    {#await data.stories}
+      {#each skeletonStories as id}
+        <Story {id} />
+      {/each}
+    {:then stories}
+      <Stories storyKind={kind} initialStories={stories} />
+    {/await}
   {/key}
 </div>
 

@@ -23,14 +23,14 @@ export const load = async ({ parent, fetch, params }) => {
   }
 
 
-  // const story: Promise<Story> = fetch(`/api/hn/post/${id}`)
+  // const story: Promise<Story> = fetch(`/api/hn/item/${id}`)
   //   .then((res) => res.json())
   //   .then((story) => parseStory(story));
 
   // const comments = story.then((story) => {
   //   return Promise.all(
   //     story.kids?.map(async (id): Promise<Comment> => {
-  //       const res = await fetch(`/api/hn/post/${id}`);
+  //       const res = await fetch(`/api/hn/item/${id}`);
   //       const comment = await res.json();
   //       const parsed = parseComment(comment);
 
@@ -48,7 +48,7 @@ export const load = async ({ parent, fetch, params }) => {
 //   }): Promise<Comment[] | undefined> {
 
 //   return await Promise.all(comment.kids?.map(async (id) => {
-//     const res = await fetch(`/api/hn/post/${id}`);
+//     const res = await fetch(`/api/hn/item/${id}`);
 //     const comment = await res.json();
 //     const child = parseComment(comment);
 //     child.children = await loadChildren(child, fetch);

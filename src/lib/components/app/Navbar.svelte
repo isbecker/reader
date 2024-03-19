@@ -1,5 +1,5 @@
 <script lang="ts">
-    import ThemePicker from "$lib/components/app/ThemePicker.svelte";
+    import ThemePicker from "./ThemePicker.svelte";
 
     export let themes: string[];
     export let title: string;

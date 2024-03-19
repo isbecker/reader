@@ -1,8 +1,9 @@
 <script lang="ts">
   import moment from "moment";
   import type Story from "$lib/types/hn/Story";
+  import type { Item } from "$lib/types/hn/item";
 
-  export let story: Story;
+  export let story: Item;
 </script>
 
 <div class="hover:bg-accent rounded-box p-[.1rem]">
@@ -30,7 +31,7 @@
               >{story.author}</a
             >
             <p class="text-xs">
-              {moment.unix(story.time).fromNow()}
+              {moment.unix(story.time ?? 0).fromNow()}
             </p>
           </div>
         </div>

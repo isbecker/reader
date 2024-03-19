@@ -6,7 +6,7 @@ import { parseStory } from "$lib/types/hn/Story";
 export async function load({ fetch, params }) {
   const { id } = params;
 
-  const story: Story = await fetch(`/api/hn/post/${id}`)
+  const story: Story = await fetch(`/api/hn/item/${id}`)
     .then((res) => res.json())
     .then((story) => parseStory(story))
 

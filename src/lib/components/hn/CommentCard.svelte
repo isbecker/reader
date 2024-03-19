@@ -1,10 +1,10 @@
 <script lang="ts">
   import { browser } from "$app/environment";
   import type { Comment } from "$lib/types/hn/item";
+  import he from "he";
   import moment from "moment";
   import { onMount } from "svelte";
   import { writable } from "svelte/store";
-  import he from 'he';
 
   // import type Comment from "../../types/hn/Comment";
   // import { parseComment } from "../../types/hn/Comment";
@@ -34,7 +34,7 @@
   });
 
   async function fetchComment(): Promise<Comment> {
-    const res = await fetch(`/api/hn/post/${comment?.id ?? id}`);
+    const res = await fetch(`/api/hn/item/${comment?.id ?? id}`);
     const commentJson = await res.json();
     const freshComment = commentJson as Comment;
     freshComment.root = root;
@@ -54,8 +54,7 @@
   <div
     class="collapse collapse-plus divide-x divide-accent"
     id="comment-{$commentStore.id}"
-    style={`max-width: ${widthStyle};`}
-  >
+    style={`max-width: ${widthStyle};`}>
     <input class="" type="checkbox" {checked} />
     <article class="collapse-title text-xs font-medium">
       <div class="join gap-1">
@@ -66,8 +65,7 @@
         </a>
         <a
           href="#comment-{$commentStore.id}"
-          class="text-sm z-10 link link-accent max-w-[15ch] truncate"
-        >
+          class="text-sm z-10 link link-accent max-w-[15ch] truncate">
           {moment.unix($commentStore.time ?? 0).fromNow()}
         </a>
       </div>
@@ -75,19 +73,17 @@
 
     <div class="collapse-content" style={`max-width: ${widthStyle};`}>
       <article class="text-wrap prose">
-        {@html he.decode($commentStore.text)}
+        {@html he.decode($commentStore.text ?? "")}
       </article>
       {#if !$commentStore.isRoot}
         <div class="join gap-1">
           <a
             class="btn btn-ghost btn-xs link link-secondary"
-            href="#comment-{$commentStore.parent}">parent</a
-          >
+            href="#comment-{$commentStore.parent}">parent</a>
 
           <a
             class="btn btn-ghost btn-xs link link-secondary"
-            href="#comment-{$commentStore.root}">root</a
-          >
+            href="#comment-{$commentStore.root}">root</a>
         </div>
       {/if}
       {#if $commentStore.comments}
@@ -96,8 +92,7 @@
             <svelte:self
               comment={child}
               nestLevel={nestLevel + 1}
-              root={$commentStore.root ?? $commentStore.id}
-            />
+              root={$commentStore.root ?? $commentStore.id} />
           </div>
         {/each}
       {/if}

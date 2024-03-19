@@ -1,12 +1,12 @@
 <script lang="ts">
-  import { createQuery } from "@tanstack/svelte-query";
   import CommentCard from "$lib/components/hn/CommentCard.svelte";
   import { parseComment } from "$lib/types/hn/Comment";
   import { parseStory } from "$lib/types/hn/Story";
+  import { createQuery } from "@tanstack/svelte-query";
 
-  import type * as newStuff from "$lib/types/hn/item";
   import type Comment from "$lib/types/hn/Comment";
   import type Story from "$lib/types/hn/Story";
+  import type * as newStuff from "$lib/types/hn/item";
 
   export let id: number;
   export let story: Story | undefined = undefined;
@@ -16,7 +16,7 @@
     if (story) return story;
     if (comment) return comment;
 
-    const res = await fetch(`/api/hn/post/${id}`);
+    const res = await fetch(`/api/hn/item/${id}`);
     const itemJson = await res.json();
     if (itemJson.type === "story") {
       return parseStory(itemJson);

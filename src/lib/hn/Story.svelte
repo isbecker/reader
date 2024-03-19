@@ -1,16 +1,16 @@
 <script lang="ts">
-  import { createQuery } from "@tanstack/svelte-query";
   import StoryCard from "$lib/components/hn/StoryCard.svelte";
-  import type Story from "$lib/types/hn/Story";
-  import { parseStory } from "$lib/types/hn/Story";
-  import type {Item} from "$lib/types/hn/item";
+  import type { Item } from "$lib/types/hn/item";
+  import { createQuery } from "@tanstack/svelte-query";
 
   export let id: number;
 
   const fetchStory = async (id: number): Promise<Item> => {
-    const res = await fetch(`/api/hn/post/${id}`);
+    if (id === 0) return {} as Item; // For skeleton loading
+
+    const res = await fetch(`/api/hn/item/${id}`);
     const storyJson = await res.json();
-    return storyJson as Item
+    return storyJson as Item;
   };
 
   const story = createQuery<Item>({
@@ -22,7 +22,7 @@
 </script>
 
 <div class="container mx-auto">
-  {#if $story.isPending}
+  {#if $story.isPending || id === 0}
     <div class="">
       <div class="card card-bordered card-compact">
         <div class="card-body">
@@ -40,12 +40,10 @@
             </div>
           </div>
           <div class="card-actions justify-end">
-            <div
-              class="skeleton btn-xs md:btn-sm sm:btn-xs lg:btn-md w-10"
-            ></div>
-            <div
-              class="skeleton btn-xs md:btn-sm sm:btn-xs lg:btn-md w-36"
-            ></div>
+            <div class="skeleton btn-xs md:btn-sm sm:btn-xs lg:btn-md w-10">
+            </div>
+            <div class="skeleton btn-xs md:btn-sm sm:btn-xs lg:btn-md w-36">
+            </div>
           </div>
         </div>
       </div>

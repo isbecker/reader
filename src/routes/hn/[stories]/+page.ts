@@ -13,15 +13,15 @@ export const load: PageLoad = async ({ parent, fetch, params }) => {
       .then(async (ids) => {
         return ids.slice(0, 30)
       })
-      // .then(async (top) =>
-      //   await Promise.all(top.slice(0, 30)
-      //     .map(async (story: number) => {
-      //       return await fetch(`/api/hn/post/${story}`)
-      //         .then((res) => res.json())
-      //         .then((story) => parseStory(story));
-      //     })
-      //   )
-      // )
+    // .then(async (top) =>
+    //   await Promise.all(top.slice(0, 30)
+    //     .map(async (story: number) => {
+    //       return await fetch(`/api/hn/item/${story}`)
+    //         .then((res) => res.json())
+    //         .then((story) => parseStory(story));
+    //     })
+    //   )
+    // )
   }
 
   await queryClient.prefetchQuery({
@@ -31,6 +31,6 @@ export const load: PageLoad = async ({ parent, fetch, params }) => {
 
   return {
     kind: stories,
-    stories: await fetchStories()
+    stories: fetchStories()
   };
 }

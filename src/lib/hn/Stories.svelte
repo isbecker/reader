@@ -5,8 +5,8 @@
   import Story from "./Story.svelte";
 
   export let storyKind: string | undefined;
-  // export let initialStories: Story[] = [];
   export let initialStories: number[] = [];
+
   const client = useQueryClient();
   const stories = createQuery({
     queryKey: ["stories", storyKind],
@@ -19,7 +19,7 @@
       // .then(async (top) =>
       //   await Promise.all(top.slice(0, 30)
       //     .map(async (story: number) => {
-      //       return await fetch(`/api/hn/post/${story}`)
+      //       return await fetch(`/api/hn/item/${story}`)
       //         .then((res) => res.json())
       //         .then((story) => parseStory(story));
       //     })
@@ -28,8 +28,6 @@
     },
     initialData: initialStories,
   });
-
-  // console.log(initialStories)
 </script>
 
 <div class="flex flex-col place-items-center">

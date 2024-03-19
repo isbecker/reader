@@ -12,7 +12,7 @@
 
   $: fullPost = post.comments !== undefined;
 
-  const openLightbox = (index) => {
+  const openLightbox = (index: number) => {
     currentAttachmentIndex = index;
     lightboxOpen = true;
   };
@@ -35,7 +35,7 @@
 
   // Close lightbox on ESC key press
   onMount(() => {
-    const handleKeydown = (event) => {
+    const handleKeydown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         closeLightbox();
       }

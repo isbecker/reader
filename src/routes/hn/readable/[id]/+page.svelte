@@ -1,8 +1,8 @@
 <script lang="ts">
   import SvelteMarkdown from "svelte-markdown";
   import { writable } from "svelte/store";
-  import type Readable from "../../../../types/Reabable";
-  import type Story from "../../../../types/hn/Story";
+  import type Readable from "$lib/types/Reabable";
+  import type Story from "$lib/types/hn/Story";
 
   export let data;
 

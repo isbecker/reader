@@ -2,9 +2,9 @@ import type { RequestHandler } from '@sveltejs/kit';
 import { json } from '@sveltejs/kit';
 import { JSDOM } from 'jsdom';
 
-import PostParser from '$lib/hf/PostParser';
+import PostParser from '$lib/types/hf/PostParser';
 
-export const GET: RequestHandler = async ({ request, fetch, params }) => {
+export const GET: RequestHandler = async ({ fetch, params }) => {
   const { slug } = params;
   const { user } = params;
 

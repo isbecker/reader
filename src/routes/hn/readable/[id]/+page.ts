@@ -1,7 +1,7 @@
-import type Readable from "../../../../types/Reabable";
-import { parseReadable } from "../../../../types/Reabable";
-import type Story from "../../../../types/hn/Story";
-import { parseStory } from "../../../../types/hn/Story";
+import type Readable from "$lib/types/Reabable";
+import { parseReadable } from "$lib/types/Reabable";
+import type Story from "$lib/types/hn/Story";
+import { parseStory } from "$lib/types/hn/Story";
 
 export async function load({ fetch, params }) {
   const { id } = params;

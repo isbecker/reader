@@ -1,7 +1,7 @@
 import moment from 'moment';
-import { parseReadable } from '../../../../../../types/Reabable.js';
-import type Post from '../../../../../../types/reddit/Post.js';
-import { parsePost } from '../../../../../../types/reddit/Post.js';
+import { parseReadable } from '$lib/types/Reabable.js';
+import type Post from '$lib/types/reddit/Post.js';
+import { parsePost } from '$lib/types/reddit/Post.js';
 
 export async function load({ fetch, params }) {
   const { name, id, title } = params;

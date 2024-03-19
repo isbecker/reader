@@ -4,8 +4,8 @@
 
   import { injectSpeedInsights } from "@vercel/speed-insights/sveltekit";
   import "../app.css";
-  import Navbar from "../components/Navbar.svelte";
-  import Sidebar from "../components/Sidebar.svelte";
+  import Navbar from "$lib/components/app/Navbar.svelte";
+  import Sidebar from "$lib/components/app/Sidebar.svelte";
 
   export let data: PageData;
   const themes = [

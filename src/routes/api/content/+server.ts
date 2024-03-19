@@ -1,8 +1,7 @@
 // src/routes/api/content/+server.ts
 import type { RequestHandler } from '@sveltejs/kit';
-import fetch from 'cross-fetch';
 
-export const GET: RequestHandler = async ({ request }) => {
+export const GET: RequestHandler = async ({ request, fetch }) => {
     const url = new URL(request.url).searchParams.get('url')
     if (!url) {
         return new Response(JSON.stringify(

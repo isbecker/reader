@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { SocialPost } from "$lib/hf/schemas/SocialPostSchema";
+  import type { SocialPost } from "$lib/types/hf/schemas/SocialPostSchema";
   import hljs from "highlight.js";
   import "highlight.js/styles/github.css";
   import moment from "moment";

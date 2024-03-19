@@ -1,4 +1,4 @@
-import PostParser from '$lib/hf/PostParser';
+import PostParser from '$lib/types/hf/PostParser';
 import type { RequestHandler } from '@sveltejs/kit';
 import { json } from '@sveltejs/kit';
 

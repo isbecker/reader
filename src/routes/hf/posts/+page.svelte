@@ -6,6 +6,10 @@
   $: posts = data.posts;
 </script>
 
+<svelte:head>
+  <title>beckr.dev - HF Posts</title>
+</svelte:head>
+
 <div>
   <Posts {posts} />
 </div>

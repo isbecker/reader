@@ -1,7 +1,7 @@
-import type { SocialPost } from '$lib/hf/schemas/SocialPostSchema';
+import type { SocialPost } from '$lib/types/hf/schemas/SocialPostSchema';
 import type { PageLoad } from './$types';
 
-export const load: PageLoad = async ({ parent, fetch, params }) => {
+export const load: PageLoad = async ({ fetch, params }) => {
 
   const { slug } = params;
   const { user } = params;

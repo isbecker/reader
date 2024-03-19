@@ -1,5 +1,5 @@
 <script lang="ts">
-  import PostCard from "../../../components/PostCard.svelte";
+  import PostCard from "$lib/components/reddit/PostCard.svelte";
 
   export let data;
 

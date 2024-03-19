@@ -1,57 +1,57 @@
-import type Comment from "../../../../types/hn/Comment";
-import { parseComment } from "../../../../types/hn/Comment";
-import type Story from "../../../../types/hn/Story";
-import { parseStory } from "../../../../types/hn/Story";
+// import { parsePwaStory } from "../../../../types/hn/Story";
+// import { parsePwaStory } from "../../../../types/hn/Story";
+import type { Item } from '$lib/types/hn/item';
 
-export async function load({ fetch, params }) {
+export const load = async ({ parent, fetch, params }) => {
+
+  const { queryClient } = await parent();
   const { id } = params;
 
-  const story = await fetch(`/api/hn/post/${id}`)
-    .then((res) => res.json())
-    .then((story) => parseStory(story))
-    .then(async (story) => {
-      story.comments = await loadComments(story, fetch);
-      return story;
-    })
+  const fetchStory = async () => {
+    return await fetch(`/api/hnpwa/item/${id}`)
+      .then(async (res) => await res.json())
+      .then(async (hnpwa) => hnpwa as Item);
+  }
 
-  return { story }
+  await queryClient.prefetchQuery({
+    queryKey: ['item', id],
+    queryFn: fetchStory,
+  });
+
+  return {
+    item: await fetchStory()
+  }
+
+
+  // const story: Promise<Story> = fetch(`/api/hn/post/${id}`)
+  //   .then((res) => res.json())
+  //   .then((story) => parseStory(story));
+
+  // const comments = story.then((story) => {
+  //   return Promise.all(
+  //     story.kids?.map(async (id): Promise<Comment> => {
+  //       const res = await fetch(`/api/hn/post/${id}`);
+  //       const comment = await res.json();
+  //       const parsed = parseComment(comment);
+
+  //       return parsed;
+  //     }) || [])
+  // });
+
+
 }
 
-async function loadComments(story: Story, fetch: {
-  (input: URL | RequestInfo, init?: RequestInit | undefined): Promise<Response>;
-  (input: string | URL | Request, init?: RequestInit | undefined): Promise<Response>;
-}): Promise<Comment[] | undefined> {
+// async function loadChildren(comment: Comment,
+//   fetch: {
+//     (input: URL | RequestInfo, init?: RequestInit | undefined): Promise<Response>;
+//     (input: string | URL | Request, init?: RequestInit | undefined): Promise<Response>;
+//   }): Promise<Comment[] | undefined> {
 
-  if (!story.kids) return undefined;
-
-  const comments = await Promise.all(story.kids.map(async (id) => {
-    const response = await fetch(`/api/hn/post/${id}`);
-    const commentRes = await response.json();
-    const comment = parseComment(commentRes);
-    comment.children = await loadChildren(comment, fetch);
-    return comment
-  }));
-
-  return comments;
-}
-
-
-async function loadChildren(comment: Comment,
-  fetch: {
-    (input: URL | RequestInfo, init?: RequestInit | undefined): Promise<Response>;
-    (input: string | URL | Request, init?: RequestInit | undefined): Promise<Response>;
-  }): Promise<Comment[] | undefined> {
-  if (!comment.kids) return undefined;
-
-  const comments = await Promise.all(comment.kids.map(async (id) => {
-    const response = await fetch(`/api/hn/post/${id}`);
-    const commentRes = await response.json();
-
-    const child = parseComment(commentRes, comment.root ?? comment.id);
-    child.children = await loadChildren(child, fetch);
-
-    return child
-  }));
-
-  return comments;
-}
+//   return await Promise.all(comment.kids?.map(async (id) => {
+//     const res = await fetch(`/api/hn/post/${id}`);
+//     const comment = await res.json();
+//     const child = parseComment(comment);
+//     child.children = await loadChildren(child, fetch);
+//     return child;
+//   }) || []);
+// }

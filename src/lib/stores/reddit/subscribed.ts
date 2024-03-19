@@ -10,12 +10,8 @@ const defaultValue: Subscription[] = [
   { name: "gaming", url: "/r/gaming" },
 ]
 
-const initialValue = browser ?
-  JSON.parse(
-    localStorage.getItem("reddit.subscriptions") || ""
-  )
-  || defaultValue
-  : defaultValue;
+const storedValue = browser ? localStorage.getItem("reddit.subscriptions") : null;
+const initialValue = storedValue ? JSON.parse(storedValue) : defaultValue;
 export const subscriptions = writable<Subscription[]>(initialValue);
 
 subscriptions.subscribe((value) => {

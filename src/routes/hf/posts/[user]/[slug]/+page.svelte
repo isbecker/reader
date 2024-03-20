@@ -1,25 +1,43 @@
 <script lang="ts">
   import Comment from "$lib/components/hf/Comment.svelte";
   import Post from "$lib/components/hf/Post.svelte";
+  import type { SocialPost } from "$lib/types/hf/schemas/SocialPostSchema";
+  import { createQuery } from "@tanstack/svelte-query";
+
   export let data;
 
   let skeletonComments = Array(3).fill(0);
+
+  const fetchPost = async (user: string, slug: string) => {
+    const res = await fetch(`/api/hf/posts/${user}/${slug}`);
+    const postJson = await res.json();
+    return postJson as SocialPost;
+  };
+
+  const post = createQuery({
+    queryKey: ["hf", "post", data.user, data.slug],
+    queryFn: async () => {
+      return await fetchPost(data.user, data.slug);
+    },
+  });
 </script>
 
 <svelte:head>
-  {#await data.post}
+  {#if $post.isLoading}
     <title>beckr.dev - HF Post</title>
-  {:then post}
-    <title>{post.rawContent.slice(0, 64)}... - beckr.dev - @{post.author?.name} on HF</title>
-    <meta name="description" content={post.rawContent} />
-    <meta property="og:title" content={post.rawContent} />
-    <meta property="og:description" content={post.rawContent} />
-    <meta property="og:image" content={post.author?.avatarUrl} />
-  {/await}
+  {:else if $post.isSuccess}
+    <title
+      >{$post.data.rawContent.slice(0, 64)}... - beckr.dev - @{$post.data.author
+        ?.name} on HF</title>
+    <meta name="description" content={$post.data.rawContent} />
+    <meta property="og:title" content={$post.data.rawContent} />
+    <meta property="og:description" content={$post.data.rawContent} />
+    <meta property="og:image" content={$post.data.author?.avatarUrl} />
+  {/if}
 </svelte:head>
 
 <div>
-  {#await data.post}
+  {#if $post.isLoading}
     <div class="container max-w-4xl mx-auto p-1">
       <div class="card card-bordered card-compact bg-base-100 shadow-xl">
         <div class="card-body">
@@ -89,14 +107,14 @@
         </div>
       </div>
     {/each}
-  {:then post}
-    <Post {post} />
+  {:else if $post.isSuccess}
+    <Post post={$post.data} />
     <div id="comments">
-      {#each post.comments ?? [] as comment}
+      {#each $post.data.comments ?? [] as comment}
         <div>
           <Comment {comment} />
         </div>
       {/each}
     </div>
-  {/await}
+  {/if}
 </div>

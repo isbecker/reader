@@ -91,7 +91,7 @@
       <article class="text-wrap prose">
         {@html he.decode($commentStore.data.text ?? "")}
       </article>
-      {#if !$commentStore.data.isRoot}
+      {#if nestLevel > 0}
         <div class="join gap-1">
           <a
             class="btn btn-ghost btn-xs link link-secondary"

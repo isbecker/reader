@@ -14,7 +14,7 @@
   };
 
   const story = createQuery<Item>({
-    queryKey: ["story", id],
+    queryKey: ["hn", "item", id],
     queryFn: async () => {
       return await fetchStory(id);
     },

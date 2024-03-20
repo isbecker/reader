@@ -5,6 +5,7 @@
   // import StoryCard from "../../../components/hn/StoryCard.svelte";
   import Stories from "$lib/hn/Stories.svelte";
   import Story from "$lib/hn/Story.svelte";
+  import { createQuery } from "@tanstack/svelte-query";
   import type { PageData } from "./$types";
 
   export let data: PageData;
@@ -12,6 +13,19 @@
   $: kind = data.kind;
 
   const skeletonStories = Array(30).fill(0);
+
+  const fetchStories = async (kind: string) => {
+    const res = await fetch(`/api/hn/${kind}`);
+    const stories = await res.json();
+    return stories;
+  };
+
+  $: stories = createQuery({
+    queryKey: ["hn", "stories", kind],
+    queryFn: async () => {
+      return await fetchStories(kind);
+    },
+  });
 
   // const firebaseConfig = {
   //   databaseURL: "https://hacker-news.firebaseio.com",
@@ -37,14 +51,16 @@
 </svelte:head>
 
 <div>
-  {#key kind}
-    {#await data.stories}
+  {#key data.kind}
+    {#if $stories.isLoading}
       {#each skeletonStories as id}
         <Story {id} />
       {/each}
-    {:then stories}
-      <Stories storyKind={kind} initialStories={stories} />
-    {/await}
+    {:else if $stories.isSuccess}
+      <Stories storyKind={kind} initialStories={$stories.data.slice(0, 30)} />
+    {:else if $stories.isError}
+      <div>Error: {$stories.error.message}</div>
+    {/if}
   {/key}
 </div>
 

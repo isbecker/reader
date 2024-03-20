@@ -1,10 +1,8 @@
 <script lang="ts">
-  import { browser } from "$app/environment";
-  import type { Comment } from "$lib/types/hn/item";
+  import { Comment } from "$lib/types/hn/item";
+  import { createQuery } from "@tanstack/svelte-query";
   import he from "he";
   import moment from "moment";
-  import { onMount } from "svelte";
-  import { writable } from "svelte/store";
 
   // import type Comment from "../../types/hn/Comment";
   // import { parseComment } from "../../types/hn/Comment";
@@ -14,7 +12,15 @@
   export let nestLevel: number = 0;
   export let root: number | undefined = undefined;
 
-  let commentStore = writable(comment);
+  // const queryClient = useQueryClient();
+
+  // let commentStore = writable(comment);
+  const commentStore = createQuery({
+    queryKey: ["hn", "item", comment?.id ?? id],
+    queryFn: fetchComment,
+    refetchInterval: 1000 * 60 * 5, // 5 minutes
+    initialData: comment || Comment.createEmpty(id),
+  });
 
   // let commentPromise: Promise<Comment> = comment
   //   ? Promise.resolve(comment)
@@ -27,11 +33,11 @@
     return `calc(100vw - ${level * baseSubtractAmount}px)`;
   }
 
-  onMount(async () => {
-    if (browser) {
-      await fetchComment();
-    }
-  });
+  // onMount(async () => {
+  //   if (browser) {
+  //     await fetchComment();
+  //   }
+  // });
 
   async function fetchComment(): Promise<Comment> {
     const res = await fetch(`/api/hn/item/${comment?.id ?? id}`);
@@ -40,7 +46,7 @@
     freshComment.root = root;
     freshComment.isRoot = nestLevel === 0;
 
-    commentStore.set(freshComment);
+    // commentStore.set(freshComment);
 
     return freshComment;
   }
@@ -50,49 +56,59 @@
 </script>
 
 <!-- {#await commentPromise then comment} -->
-{#if $commentStore && $commentStore.author}
+{#if $commentStore.isLoading}
+  <div>Loading</div>
+{:else if $commentStore.isError}
+  <div>Error: {$commentStore.error.message}</div>
+{:else if $commentStore.isSuccess}
+  <!-- <h1>
+    {queryClient.getQueryData(["hn", "item", comment?.id ?? id])
+      ? "Cached"
+      : "New"}
+  </h1> -->
+  <!-- {#if $commentStore && $commentStore.author} -->
   <div
     class="collapse collapse-plus divide-x divide-accent"
-    id="comment-{$commentStore.id}"
+    id="comment-{$commentStore.data.id}"
     style={`max-width: ${widthStyle};`}>
     <input class="" type="checkbox" {checked} />
     <article class="collapse-title text-xs font-medium">
       <div class="join gap-1">
         <a
-          href="https://news.ycombinator.com/user?id={$commentStore.author}"
+          href="{$commentStore.data.deleted ? "" : `https://news.ycombinator.com/user?id=${$commentStore.data.author}`}"
           class="text-sm z-10 link link-secondary max-w-[10ch] truncate"
-          >{$commentStore.author}
+          >{$commentStore.data.deleted ? "deleted" : $commentStore.data.author}
         </a>
         <a
-          href="#comment-{$commentStore.id}"
+          href="#comment-{$commentStore.data.id}"
           class="text-sm z-10 link link-accent max-w-[15ch] truncate">
-          {moment.unix($commentStore.time ?? 0).fromNow()}
+          {moment.unix($commentStore.data.time ?? 0).fromNow()}
         </a>
       </div>
     </article>
 
     <div class="collapse-content" style={`max-width: ${widthStyle};`}>
       <article class="text-wrap prose">
-        {@html he.decode($commentStore.text ?? "")}
+        {@html he.decode($commentStore.data.text ?? "")}
       </article>
-      {#if !$commentStore.isRoot}
+      {#if !$commentStore.data.isRoot}
         <div class="join gap-1">
           <a
             class="btn btn-ghost btn-xs link link-secondary"
-            href="#comment-{$commentStore.parent}">parent</a>
+            href="#comment-{$commentStore.data.parent}">parent</a>
 
           <a
             class="btn btn-ghost btn-xs link link-secondary"
-            href="#comment-{$commentStore.root}">root</a>
+            href="#comment-{$commentStore.data.root}">root</a>
         </div>
       {/if}
-      {#if $commentStore.comments}
-        {#each $commentStore.comments as child}
+      {#if $commentStore.data.comments}
+        {#each $commentStore.data.comments as child}
           <div class="child-comment">
             <svelte:self
               comment={child}
               nestLevel={nestLevel + 1}
-              root={$commentStore.root ?? $commentStore.id} />
+              root={$commentStore.data.root ?? $commentStore.data.id} />
           </div>
         {/each}
       {/if}

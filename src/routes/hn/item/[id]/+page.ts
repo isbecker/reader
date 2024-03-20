@@ -14,12 +14,12 @@ export const load = async ({ parent, fetch, params }) => {
   }
 
   await queryClient.prefetchQuery({
-    queryKey: ['item', id],
+    queryKey: ["hn", "item", id],
     queryFn: fetchStory,
   });
 
   return {
-    item: await fetchStory()
+    itemId: id
   }
 
 

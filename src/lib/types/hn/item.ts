@@ -1,6 +1,7 @@
 
 import { ItemSchema as OfficialSchema, type Item as OfficialItem } from '$lib/types/hn/hn';
 import { ItemSchema as PwaSchema, type Item as PwaItem } from '$lib/types/hn/hnpwa';
+import he from 'he';
 import type { z } from 'zod';
 
 type ItemSource = OfficialItem | PwaItem;
@@ -27,7 +28,7 @@ export class Item {
   domain?: string;
   deleted?: boolean;
   dead?: boolean;
-  comments?: Item[]
+  comments?: Comment[]
 
   constructor(source: ItemSource) {
     this.id = source.id;
@@ -63,15 +64,18 @@ export class Item {
       this.comments = source.comments.map(comment => {
         return new Comment(comment);
       })
-    } else if ('kids' in source && source.kids){
+    } else if ('kids' in source && source.kids) {
       this.comments = source.kids?.map(id => {
-        return new Comment({ id, parent: this.id, isRoot: false });
+        return Comment.createEmpty(id, this.id, false);
       }
       );
     }
     // The PWA API uses 'link' while the official API uses 'story'
     if (this.type === ItemType.Link) {
       this.type = ItemType.Story;
+    }
+    if (this.text) {
+      this.text = he.decode(this.text);
     }
   }
 
@@ -92,13 +96,15 @@ export class Item {
 export class Comment extends Item {
   isRoot: boolean;
   root?: number;
-  // level: number;
 
   constructor(source: ItemSource) {
     super(source);
     this.isRoot = false;
-    // this.isRoot = level === 0;
-    // this.root = source.root;
-    // this.level = level;
+  }
+
+  static createEmpty(id?: number, parent?: number, isRoot?: boolean): Comment {
+    const comment = new Comment({ id: id ?? 0, parent: parent ?? 0, time: 0 });
+    comment.isRoot = isRoot ?? false;
+    return comment;
   }
 }

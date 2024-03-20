@@ -8,29 +8,17 @@ export const load: PageLoad = async ({ parent, fetch, params }) => {
   const { stories } = params; // top, hot, new, best, ask, show, job
 
   const fetchStories = async () => {
-    return await fetch(`/api/hn/${stories}`)
-      .then(async (res) => await res.json())
-      .then(async (ids) => {
-        return ids.slice(0, 30)
-      })
-    // .then(async (top) =>
-    //   await Promise.all(top.slice(0, 30)
-    //     .map(async (story: number) => {
-    //       return await fetch(`/api/hn/item/${story}`)
-    //         .then((res) => res.json())
-    //         .then((story) => parseStory(story));
-    //     })
-    //   )
-    // )
+    const response = await fetch(`/api/hn/${stories}`);
+    const ids = await response.json();
+    return ids;
   }
 
   await queryClient.prefetchQuery({
-    queryKey: ['hn', stories],
+    queryKey: ['hn', "stories", stories],
     queryFn: fetchStories,
   });
 
   return {
     kind: stories,
-    stories: fetchStories()
   };
 }

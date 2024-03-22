@@ -1,5 +1,10 @@
+import type { Config } from '@sveltejs/adapter-vercel';
 import {Item, Comment} from '$lib/types/hn/item';
 import { json, type RequestHandler } from '@sveltejs/kit';
+
+export const config: Config = {
+  runtime: 'edge',
+};
 
 export const GET: RequestHandler = async ({ params, fetch, url }) => {
     const { id } = params;

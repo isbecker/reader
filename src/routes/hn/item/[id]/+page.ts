@@ -1,4 +1,5 @@
 import { api } from "$lib/api/hn";
+import type { Item } from "$lib/types/hn/item";
 import type { PageLoad } from './$types';
 
 export const load: PageLoad = async ({ parent, fetch, params }) => {
@@ -24,7 +25,7 @@ export const load: PageLoad = async ({ parent, fetch, params }) => {
   //   queryKey: ["hnpwa", "item", itemId],
   //   queryFn: () => api(fetch).getItemPwa(itemId),
   // });
-  const cached = await queryClient.getQueryData(["hn", "item", itemId]) as Item
+  const cached = queryClient.getQueryData<Item>(["hn", "item", itemId])
   if (cached) {
     if (cached.kids && cached.comments?.length === 0) {
       // console.log(`${moment().unix()} - removing cached item`)

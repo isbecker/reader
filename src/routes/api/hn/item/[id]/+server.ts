@@ -1,6 +1,6 @@
 import type { Config } from '@sveltejs/adapter-vercel';
 import {Item, Comment} from '$lib/types/hn/item';
-import { json, type RequestHandler } from '@sveltejs/kit';
+import { json, redirect, type RequestHandler } from '@sveltejs/kit';
 
 export const config: Config = {
   runtime: 'edge',
@@ -12,11 +12,13 @@ export const GET: RequestHandler = async ({ params, fetch, url }) => {
 
     const itemId = parseInt(id as string);
 
-    let item: Item;
+    const maxItems = 1500;
+    let item: Item  = await fetchItem(itemId, fetch);
+    if ((item.descendants ?? 0) > maxItems) {
+      redirect(307, `/api/hnpwa/item/${id}`);
+    }
     if (deep === 'true') {
-      item = await fetchItemFull(itemId, fetch);
-    } else {
-      item = await fetchItem(itemId, fetch);
+      item = await fetchItemFull(item, fetch, maxItems);
     }
     
     return json(item,
@@ -38,11 +40,11 @@ async function fetchItem(id: number, customFetch = fetch): Promise<Item> {
   return Item.createFromOfficial(data);
 }
 
-async function fetchItemFull(id: number, customFetch = fetch): Promise<Item> {
-  const item = await fetchItem(id, customFetch);
+async function fetchItemFull(item: Item, customFetch = fetch, maxItems: number): Promise<Item> {
 
   if (item.kids) {
-    const kids = await Promise.all(item.kids.map(async (id: number) => await fetchItemFull(id, customFetch) as Comment));
+    const kidMax = maxItems - item.kids.length - 1;
+    const kids = await Promise.all(item.kids.map(async (id: number) => await fetchItemFull(id, customFetch, kidMax) as Comment));
     item.comments = kids;
   }
 

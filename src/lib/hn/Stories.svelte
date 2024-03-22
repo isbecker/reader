@@ -2,32 +2,20 @@
   import { createQuery, useQueryClient } from "@tanstack/svelte-query";
   // import StoryCard from '../../components/hn/StoryCard.svelte';
   // import type Story from '../../types/hn/Story';
+  import { api } from "$lib/api/hn";
   import Story from "./Story.svelte";
 
-  export let storyKind: string | undefined;
+  export let storyKind: string = "top";
   export let initialStories: number[] = [];
+  export let skip: number = 0;
+  export let size: number = 30;
 
-  const client = useQueryClient();
   const stories = createQuery({
-    queryKey: ["stories", storyKind],
-    queryFn: async () => {
-      return await fetch(`/api/hn/${storyKind}`)
-        .then(async (res) => await res.json())
-        .then(async (ids) => {
-          return ids.slice(0, 30);
-        });
-      // .then(async (top) =>
-      //   await Promise.all(top.slice(0, 30)
-      //     .map(async (story: number) => {
-      //       return await fetch(`/api/hn/item/${story}`)
-      //         .then((res) => res.json())
-      //         .then((story) => parseStory(story));
-      //     })
-      //   )
-      // )
-    },
+    queryKey: ["hn", "stories", storyKind],
+    queryFn: () => api().getStories(storyKind),
     initialData: initialStories,
   });
+
 </script>
 
 <div class="flex flex-col place-items-center">
@@ -40,7 +28,7 @@
   {:else if $stories.isError}
     <div>Error: {$stories.error.message}</div>
   {:else if $stories.isSuccess}
-    {#each $stories.data as id}
+    {#each $stories.data.slice(skip, skip + size) as id}
       <div class="container mx-auto">
         <!-- <div>{client.getQueryData(['stories', storyKind]) ? 'Cached': 'New'}</div> -->
         <Story {id} />

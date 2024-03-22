@@ -1,5 +1,6 @@
 <script lang="ts">
   import { QueryClientProvider } from "@tanstack/svelte-query";
+  import {SvelteQueryDevtools} from "@tanstack/svelte-query-devtools"
   import type { PageData } from "./$types";
 
   import { injectSpeedInsights } from "@vercel/speed-insights/sveltekit";
@@ -196,6 +197,7 @@
       </button>
     </div>
   </main>
+  <SvelteQueryDevtools initialIsOpen={true} />
 </QueryClientProvider>
 
 <style>

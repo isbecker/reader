@@ -1,15 +1,19 @@
-import {Item} from '$lib/types/hn/item';
+import {Item, Comment} from '$lib/types/hn/item';
 import { json, type RequestHandler } from '@sveltejs/kit';
 
-export const GET: RequestHandler = async ({ params }) => {
+export const GET: RequestHandler = async ({ params, fetch, url }) => {
     const { id } = params;
+    const deep = url.searchParams.get('deep') ?? 'false';
 
+    const itemId = parseInt(id as string);
 
-    const hnJson = await fetch(`https://hacker-news.firebaseio.com/v0/item/${id}.json`)
-        .then(async (res) => await res.json())
-        .catch((err) => console.log(err));
-    const item = Item.createFromOfficial(hnJson)
-
+    let item: Item;
+    if (deep === 'true') {
+      item = await fetchItemFull(itemId, fetch);
+    } else {
+      item = await fetchItem(itemId, fetch);
+    }
+    
     return json(item,
         {
             status: 200,
@@ -20,4 +24,22 @@ export const GET: RequestHandler = async ({ params }) => {
                 'Vercel-CDN-Cache-Control': 'max-age=3600, public, s-maxage=3600, stale-while-revalidate=3600, stale-if-error=3600',
             }
         });
+}
+
+async function fetchItem(id: number, customFetch = fetch): Promise<Item> {
+  const response = await customFetch(`https://hacker-news.firebaseio.com/v0/item/${id}.json`);
+  const data = await response.json();
+
+  return Item.createFromOfficial(data);
+}
+
+async function fetchItemFull(id: number, customFetch = fetch): Promise<Item> {
+  const item = await fetchItem(id, customFetch);
+
+  if (item.kids) {
+    const kids = await Promise.all(item.kids.map(async (id: number) => await fetchItemFull(id, customFetch) as Comment));
+    item.comments = kids;
+  }
+
+  return item;
 }

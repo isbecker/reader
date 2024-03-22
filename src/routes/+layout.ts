@@ -9,7 +9,7 @@ export const load: LayoutLoad = async () => {
     defaultOptions: {
       queries: {
         enabled: browser,
-        staleTime: 1000,
+        staleTime: 1000 * 60 * 10,
       },
     },
   })

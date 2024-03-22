@@ -3,23 +3,88 @@
   import CommentCard from "$lib/components/hn/CommentCard.svelte";
   import moment from "moment";
   // import type Comment from "../../../../types/hn/Comment";
-  import { Comment, Item } from "$lib/types/hn/item";
-  import { createQuery } from "@tanstack/svelte-query";
+  import { api } from "$lib/api/hn";
+  import { Item, Comment } from "$lib/types/hn/item";
+  import { createQuery, useQueryClient, createQueries } from "@tanstack/svelte-query";
+  import { writable } from "svelte/store";
   import type { PageData } from "./$types";
 
   // export let data: { story: Story; comments: Promise<Comment[]> };
   export let data: PageData;
 
+  const queryclient = useQueryClient();
+
+  const freshened = writable<boolean>(false);
+
   const fetchStory = async () => {
-    return await fetch(`/api/hn/item/${data.itemId}`)
-      .then(async (res) => await res.json())
-      .then(async (hnpwa) => hnpwa as Item);
+    const story = await fetchItem(data.itemId);
+    $freshened = true;
+    return story;
   };
 
-  const story = createQuery<Item>({
-    queryKey: ["hn", "item", data.itemId],
-    queryFn: fetchStory,
-  });
+  // const cacheAll = async (story: Item) => {
+  //   for await (const child of story.comments ?? []) {
+  //     await queryclient.setQueryData(["hn", "item", child.id], child);
+  //     await cacheAll(child);
+  //   }
+  // };
+
+  const fetchItem = async (id: number): Promise<Item> => {
+    // const cached = (await queryclient.getQueryData(["hn", "item", id])) as Item;
+
+    const fresh = await api().getItem(id, true);
+    // await cacheAll(fresh);
+
+    // console.log(JSON.stringify(fresh, null, 2))
+
+    // console.log(fresh.text);
+
+    // const merged = cached ? await mergeStory(cached, fresh) : fresh;
+
+    // console.log(merged);
+    return fresh;
+  };
+
+  const mergeStory = async (cached: Item, fresh: Item): Promise<Item> => {
+    // fresh.comments?.forEach(async (kid) => {
+    //   if (!cached.comments?.includes(kid)) {
+    //     console.log("adding new comment: " + kid.id)
+    //     const data = await api().getItem(kid.id)
+    //     cached.comments?.push(data as Comment)
+    //   }
+    // });
+
+    return cached;
+  };
+
+  // const pwaStory = createQuery<Item>({
+  //   queryKey: ["hnpwa", "item", data.itemId],
+  //   queryFn: () => api().getItemPwa(data.itemId),
+  // });
+
+  // console.log(`${moment().unix()} - setting up query with placeholderData`);
+
+  const story = createQuery<Item>(
+    // derived(freshened, ($freshened) => (
+    {
+      queryKey: ["hn", "item", data.itemId],
+      queryFn: () => api().getItem(data.itemId, true),
+      placeholderData: data.story,
+      // refetchInterval: $freshened ? 1000 * 60 * 10 : 1000 * 1,
+    },
+    // )),
+  );
+  // const test = createQueries( {
+  //   queries: $story.isSuccess ? $story.data.kids?.map((id) => ({
+  //     queryKey: ["hn", "item", id],
+  //     queryFn: () => fetchItem(id),
+  //   })
+  //   ) : [],
+
+  // })
+  // $test.map((query) => {
+  //   console.log(query.data)
+  // })
   // let story = writable(data.item);
 
   // const firebaseConfig = {
@@ -50,15 +115,15 @@
   //     });
   // });
 
-  // Assume this function is available to fetch a single comment by its ID
-  async function fetchCommentById(id: number): Promise<Comment> {
-    // Implementation to fetch a single comment by ID
-    // This would involve an API call or database query
-    const response = await fetch(`/api/hn/item/${id}`);
-    const commentJson = await response.json();
-    const comment = commentJson as Comment;
-    return comment;
-  }
+  // // Assume this function is available to fetch a single comment by its ID
+  // async function fetchCommentById(id: number): Promise<Comment> {
+  //   // Implementation to fetch a single comment by ID
+  //   // This would involve an API call or database query
+  //   const response = await fetch(`/api/hn/item/${id}`);
+  //   const commentJson = await response.json();
+  //   const comment = commentJson as Comment;
+  //   return comment;
+  // }
 
   // // Recursive function to fetch a comment and its children
   // async function fetchCommentTree(
@@ -147,8 +212,75 @@
 </svelte:head>
 
 {#if $story.isLoading}
-  <!-- TODO: Add skeleton -->
   <div>Loading...</div>
+  <!-- <div class="">
+      <div class="card">
+        <div class="card-body">
+          <a
+            class="card-title flex-col place-items-start mx-auto"
+            href={data.story.url}>
+            <article class="join gap-1">
+              <div class="text-base md:text-lg lg:text-3xl xl:text-5xl">
+                {data.story.title}
+              </div>
+              {#if data.story.domain}
+                <div class="text-sm self-center">({data.story.domain})</div>
+              {/if}
+            </article>
+            <div class="tooltip place-self-center" data-tip="Reader view">
+              <a
+                href="/hn/readable/{data.story.id}"
+                class="link link-primary btn btn-ghost max-w-fit"
+                ><svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  height="24"
+                  viewBox="0 -960 960 960"
+                  width="24"
+                  class="fill-secondary"
+                  ><path
+                    d="M320-240h320v-80H320v80Zm0-160h320v-80H320v80ZM240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v480q0 33-23.5 56.5T720-80H240Zm280-520v-200H240v640h480v-440H520ZM240-800v200-200 640-640Z" />
+                </svg>
+              </a>
+            </div>
+            <div class="join gap-1 mx-auto">
+              <div class="text-sm text-accent">
+                {data.story.score} points
+              </div>
+              <a
+                class="text-sm hover:underline"
+                href="https://news.ycombinator.com/user?id={data.story.author}"
+                >by <span class="text-secondary">{data.story.author}</span
+                ></a>
+              <p class="text-sm">
+                {moment.unix(data.story.time ?? 0).fromNow()}
+              </p>
+              <span class="divider divider-horizontal"></span>
+              <div class="text-sm text-primary">
+                {data.story.descendants ?? 0} comments
+              </div>
+            </div>
+          </a>
+          <div class=" max-w-prose w-full mx-auto">
+            {#if data.story.text}
+              <article class="text-wrap prose">
+                {@html data.story.text}
+              </article>
+            {/if}
+          </div>
+        </div>
+      </div>
+      <div class="">
+        <ul class="divide-y divide-neutral mx-auto max-w-max">
+          {#each data.story.comments || [] as comment}
+            <li class="">
+              <div class="">
+                <CommentCard {comment} />
+              </div>
+            </li>
+          {/each}
+        </ul>
+      </div>
+    </div> -->
 {:else if $story.isError}
   <div>Error: {$story.error.message}</div>
 {:else if $story.isSuccess}
@@ -182,14 +314,18 @@
             </a>
           </div>
           <div class="join gap-1 mx-auto">
-            <div class="text-sm">{$story.data.score} points</div>
+            <div class="text-sm text-accent">{$story.data.score} points</div>
             <a
               class="text-sm hover:underline"
               href="https://news.ycombinator.com/user?id={$story.data.author}"
-              >{$story.data.author}</a>
+              >by <span class="text-secondary">{$story.data.author}</span></a>
             <p class="text-sm">
               {moment.unix($story.data.time ?? 0).fromNow()}
             </p>
+            <span class="divider divider-horizontal"></span>
+            <div class="text-sm text-primary">
+              {$story.data.descendants ?? 0} comments
+            </div>
           </div>
         </a>
         <div class=" max-w-prose w-full mx-auto">
@@ -201,15 +337,22 @@
     </div>
     <div class="">
       <ul class="divide-y divide-neutral mx-auto max-w-max">
-        {#if $story.data.comments}
-          {#each $story.data.comments as comment}
-            <li class="">
-              <div class="">
-                <CommentCard {comment} />
-              </div>
-            </li>
-          {/each}
-        {/if}
+        <!-- {#each $story.data.kids || [] as id}
+        <li class="">
+          <div class="">
+            <CommentCard id={id} />
+          </div>
+        </li>
+        {/each} -->
+        <!-- {#key $story.data.kids} -->
+        {#each $story.data.comments || [] as comment}
+          <li class="">
+            <div class="">
+              <CommentCard {comment} />
+            </div>
+          </li>
+        {/each}
+        <!-- {/key} -->
       </ul>
     </div>
   </div>

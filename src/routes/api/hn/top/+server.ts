@@ -5,7 +5,7 @@ import type { RequestHandler } from '@sveltejs/kit';
 // const app: FirebaseApp = initializeApp({ databaseURL: "https://hacker-news.firebaseio.com/v0/" });
 
 
-export const GET: RequestHandler = async () => {
+export const GET: RequestHandler = async ({ fetch }) => {
 
   const hnJson = await fetch('https://hacker-news.firebaseio.com/v0/topstories.json')
     .then(async (res) => await res.json())

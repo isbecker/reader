@@ -64,11 +64,13 @@ export class Item {
       this.comments = source.comments.map(comment => {
         return new Comment(comment);
       })
-    } else if ('kids' in source && source.kids) {
-      this.comments = source.kids?.map(id => {
-        return Comment.createEmpty(id, this.id, false);
-      }
-      );
+    }
+     else if ('kids' in source && source.kids) {
+      this.comments = []
+      // this.comments = source.kids?.map(id => {
+      //   return Comment.createEmpty(id, this.id, false);
+      // }
+      // );
     }
     // The PWA API uses 'link' while the official API uses 'story'
     if (this.type === ItemType.Link) {

@@ -1,24 +1,23 @@
 // import { createQuery } from "@tanstack/svelte-query";
 // import { parseStory } from "../../../types/hn/Story";
+import { api } from '$lib/api/hn';
 import type { PageLoad } from './$types';
 
-export const load: PageLoad = async ({ parent, fetch, params }) => {
+export const load: PageLoad = async ({ parent, fetch, params, url }) => {
 
   const { queryClient } = await parent()
   const { stories } = params; // top, hot, new, best, ask, show, job
-
-  const fetchStories = async () => {
-    const response = await fetch(`/api/hn/${stories}`);
-    const ids = await response.json();
-    return ids;
-  }
+  const skip = parseInt(url.searchParams.get('skip') ?? '0');
+  const size = parseInt(url.searchParams.get('size') ?? '30');
 
   await queryClient.prefetchQuery({
     queryKey: ['hn', "stories", stories],
-    queryFn: fetchStories,
+    queryFn: () => api(fetch).getStories(stories),
   });
 
   return {
     kind: stories,
+    skip: skip,
+    size: size
   };
 }

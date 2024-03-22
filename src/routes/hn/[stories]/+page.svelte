@@ -3,6 +3,7 @@
   // import { getDatabase, ref, child, get } from "firebase/database";
 
   // import StoryCard from "../../../components/hn/StoryCard.svelte";
+  import { api } from "$lib/api/hn";
   import Stories from "$lib/hn/Stories.svelte";
   import Story from "$lib/hn/Story.svelte";
   import { createQuery } from "@tanstack/svelte-query";
@@ -11,20 +12,29 @@
   export let data: PageData;
 
   $: kind = data.kind;
+  $: skip = data.skip;
+  $: size = data.size;
+
+  $: next = skip + size;
+  $: prev = skip - size;
+  $: {
+    // Check if next would go past end of the length of $stories.data
+    if ($stories && $stories.isSuccess) {
+      const length = $stories.data.length;
+      if (next >= length) {
+        next = -1;
+      }
+      if (prev < 0) {
+        prev = -1;
+      }
+    }
+  }
 
   const skeletonStories = Array(30).fill(0);
 
-  const fetchStories = async (kind: string) => {
-    const res = await fetch(`/api/hn/${kind}`);
-    const stories = await res.json();
-    return stories;
-  };
-
   $: stories = createQuery({
     queryKey: ["hn", "stories", kind],
-    queryFn: async () => {
-      return await fetchStories(kind);
-    },
+    queryFn: () => api().getStories(kind),
   });
 
   // const firebaseConfig = {
@@ -51,13 +61,27 @@
 </svelte:head>
 
 <div>
-  {#key data.kind}
+  {#key kind}
     {#if $stories.isLoading}
       {#each skeletonStories as id}
         <Story {id} />
       {/each}
     {:else if $stories.isSuccess}
-      <Stories storyKind={kind} initialStories={$stories.data.slice(0, 30)} />
+      {#key skip}
+        <Stories
+          storyKind={kind}
+          initialStories={$stories.data}
+          {skip}
+          {size} />
+        <div class="flex flex-row w-full justify-center p-4 gap-4">
+          {#if prev >= 0}
+            <a class="btn btn-accent" href="?skip={prev}&size={size}">prev</a>
+          {/if}
+          {#if next > 0}
+            <a class="btn btn-accent" href="?skip={next}&size={size}">next</a>
+          {/if}
+        </div>
+      {/key}
     {:else if $stories.isError}
       <div>Error: {$stories.error.message}</div>
     {/if}

@@ -1,7 +1,7 @@
 import {Item} from '$lib/types/hn/item';
 import { json, type RequestHandler } from '@sveltejs/kit';
 
-export const GET: RequestHandler = async ({ params }) => {
+export const GET: RequestHandler = async ({ params, fetch }) => {
   const { id } = params;
 
   const hnJson = await fetch(`https://api.hnpwa.com/v0/item/${id}.json`)

@@ -1,23 +1,14 @@
 <script lang="ts">
+  import { api } from "$lib/api/hn";
   import StoryCard from "$lib/components/hn/StoryCard.svelte";
   import type { Item } from "$lib/types/hn/item";
   import { createQuery } from "@tanstack/svelte-query";
 
   export let id: number;
 
-  const fetchStory = async (id: number): Promise<Item> => {
-    if (id === 0) return {} as Item; // For skeleton loading
-
-    const res = await fetch(`/api/hn/item/${id}`);
-    const storyJson = await res.json();
-    return storyJson as Item;
-  };
-
   const story = createQuery<Item>({
     queryKey: ["hn", "item", id],
-    queryFn: async () => {
-      return await fetchStory(id);
-    },
+    queryFn: () => api().getItem(id),
   });
 </script>
 

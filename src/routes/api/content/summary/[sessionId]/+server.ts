@@ -112,19 +112,19 @@ export const GET: RequestHandler = async ({ params, fetch, locals, cookies }) =>
     if (contentType && contentType.includes('application/json')) {
       // transform the json into an event stream
       const json = await response.json();
-      const event = JSON.stringify({
-        // this is the event name that the summarizer sends as a final step, we are just going to fake it
-        event: "reduceStep",
-        data: json
+      const headers = new Headers({
+        'Content-Type': 'text/event-stream',
+        'Cache-Control': 'no-cache',
+        'Connection': 'keep-alive'
       });
-      return new Response(`data: ${event}\n\n`, {
-        status: 200,
-        headers: {
-          'Content-Type': 'text/event-stream',
-          'Cache-Control': 'no-cache',
-          'Connection': 'keep-alive',
-        },
-      });
+      const encoder = new TextEncoder();
+      const stream = new TransformStream();
+      const writable = stream.writable;
+      const writer = writable.getWriter();
+      const response = new Response(stream.readable, { headers });
+      writer.write(encoder.encode(`event: reduceStep\n` + `data: ${JSON.stringify(json)}\n\n`));
+      writer.close();
+      return response;
     }
     else if (contentType && contentType.includes('text/event-stream')) {
       return new Response(response.body, {

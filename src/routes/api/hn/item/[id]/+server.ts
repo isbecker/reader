@@ -49,7 +49,6 @@ async function fetchItemFull(item: Item | number, customFetch = fetch): Promise<
   if (item.kids) {
     const kids = await Promise.all(item.kids.map(async (kid) => {
       const child = await fetchItemFull(kid, customFetch) as Comment;
-      child.parent = (item as Comment).id; // Add type assertion here
       child.root = (item as Comment).root ?? (item as Comment).id;
       return child;
     }));

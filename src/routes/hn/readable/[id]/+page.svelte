@@ -75,11 +75,16 @@
         reduceResult += response;
       });
 
-      eventSource.addEventListener("[DONE]", (_) => {
+      eventSource.addEventListener("done", (_) => {
         eventSource.close();
         summary = reduceResult;
         summaryLoading = false;
       });
+
+      eventSource.onerror = (error) => {
+        eventSource.close();
+        summaryLoading = false;
+      };
 
       // Set up event listeners on eventSource as needed...
     } else {

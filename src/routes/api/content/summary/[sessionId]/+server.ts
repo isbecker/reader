@@ -123,6 +123,7 @@ export const GET: RequestHandler = async ({ params, fetch, locals, cookies }) =>
       const writer = writable.getWriter();
       const streamResponse = new Response(stream.readable, { headers });
       writer.write(encoder.encode(`event: reduceStep\n` + `data: ${JSON.stringify(json)}\n\n`));
+      writer.write(encoder.encode('event: done\ndata: {}\n\n'));
       writer.close();
       return streamResponse;
     }

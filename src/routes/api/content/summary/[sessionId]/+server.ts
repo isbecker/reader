@@ -121,10 +121,10 @@ export const GET: RequestHandler = async ({ params, fetch, locals, cookies }) =>
       const stream = new TransformStream();
       const writable = stream.writable;
       const writer = writable.getWriter();
-      const response = new Response(stream.readable, { headers });
+      const streamResponse = new Response(stream.readable, { headers });
       writer.write(encoder.encode(`event: reduceStep\n` + `data: ${JSON.stringify(json)}\n\n`));
       writer.close();
-      return response;
+      return streamResponse;
     }
     else if (contentType && contentType.includes('text/event-stream')) {
       return new Response(response.body, {

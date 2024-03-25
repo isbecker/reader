@@ -44,7 +44,7 @@ async function fetchItem(id: number, customFetch = fetch): Promise<Item> {
 async function fetchItemFull(item: Item, customFetch = fetch): Promise<Item> {
   const kids = item.kids ? await Promise.all(item.kids.map(async (kid) => {
     const child = await fetchItem(kid, customFetch) as Comment;
-    child.root = (item as Comment).root ?? item.id;
+    child.root = (item as Comment).root ?? (item.type === 'comment' ? item.id : undefined);
     return await fetchItemFull(child, customFetch) as Comment;
   })) : [];
   item.comments = kids as Comment[];

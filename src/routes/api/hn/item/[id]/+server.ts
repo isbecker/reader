@@ -41,19 +41,13 @@ async function fetchItem(id: number, customFetch = fetch): Promise<Item> {
   return Item.createFromOfficial(data);
 }
 
-async function fetchItemFull(item: Item | number, customFetch = fetch): Promise<Item> {
-
-  if (typeof item === 'number') {
-    item = await fetchItem(item, customFetch);
-  }
-  if (item.kids) {
-    const kids = await Promise.all(item.kids.map(async (kid) => {
-      const child = await fetchItemFull(kid, customFetch) as Comment;
-      child.root = (item as Comment).root ?? (item as Comment).id;
-      return child;
-    }));
-    item.comments = kids;
-  }
+async function fetchItemFull(item: Item, customFetch = fetch): Promise<Item> {
+  const kids = item.kids ? await Promise.all(item.kids.map(async (kid) => {
+    const child = await fetchItem(kid, customFetch) as Comment;
+    child.root = (item as Comment).root ?? item.id;
+    return await fetchItemFull(child, customFetch) as Comment;
+  })) : [];
+  item.comments = kids as Comment[];
 
   return item;
 }

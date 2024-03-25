@@ -78,6 +78,7 @@
       eventSource.addEventListener("done", (_) => {
         eventSource.close();
         summary = reduceResult;
+        reduceResult = ""; // Reset the reduce result
         summaryLoading = false;
       });
 

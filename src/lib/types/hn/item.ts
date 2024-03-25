@@ -65,7 +65,7 @@ export class Item {
         return new Comment(comment);
       })
     }
-     else if ('kids' in source && source.kids) {
+    else if ('kids' in source && source.kids) {
       this.comments = []
       // this.comments = source.kids?.map(id => {
       //   return Comment.createEmpty(id, this.id, false);
@@ -84,14 +84,28 @@ export class Item {
 
   static createFromOfficial(jsonData: z.infer<typeof OfficialSchema>): Item {
     const parsedData = OfficialSchema.parse(jsonData); // Validate JSON data with Zod
-    return new Item(parsedData); // Create and return a Story instance
+    const item: Item = new Item(parsedData); // Create and return a Story instance
+    // Prepend a <p> tag to the text if it's not empty
+    if (item.text) {
+      item.text = `<p>${item.text}`;
+    }
+    return item;
   }
 
   static createFromPwa(itemJson: z.infer<typeof PwaSchema>): Item {
     const parsedItem = PwaSchema.parse(itemJson); // Validate item JSON with Zod
+
     return new Item(parsedItem); // Create and return a Story instance
   }
 
+  // static createCommentRoots(comment: Comment): void {
+  //   if (comment.comments) {
+  //     comment.comments.forEach(child => {
+  //       child.root = comment.id;
+  //       this.createCommentRoots(child);
+  //     });
+  //   }
+  // }
 }
 
 

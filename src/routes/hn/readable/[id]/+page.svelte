@@ -75,7 +75,7 @@
         reduceResult += response;
       });
 
-      eventSource.addEventListener("[DONE]", (event) => {
+      eventSource.addEventListener("[DONE]", (_) => {
         eventSource.close();
         summary = reduceResult;
         summaryLoading = false;

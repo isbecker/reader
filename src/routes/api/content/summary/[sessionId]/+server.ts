@@ -106,15 +106,44 @@ export const GET: RequestHandler = async ({ params, fetch, locals, cookies }) =>
 
     await kv.del(sessionId);
 
-    // Stream the response back to the client
-    return new Response(response.body, {
-      status: 200,
-      headers: {
-        'Content-Type': 'text/event-stream',
-        'Cache-Control': 'no-cache',
-        'Connection': 'keep-alive',
-      },
-    });
+    // Check the response type
+    // If it is a JSON response, parse it and return it
+    const contentType = response.headers.get('Content-Type');
+    if (contentType && contentType.includes('application/json')) {
+      // transform the json into an event stream
+      const json = await response.json();
+      const event = JSON.stringify({
+        // this is the event name that the summarizer sends as a final step, we are just going to fake it
+        event: "reduceStep",
+        data: json
+      });
+      return new Response(`data: ${event}\n\n`, {
+        status: 200,
+        headers: {
+          'Content-Type': 'text/event-stream',
+          'Cache-Control': 'no-cache',
+          'Connection': 'keep-alive',
+        },
+      });
+    }
+    else if (contentType && contentType.includes('text/event-stream')) {
+      return new Response(response.body, {
+        status: 200,
+        headers: {
+          'Content-Type': 'text/event-stream',
+          'Cache-Control': 'no-cache',
+          'Connection': 'keep-alive',
+        },
+      });
+    }
+    else {
+      return new Response(await response.text(), {
+        status: 200,
+        headers: {
+          'Content-Type': contentType || 'text/plain'
+        }
+      });
+    }
   } catch (error) {
     if (error instanceof Error) {
       return new Response(JSON.stringify({ error: error.message }), {

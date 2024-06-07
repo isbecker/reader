@@ -1,33 +1,37 @@
 <script lang="ts">
   import CommentCard from "$lib/components/hn/CommentCard.svelte";
-  import { parseComment } from "$lib/types/hn/Comment";
-  import { parseStory } from "$lib/types/hn/Story";
+  // import { parseComment } from "$lib/types/hn/Comment";
+  // import { parseStory } from "$lib/types/hn/Story";
   import { createQuery } from "@tanstack/svelte-query";
 
-  import type Comment from "$lib/types/hn/Comment";
-  import type Story from "$lib/types/hn/Story";
-  import type * as newStuff from "$lib/types/hn/item";
+  // import type Comment from "$lib/types/hn/Comment";
+  // import type Story from "$lib/types/hn/Story";
+  // import type * as newStuff from "$lib/types/hn/item";
+
+  import type { Comment, Item } from "$lib/types/hn/item";
 
   export let id: number;
-  export let story: Story | undefined = undefined;
+  export let story: Item | undefined = undefined;
   export let comment: Comment | undefined = undefined;
 
-  const fetchItem = async (id: number) => {
+  const fetchItem = async (id: number): Promise<Item> => {
     if (story) return story;
     if (comment) return comment;
 
     const res = await fetch(`/api/hn/item/${id}`);
     const itemJson = await res.json();
     if (itemJson.type === "story") {
-      return parseStory(itemJson);
+      return itemJson as Item;
     } else if (itemJson.type === "comment") {
-      console.log(itemJson as newStuff.Item);
-      return parseComment(itemJson);
+      // console.log(itemJson as newStuff.Item);
+      return itemJson as Comment;
     }
+
+    return Promise.reject("Unknown item type");
   };
 
   const item = createQuery({
-    queryKey: ["item", id],
+    queryKey: ["hn", "item", id],
     queryFn: async () => {
       return await fetchItem(id);
     },

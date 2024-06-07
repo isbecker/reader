@@ -1,8 +1,8 @@
 <script lang="ts">
   import SvelteMarkdown from "svelte-markdown";
   import { writable } from "svelte/store";
-  import type Readable from "../../../../types/Reabable";
-  import type Story from "../../../../types/hn/Story";
+  import type Readable from "$lib/types/Reabable";
+  import type Story from "$lib/types/hn/Story";
 
   export let data;
 
@@ -75,11 +75,17 @@
         reduceResult += response;
       });
 
-      eventSource.addEventListener("[DONE]", (event) => {
+      eventSource.addEventListener("done", (_) => {
         eventSource.close();
         summary = reduceResult;
+        reduceResult = ""; // Reset the reduce result
         summaryLoading = false;
       });
+
+      eventSource.onerror = (error) => {
+        eventSource.close();
+        summaryLoading = false;
+      };
 
       // Set up event listeners on eventSource as needed...
     } else {

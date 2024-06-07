@@ -1,57 +1,78 @@
-import type Comment from "../../../../types/hn/Comment";
-import { parseComment } from "../../../../types/hn/Comment";
-import type Story from "../../../../types/hn/Story";
-import { parseStory } from "../../../../types/hn/Story";
+import { api } from "$lib/api/hn";
+import type { Item } from "$lib/types/hn/item";
+import type { PageLoad } from './$types';
 
-export async function load({ fetch, params }) {
+export const load: PageLoad = async ({ parent, fetch, params }) => {
+
+  const { queryClient } = await parent();
   const { id } = params;
+  const itemId = parseInt(id)
+  // const pwaStory = await api(fetch).getItemPwa(itemId);
+  // console.debug("finished pwa cache fetch");
 
-  const story = await fetch(`/api/hn/post/${id}`)
-    .then((res) => res.json())
-    .then((story) => parseStory(story))
-    .then(async (story) => {
-      story.comments = await loadComments(story, fetch);
-      return story;
-    })
+  const full = (async () => {
+    // console.log(`${moment().unix()} - Fetching full item`)
+    return api(fetch).getItem(itemId, true)
+  })()
 
-  return { story }
+  // full.finally(() => {
+  //   console.log(`${moment().unix()} - Full item fetched`)
+  // })
+
+
+
+  // await queryClient.prefetchQuery({
+  //   queryKey: ["hnpwa", "item", itemId],
+  //   queryFn: () => api(fetch).getItemPwa(itemId),
+  // });
+  const cached = queryClient.getQueryData<Item>(["hn", "item", itemId])
+  if (cached) {
+    if (cached.kids && cached.comments?.length === 0) {
+      // console.log(`${moment().unix()} - removing cached item`)
+      queryClient.removeQueries({ queryKey: ["hn", "item", itemId] })
+    }
+  }
+  queryClient.prefetchQuery({
+    queryKey: ["hn", "item", itemId],
+    queryFn: () => full
+  });
+
+  // console.log(`${moment().unix()} - returning from load`)
+  return {
+    itemId: itemId,
+    story: await api(fetch).getItemPwa(itemId)
+  }
+
+
+  // const story: Promise<Story> = fetch(`/api/hn/item/${id}`)
+  //   .then((res) => res.json())
+  //   .then((story) => parseStory(story));
+
+  // const comments = story.then((story) => {
+  //   return Promise.all(
+  //     story.kids?.map(async (id): Promise<Comment> => {
+  //       const res = await fetch(`/api/hn/item/${id}`);
+  //       const comment = await res.json();
+  //       const parsed = parseComment(comment);
+
+  //       return parsed;
+  //     }) || [])
+  // });
+
+
 }
 
-async function loadComments(story: Story, fetch: {
-  (input: URL | RequestInfo, init?: RequestInit | undefined): Promise<Response>;
-  (input: string | URL | Request, init?: RequestInit | undefined): Promise<Response>;
-}): Promise<Comment[] | undefined> {
+// async function loadChildren(comment: Comment,
+//   fetch: {
+//     (input: URL | RequestInfo, init?: RequestInit | undefined): Promise<Response>;
+//     (input: string | URL | Request, init?: RequestInit | undefined): Promise<Response>;
+//   }): Promise<Comment[] | undefined> {
 
-  if (!story.kids) return undefined;
-
-  const comments = await Promise.all(story.kids.map(async (id) => {
-    const response = await fetch(`/api/hn/post/${id}`);
-    const commentRes = await response.json();
-    const comment = parseComment(commentRes);
-    comment.children = await loadChildren(comment, fetch);
-    return comment
-  }));
-
-  return comments;
-}
-
-
-async function loadChildren(comment: Comment,
-  fetch: {
-    (input: URL | RequestInfo, init?: RequestInit | undefined): Promise<Response>;
-    (input: string | URL | Request, init?: RequestInit | undefined): Promise<Response>;
-  }): Promise<Comment[] | undefined> {
-  if (!comment.kids) return undefined;
-
-  const comments = await Promise.all(comment.kids.map(async (id) => {
-    const response = await fetch(`/api/hn/post/${id}`);
-    const commentRes = await response.json();
-
-    const child = parseComment(commentRes, comment.root ?? comment.id);
-    child.children = await loadChildren(child, fetch);
-
-    return child
-  }));
-
-  return comments;
-}
+//   return await Promise.all(comment.kids?.map(async (id) => {
+//     const res = await fetch(`/api/hn/item/${id}`);
+//     const comment = await res.json();
+//     const child = parseComment(comment);
+//     child.children = await loadChildren(child, fetch);
+//     return child;
+//   }) || []);
+// }

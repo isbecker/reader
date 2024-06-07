@@ -24,7 +24,7 @@ export const GET: RequestHandler = async ({ params, fetch, locals, cookies }) =>
         },
       });
       if (!response.ok) {
-        throw redirect(307, '/auth/login');
+        redirect(307, '/auth/login');
       } else {
         response.headers.getSetCookie().forEach((cookieString) => {
           const cookieAttributes = cookieString.split(';').map(attr => attr.trim());
@@ -99,22 +99,52 @@ export const GET: RequestHandler = async ({ params, fetch, locals, cookies }) =>
       if (response.status === 401) {
         // Clear the session and redirect to login
         await kv.del(sessionId);
-        throw redirect(307, '/auth/login');
+        redirect(307, '/auth/login');
       }
       throw new Error(`Failed to connect: ${response.statusText}`);
     }
 
     await kv.del(sessionId);
 
-    // Stream the response back to the client
-    return new Response(response.body, {
-      status: 200,
-      headers: {
+    // Check the response type
+    // If it is a JSON response, parse it and return it
+    const contentType = response.headers.get('Content-Type');
+    if (contentType && contentType.includes('application/json')) {
+      // transform the json into an event stream
+      const json = await response.json();
+      const headers = new Headers({
         'Content-Type': 'text/event-stream',
         'Cache-Control': 'no-cache',
-        'Connection': 'keep-alive',
-      },
-    });
+        'Connection': 'keep-alive'
+      });
+      const encoder = new TextEncoder();
+      const stream = new TransformStream();
+      const writable = stream.writable;
+      const writer = writable.getWriter();
+      const streamResponse = new Response(stream.readable, { headers });
+      writer.write(encoder.encode(`event: reduceStep\n` + `data: ${JSON.stringify(json)}\n\n`));
+      writer.write(encoder.encode('event: done\ndata: {}\n\n'));
+      writer.close();
+      return streamResponse;
+    }
+    else if (contentType && contentType.includes('text/event-stream')) {
+      return new Response(response.body, {
+        status: 200,
+        headers: {
+          'Content-Type': 'text/event-stream',
+          'Cache-Control': 'no-cache',
+          'Connection': 'keep-alive',
+        },
+      });
+    }
+    else {
+      return new Response(await response.text(), {
+        status: 200,
+        headers: {
+          'Content-Type': contentType || 'text/plain'
+        }
+      });
+    }
   } catch (error) {
     if (error instanceof Error) {
       return new Response(JSON.stringify({ error: error.message }), {

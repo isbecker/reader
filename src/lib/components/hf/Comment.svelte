@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Comment } from "$lib/hf/schemas/CommentSchemas";
+  import type { Comment } from "$lib/types/hf/schemas/CommentSchemas";
   import moment from "moment";
 
   export let comment: Comment;

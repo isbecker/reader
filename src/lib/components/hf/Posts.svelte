@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { SocialPostsData } from "$lib/hf/PostParser";
+  import type { SocialPostsData } from "$lib/types/hf/PostParser";
   import PostCard from "./PostCard.svelte";
   export let posts: SocialPostsData;
 </script>

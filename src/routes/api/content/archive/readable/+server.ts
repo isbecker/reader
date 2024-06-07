@@ -18,6 +18,14 @@ export const GET: RequestHandler = async ({ request, fetch }) => {
   const response = await fetch(`/api/content/archive?url=${encodedUrl}`)
   const jsonResp = await response.json()
 
+  if (!jsonResp) {
+    return new Response(JSON.stringify({ error: `Failed to fetch content: ${url}` }), {
+      status: 500,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+  }
   const readable = await fetch(`/api/content/readable?url=${jsonResp[0].url}`)
   const readableJson = await readable.json()
 

@@ -1,5 +1,5 @@
 import moment from "moment";
-import { parseSubreddit } from "../../../types/reddit/Subreddit";
+import { parseSubreddit } from "$lib/types/reddit/Subreddit";
 
 export async function load({ fetch, params }) {
 

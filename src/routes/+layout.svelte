@@ -1,11 +1,12 @@
 <script lang="ts">
   import { QueryClientProvider } from "@tanstack/svelte-query";
+  import {SvelteQueryDevtools} from "@tanstack/svelte-query-devtools"
   import type { PageData } from "./$types";
 
   import { injectSpeedInsights } from "@vercel/speed-insights/sveltekit";
   import "../app.css";
-  import Navbar from "../components/Navbar.svelte";
-  import Sidebar from "../components/Sidebar.svelte";
+  import Navbar from "$lib/components/app/Navbar.svelte";
+  import Sidebar from "$lib/components/app/Sidebar.svelte";
 
   export let data: PageData;
   const themes = [
@@ -196,6 +197,7 @@
       </button>
     </div>
   </main>
+  <SvelteQueryDevtools initialIsOpen={true} />
 </QueryClientProvider>
 
 <style>

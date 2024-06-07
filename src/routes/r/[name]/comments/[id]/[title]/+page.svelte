@@ -1,5 +1,5 @@
 <script lang="ts">
-  import CommentCard from "../../../../../../components/reddit/CommentCard.svelte";
+  import CommentCard from "$lib/components/reddit/CommentCard.svelte";
   import he from "he";
   export let data;
 </script>

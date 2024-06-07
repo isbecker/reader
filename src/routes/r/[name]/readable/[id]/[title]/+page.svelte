@@ -1,8 +1,8 @@
 <script lang="ts">
   import SvelteMarkdown from "svelte-markdown";
   import { writable } from "svelte/store";
-  import type Readable from "../../../../../../types/Reabable";
-  import type Post from "../../../../../../types/reddit/Post";
+  import type Readable from "$lib/types/Reabable";
+  import type Post from "$lib/types/reddit/Post";
 
   export let data;
   const readable: Readable = data.readable;
@@ -79,7 +79,6 @@
         eventSource.close();
       });
 
-      // Set up event listeners on eventSource as needed...
     } else {
       console.error("Failed to set up summary");
     }

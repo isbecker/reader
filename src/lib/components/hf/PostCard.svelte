@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { SocialPost } from "$lib/hf/schemas/SocialPostSchema";
+  import type { SocialPost } from "$lib/types/hf/schemas/SocialPostSchema";
   import hljs from "highlight.js";
   import "highlight.js/styles/github.css";
   import moment from "moment";
@@ -12,7 +12,7 @@
 
   $: fullPost = post.comments !== undefined;
 
-  const openLightbox = (index) => {
+  const openLightbox = (index: number) => {
     currentAttachmentIndex = index;
     lightboxOpen = true;
   };
@@ -35,7 +35,7 @@
 
   // Close lightbox on ESC key press
   onMount(() => {
-    const handleKeydown = (event) => {
+    const handleKeydown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         closeLightbox();
       }
@@ -128,7 +128,7 @@
           </div>
 
           <div>
-            <ul class="overflow-scroll w-screen join">
+            <ul class="overflow-auto max-w-full join">
               {#each post.attachments ?? [] as attachment, index}
                 <li>
                   <button

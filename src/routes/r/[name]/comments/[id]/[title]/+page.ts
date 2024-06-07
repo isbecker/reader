@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { parsePost } from '../../../../../../types/reddit/Post';
+import { parsePost } from '$lib/types/reddit/Post';
 
 
 

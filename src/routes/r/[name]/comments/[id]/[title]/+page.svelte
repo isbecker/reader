@@ -1,6 +1,6 @@
 <script lang="ts">
-  import CommentCard from "$lib/components/reddit/CommentCard.svelte";
   import he from "he";
+  import CommentCard from "$lib/components/reddit/CommentCard.svelte";
   export let data;
 </script>
 
@@ -44,6 +44,24 @@
           alt="img"
         />
       </div>
+    {/if}
+    {#if post.is_gallery}
+    <div class="carousel mx-auto rounded-box max-w-prose space-x-4 p-4">
+      {#each Object.keys(post.media_metadata) as key}
+        {#if post.media_metadata[key].p.length > 0}
+          <img 
+            class="carousel-item w-full"
+            id={key}
+            src={post.media_metadata[key].p[post.media_metadata[key].p.length-1].u} alt="Image {key}" 
+          />
+        {/if}
+      {/each}
+    </div>
+    <div class="flex w-full justify-center gap-2 py-2">
+      {#each Object.keys(post.media_metadata) as key, index}
+        <a href="#{key}" class="btn btn-xs">{index + 1}</a>
+      {/each}
+    </div>
     {/if}
 
     <div id="comments-section" class="flex flex-col max-w-max mx-auto">

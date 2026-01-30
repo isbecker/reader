@@ -19,7 +19,6 @@
       systems = [ "x86_64-linux" "i686-linux" "x86_64-darwin" "aarch64-linux" "aarch64-darwin" ];
 
       perSystem = { config, self', inputs', pkgs, system, lib, ... }: {
-        packages.default = pkgs.git;
 
         devenv.shells.default = {
           name = "reader";
@@ -41,7 +40,6 @@
 
           pre-commit.hooks = {
             treefmt = {
-              package = pkgs.treefmt2;
               enable = true;
               settings = {
                 formatters = [
@@ -55,10 +53,11 @@
           };
 
           packages = [
-            config.packages.default
             pkgs.just
             pkgs.direnv
+            pkgs.treefmt
           ];
+
         };
       };
     };

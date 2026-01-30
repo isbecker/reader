@@ -1,0 +1,19 @@
+[formatter.typescript]
+command = "biome"
+options = ["format", "--write", "--no-errors-on-unmatched"]
+includes = ["*.ts", "*.json"]
+excludes = ["**/app.d.ts"]
+
+[formatter.md]
+command = "mdformat"
+includes = ["*.md"]
+excludes = ["LICENSE.md"]
+
+[formatter.nix]
+command = "nixpkgs-fmt"
+includes = ["*.nix"]
+
+[formatter.toml]
+command = "taplo"
+options = ["fmt"]
+includes = ["*.toml", "*.editorconfig"]

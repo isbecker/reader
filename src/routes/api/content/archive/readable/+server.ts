@@ -1,33 +1,27 @@
-import type { RequestHandler } from '@sveltejs/kit';
-import { json } from '@sveltejs/kit';
+import type { RequestHandler } from "@sveltejs/kit";
+import { json } from "@sveltejs/kit";
 
 export const GET: RequestHandler = async ({ request, fetch }) => {
-  const url = new URL(request.url).searchParams.get('url')
-  if (!url) {
-    return new Response(JSON.stringify({ error: 'URL parameter is required' }), {
-      status: 400,
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
-  }
+	const url = new URL(request.url).searchParams.get("url");
+	if (!url) {
+		return new Response(
+			JSON.stringify({ error: "URL parameter is required" }),
+			{
+				status: 400,
+				headers: {
+					"Content-Type": "application/json",
+				},
+			},
+		);
+	}
 
+	const encodedUrl = encodeURIComponent(url);
 
-  const encodedUrl = encodeURIComponent(url)
+	const response = await fetch(`/api/content/archive?url=${encodedUrl}`);
+	const jsonResp = await response.json();
 
-  const response = await fetch(`/api/content/archive?url=${encodedUrl}`)
-  const jsonResp = await response.json()
+	const readable = await fetch(`/api/content/readable?url=${jsonResp[0].url}`);
+	const readableJson = await readable.json();
 
-  if (!jsonResp) {
-    return new Response(JSON.stringify({ error: `Failed to fetch content: ${url}` }), {
-      status: 500,
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
-  }
-  const readable = await fetch(`/api/content/readable?url=${jsonResp[0].url}`)
-  const readableJson = await readable.json()
-
-  return json(readableJson)
-}
+	return json(readableJson);
+};

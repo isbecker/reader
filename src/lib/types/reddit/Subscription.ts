@@ -1,4 +1,4 @@
 export default interface Subscription {
-    name: string,
-    url: string
+	name: string;
+	url: string;
 }

@@ -17,7 +17,7 @@ async function fetchComments(
 	const maxRetries = 3;
 	let retryCount = 0;
 
-	const url = `/api/reddit/${subreddit}/comments/${id}/${title}`;
+	const url = `https://unquestioned.beckr.dev/?url=${encodeURIComponent(`https://old.reddit.com/r/${subreddit}/comments/${id}/${title}.json?t=${moment().unix()}`)}`;
 	while (retryCount < maxRetries) {
 		try {
 			const response = await fetch(url);

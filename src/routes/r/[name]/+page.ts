@@ -28,7 +28,7 @@ async function fetchSubreddit(
 
 	while (retryCount < maxRetries) {
 		try {
-			const url = `/api/reddit/${subreddit}`;
+			const url = `https://unquestioned.beckr.dev/?url=${encodeURIComponent(`https://www.reddit.com/r/${subreddit}/hot.json?t=${moment().unix()}`)}`;
 			const response = await fetch(url);
 			// const response = await fetch(`/api/reddit/${subreddit}`);
 			if (response.ok) {

@@ -23,7 +23,7 @@
 
     while (retryCount < maxRetries) {
       try {
-        const response = await fetch(`/api/reddit/${subreddit}`);
+        const response = await fetch(`https://unquestioned.beckr.dev/?url=${encodeURIComponent(`https://www.reddit.com/r/${subreddit}/hot.json`)}`);
         if (response.ok) {
           return await response.json();
         } else {

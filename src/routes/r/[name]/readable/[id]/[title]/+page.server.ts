@@ -17,7 +17,9 @@ export async function load({ fetch, params }) {
 			const response = await fetch(url);
 			if (response.ok) {
 				console.log(`${tag} reddit OK (attempt ${attempt}), fetching readable`);
-				const post: Post = await response.json().then(data => data ? parsePost(data) : null);
+				const post: Post = await response
+					.json()
+					.then((data) => (data ? parsePost(data) : null));
 				const readable = await fetch(`/api/content/readable?url=${post.url}`)
 					.then(async (res) => await res.json())
 					.then(parseReadable);
@@ -25,7 +27,9 @@ export async function load({ fetch, params }) {
 				return { post, readable };
 			} else {
 				const body = await response.text();
-				console.error(`${tag} attempt ${attempt} failed: HTTP ${response.status} ${response.statusText} — ${body.slice(0, 200)}`);
+				console.error(
+					`${tag} attempt ${attempt} failed: HTTP ${response.status} ${response.statusText} — ${body.slice(0, 200)}`,
+				);
 			}
 		} catch (error) {
 			console.error(`${tag} attempt ${attempt} threw:`, error);

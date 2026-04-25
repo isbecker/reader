@@ -1,33 +1,26 @@
 import moment from "moment";
-import { parseSubreddit } from "$lib/types/reddit/Subreddit";
+import { parsePost } from "$lib/types/reddit/Post";
 
 export async function load({ fetch, params }) {
-	const { name } = params;
+	const { name, id, title } = params;
 	return {
-		subreddit: await fetchSubreddit(name, fetch).then(
-			async (subreddit) => await parseSubreddit(name, subreddit),
+		post: await fetchComments(name, id, title, fetch).then((data) =>
+			data ? parsePost(data) : null,
 		),
 	};
 }
 
-async function fetchSubreddit(
+async function fetchComments(
 	subreddit: string,
-	fetch: {
-		(
-			input: URL | RequestInfo,
-			init?: RequestInit | undefined,
-		): Promise<Response>;
-		(
-			input: string | URL | Request,
-			init?: RequestInit | undefined,
-		): Promise<any>;
-	},
+	id: string,
+	title: string,
+	fetch,
 ): Promise<any> {
 	const maxRetries = 3;
-	const tag = `[reddit/r/${subreddit}/hot]`;
+	const tag = `[reddit/r/${subreddit}/comments/${id}]`;
 
 	for (let attempt = 1; attempt <= maxRetries; attempt++) {
-		const redditUrl = `https://www.reddit.com/r/${subreddit}/hot.json?t=${moment().unix()}`;
+		const redditUrl = `https://old.reddit.com/r/${subreddit}/comments/${id}/${title}.json?t=${moment().unix()}`;
 		const url = `https://unquestioned.beckr.dev/?url=${encodeURIComponent(redditUrl)}`;
 		console.log(`${tag} attempt ${attempt}/${maxRetries}`);
 		try {
@@ -37,7 +30,9 @@ async function fetchSubreddit(
 				return await response.json();
 			} else {
 				const body = await response.text();
-				console.error(`${tag} attempt ${attempt} failed: HTTP ${response.status} ${response.statusText} — ${body.slice(0, 200)}`);
+				console.error(
+					`${tag} attempt ${attempt} failed: HTTP ${response.status} ${response.statusText} — ${body.slice(0, 200)}`,
+				);
 			}
 		} catch (error) {
 			console.error(`${tag} attempt ${attempt} threw:`, error);

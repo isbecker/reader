@@ -4,7 +4,9 @@ import { parsePost } from "$lib/types/reddit/Post";
 export async function load({ fetch, params }) {
 	const { name, id, title, more } = params;
 	return {
-		post: await fetchComments(name, id, title, more, fetch).then(data => data ? parsePost(data) : null),
+		post: await fetchComments(name, id, title, more, fetch).then((data) =>
+			data ? parsePost(data) : null,
+		),
 	};
 }
 
@@ -38,7 +40,9 @@ async function fetchComments(
 				return await response.json();
 			} else {
 				const body = await response.text();
-				console.error(`${tag} attempt ${attempt} failed: HTTP ${response.status} ${response.statusText} — ${body.slice(0, 200)}`);
+				console.error(
+					`${tag} attempt ${attempt} failed: HTTP ${response.status} ${response.statusText} — ${body.slice(0, 200)}`,
+				);
 			}
 		} catch (error) {
 			console.error(`${tag} attempt ${attempt} threw:`, error);

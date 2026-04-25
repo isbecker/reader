@@ -10,11 +10,18 @@ export const GET: RequestHandler = async ({ params, fetch }) => {
 
 		if (!response.ok) {
 			const body = await response.text();
-			console.error(`[reddit/${subreddit}] proxy returned ${response.status}: ${body.slice(0, 500)}`);
-			return new Response(JSON.stringify({ error: `Proxy error: ${response.status} ${response.statusText}` }), {
-				status: response.status,
-				headers: { "Content-Type": "application/json" },
-			});
+			console.error(
+				`[reddit/${subreddit}] proxy returned ${response.status}: ${body.slice(0, 500)}`,
+			);
+			return new Response(
+				JSON.stringify({
+					error: `Proxy error: ${response.status} ${response.statusText}`,
+				}),
+				{
+					status: response.status,
+					headers: { "Content-Type": "application/json" },
+				},
+			);
 		}
 
 		const data = await response.json();

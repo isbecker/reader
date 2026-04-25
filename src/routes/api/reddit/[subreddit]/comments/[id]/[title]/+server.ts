@@ -17,7 +17,7 @@ export const GET: RequestHandler = async ({ params, fetch }) => {
 	}
 
 	try {
-		const url = `https://unquestioned.beckr.dev/?url=${encodeURIComponent(`https://old.reddit.com/r/${subreddit}/comments/${id}/${title}.json?t=${moment().unix()}`)}`;
+		const url = `https://unquestioned.beckr.dev/?url=${encodeURIComponent(`https://reddit.com/r/${subreddit}/comments/${id}/${title}.json?t=${moment().unix()}`)}`;
 		const response = await fetch(url);
 		if (!response.ok) {
 			throw new Error(`Failed to fetch comments: ${response.statusText}`);

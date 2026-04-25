@@ -20,7 +20,7 @@ async function fetchComments(
 	const tag = `[reddit/r/${subreddit}/comments/${id}]`;
 
 	for (let attempt = 1; attempt <= maxRetries; attempt++) {
-		const redditUrl = `https://old.reddit.com/r/${subreddit}/comments/${id}/${title}.json?t=${moment().unix()}`;
+		const redditUrl = `https://reddit.com/r/${subreddit}/comments/${id}/${title}.json?t=${moment().unix()}`;
 		const url = `https://unquestioned.beckr.dev/?url=${encodeURIComponent(redditUrl)}`;
 		console.log(`${tag} attempt ${attempt}/${maxRetries}`);
 		try {

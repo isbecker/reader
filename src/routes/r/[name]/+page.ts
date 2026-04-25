@@ -27,7 +27,7 @@ async function fetchSubreddit(
 	const tag = `[reddit/r/${subreddit}/hot]`;
 
 	for (let attempt = 1; attempt <= maxRetries; attempt++) {
-		const redditUrl = `https://www.reddit.com/r/${subreddit}/hot.json?t=${moment().unix()}`;
+		const redditUrl = `https://reddit.com/r/${subreddit}/hot.json?t=${moment().unix()}`;
 		const url = `https://unquestioned.beckr.dev/?url=${encodeURIComponent(redditUrl)}`;
 		console.log(`${tag} attempt ${attempt}/${maxRetries}`);
 		try {

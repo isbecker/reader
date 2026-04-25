@@ -5,7 +5,7 @@ export const GET: RequestHandler = async ({ params, fetch }) => {
 	const { subreddit } = params;
 
 	try {
-		const proxyUrl = `https://unquestioned.beckr.dev/?url=${encodeURIComponent(`https://reddit.com/r/${subreddit}/hot.json`)}`;
+		const proxyUrl = `https://unquestioned.beckr.dev/?url=${encodeURIComponent(`https://www.reddit.com/r/${subreddit}/hot.json`)}`;
 		const response = await fetch(proxyUrl);
 
 		if (!response.ok) {

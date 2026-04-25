@@ -5,9 +5,18 @@ export const GET: RequestHandler = async ({ params, fetch }) => {
 	const { subreddit } = params;
 
 	try {
-		const response = await fetch(
-			`https://unquestioned.beckr.dev/?url=${encodeURIComponent(`https://www.reddit.com/r/${subreddit}/hot.json`)}`,
-		);
+		const proxyUrl = `https://unquestioned.beckr.dev/?url=${encodeURIComponent(`https://www.reddit.com/r/${subreddit}/hot.json`)}`;
+		const response = await fetch(proxyUrl);
+
+		if (!response.ok) {
+			const body = await response.text();
+			console.error(`[reddit/${subreddit}] proxy returned ${response.status}: ${body.slice(0, 500)}`);
+			return new Response(JSON.stringify({ error: `Proxy error: ${response.status} ${response.statusText}` }), {
+				status: response.status,
+				headers: { "Content-Type": "application/json" },
+			});
+		}
+
 		const data = await response.json();
 
 		return new Response(JSON.stringify(data), {
@@ -17,6 +26,7 @@ export const GET: RequestHandler = async ({ params, fetch }) => {
 			},
 		});
 	} catch (error) {
+		console.error(`[reddit/${subreddit}] fetch error:`, error);
 		return new Response(JSON.stringify({ error: (error as Error).message }), {
 			status: 500,
 			headers: {

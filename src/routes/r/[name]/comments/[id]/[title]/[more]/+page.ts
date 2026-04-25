@@ -4,7 +4,7 @@ import { parsePost } from "$lib/types/reddit/Post";
 export async function load({ fetch, params }) {
 	const { name, id, title, more } = params;
 	return {
-		post: await fetchComments(name, id, title, more, fetch).then(parsePost),
+		post: await fetchComments(name, id, title, more, fetch).then(data => data ? parsePost(data) : null),
 	};
 }
 
@@ -25,22 +25,26 @@ async function fetchComments(
 	},
 ): Promise<any> {
 	const maxRetries = 3;
-	let retryCount = 0;
+	const tag = `[reddit/r/${subreddit}/comments/${id}/${more}]`;
 
-	const url = `https://unquestioned.beckr.dev/?url=${`https://old.reddit.com/r/${subreddit}/comments/${id}/${title}/${more}.json?t=${moment().unix()}`}`;
-	while (retryCount < maxRetries) {
+	for (let attempt = 1; attempt <= maxRetries; attempt++) {
+		const redditUrl = `https://old.reddit.com/r/${subreddit}/comments/${id}/${title}/${more}.json?t=${moment().unix()}`;
+		const url = `https://unquestioned.beckr.dev/?url=${encodeURIComponent(redditUrl)}`;
+		console.log(`${tag} attempt ${attempt}/${maxRetries}`);
 		try {
 			const response = await fetch(url);
 			if (response.ok) {
+				console.log(`${tag} OK (attempt ${attempt})`);
 				return await response.json();
 			} else {
-				throw new Error("Failed to fetch");
+				const body = await response.text();
+				console.error(`${tag} attempt ${attempt} failed: HTTP ${response.status} ${response.statusText} — ${body.slice(0, 200)}`);
 			}
 		} catch (error) {
-			console.error("Error:", error);
-			retryCount++;
+			console.error(`${tag} attempt ${attempt} threw:`, error);
 		}
 	}
 
+	console.error(`${tag} all ${maxRetries} attempts failed, returning null`);
 	return null;
 }

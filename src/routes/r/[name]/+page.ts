@@ -24,23 +24,26 @@ async function fetchSubreddit(
 	},
 ): Promise<any> {
 	const maxRetries = 3;
-	let retryCount = 0;
+	const tag = `[reddit/r/${subreddit}/hot]`;
 
-	while (retryCount < maxRetries) {
+	for (let attempt = 1; attempt <= maxRetries; attempt++) {
+		const redditUrl = `https://www.reddit.com/r/${subreddit}/hot.json?t=${moment().unix()}`;
+		const url = `https://unquestioned.beckr.dev/?url=${encodeURIComponent(redditUrl)}`;
+		console.log(`${tag} attempt ${attempt}/${maxRetries}`);
 		try {
-			const url = `https://unquestioned.beckr.dev/?url=${encodeURIComponent(`https://www.reddit.com/r/${subreddit}/hot.json?t=${moment().unix()}`)}`;
 			const response = await fetch(url);
-			// const response = await fetch(`/api/reddit/${subreddit}`);
 			if (response.ok) {
+				console.log(`${tag} OK (attempt ${attempt})`);
 				return await response.json();
 			} else {
-				throw new Error("Failed to fetch");
+				const body = await response.text();
+				console.error(`${tag} attempt ${attempt} failed: HTTP ${response.status} ${response.statusText} — ${body.slice(0, 200)}`);
 			}
 		} catch (error) {
-			console.error("Error:", error);
-			retryCount++;
+			console.error(`${tag} attempt ${attempt} threw:`, error);
 		}
 	}
 
+	console.error(`${tag} all ${maxRetries} attempts failed, returning null`);
 	return null;
 }

@@ -1,17 +1,23 @@
 import type Readable from "$lib/types/Reabable";
 import { parseReadable } from "$lib/types/Reabable";
-import type { Item } from "$lib/types/hn/item";
+import { Item } from "$lib/types/hn/item";
 import { error } from "@sveltejs/kit";
 import type { PageLoad } from "./$types";
 
 export const load: PageLoad = async ({ fetch, params }) => {
 	const { id } = params;
 
-	const storyRes = await fetch(`/api/hn/item/${id}`);
+	const storyRes = await fetch(
+		`https://hacker-news.firebaseio.com/v0/item/${id}.json`,
+	);
 	if (!storyRes.ok) {
 		error(storyRes.status, "Failed to fetch story");
 	}
-	const story: Item = await storyRes.json();
+	const storyData = await storyRes.json();
+	if (!storyData) {
+		error(404, "Story not found");
+	}
+	const story: Item = Item.createFromOfficial(storyData);
 
 	if (!story.url) {
 		error(400, "Story has no URL to render");

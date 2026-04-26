@@ -2,11 +2,11 @@
   import SvelteMarkdown from "svelte-markdown";
   import { writable } from "svelte/store";
   import type Readable from "$lib/types/Reabable";
-  import type Story from "$lib/types/hn/Story";
+  import type { Item } from "$lib/types/hn/item";
 
   export let data;
 
-  let story: Story = data.story;
+  let story: Item = data.story;
   let readable: Readable = data.readable;
 
   const mapResults = writable<{ [key: number]: string }>({});

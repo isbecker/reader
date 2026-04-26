@@ -1,14 +1,14 @@
 import type Readable from "$lib/types/Reabable";
 import { parseReadable } from "$lib/types/Reabable";
-import type Story from "$lib/types/hn/Story";
-import { parseStory } from "$lib/types/hn/Story";
+import type { Item } from "$lib/types/hn/item";
+import type { PageLoad } from "./$types";
 
-export async function load({ fetch, params }) {
+export const load: PageLoad = async ({ fetch, params }) => {
 	const { id } = params;
 
-	const story: Story = await fetch(`/api/hn/item/${id}`)
-		.then((res) => res.json())
-		.then((story) => parseStory(story));
+	const story: Item = await fetch(`/api/hn/item/${id}`).then((res) =>
+		res.json(),
+	);
 
 	const readable: Readable = await fetch(
 		`/api/content/readable?url=${story.url}`,
@@ -17,4 +17,4 @@ export async function load({ fetch, params }) {
 		.then(parseReadable);
 
 	return { story, readable };
-}
+};

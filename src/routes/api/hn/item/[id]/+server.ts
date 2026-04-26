@@ -13,7 +13,11 @@ export const GET: RequestHandler = async ({ params, fetch, url }) => {
 	const itemId = parseInt(id as string);
 
 	const maxItems = 1500;
-	let item: Item = await fetchItem(itemId, fetch);
+	const fetchedItem = await fetchItem(itemId, fetch);
+	if (!fetchedItem) {
+		return json({ error: "Item not found" }, { status: 404 });
+	}
+	let item: Item = fetchedItem;
 	if ((item.descendants ?? 0) > maxItems) {
 		redirect(307, `/api/hnpwa/item/${id}`);
 	}
@@ -36,28 +40,42 @@ export const GET: RequestHandler = async ({ params, fetch, url }) => {
 	});
 };
 
-async function fetchItem(id: number, customFetch = fetch): Promise<Item> {
+async function fetchItem(
+	id: number,
+	customFetch = fetch,
+): Promise<Item | null> {
 	const response = await customFetch(
 		`https://hacker-news.firebaseio.com/v0/item/${id}.json`,
 	);
+	if (!response.ok) {
+		return null;
+	}
 	const data = await response.json();
+	if (!data) {
+		return null;
+	}
 
 	return Item.createFromOfficial(data);
 }
 
 async function fetchItemFull(item: Item, customFetch = fetch): Promise<Item> {
-	const kids = item.kids
-		? await Promise.all(
-				item.kids.map(async (kid) => {
-					const child = (await fetchItem(kid, customFetch)) as Comment;
-					child.root =
-						(item as Comment).root ??
-						(item.type === "comment" ? item.id : undefined);
-					return (await fetchItemFull(child, customFetch)) as Comment;
-				}),
-			)
-		: [];
-	item.comments = kids as Comment[];
+	if (!item.kids) {
+		item.comments = [];
+		return item;
+	}
+
+	const results = await Promise.all(
+		item.kids.map(async (kid) => {
+			const child = await fetchItem(kid, customFetch);
+			if (!child) return null;
+			const comment = child as Comment;
+			comment.root =
+				(item as Comment).root ??
+				(item.type === "comment" ? item.id : undefined);
+			return (await fetchItemFull(comment, customFetch)) as Comment;
+		}),
+	);
+	item.comments = results.filter((c): c is Comment => c !== null);
 
 	return item;
 }

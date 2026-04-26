@@ -1,11 +1,16 @@
 import type { RequestHandler } from "@sveltejs/kit";
 
 export const GET: RequestHandler = async ({ fetch }) => {
-	const hnJson = await fetch(
+	const res = await fetch(
 		"https://hacker-news.firebaseio.com/v0/beststories.json",
-	)
-		.then(async (res) => await res.json())
-		.catch((err) => console.log(err));
+	);
+	if (!res.ok) {
+		return new Response(JSON.stringify({ error: "Failed to fetch stories" }), {
+			status: res.status,
+			headers: { "Content-Type": "application/json" },
+		});
+	}
+	const hnJson = await res.json();
 
 	return new Response(JSON.stringify(hnJson), {
 		status: 200,
